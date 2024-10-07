@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<title>Job application Vortex</title>
+<meta content="Vortex Jobs" property="og:title" />
+<meta content="Et job hos Vortex3PS her!" property="og:description" />
+<meta content="https://vortex-real.w3spaces.com/job-app.html" property="og:url" />
+<meta content="https://d3fg3fwfxon4h5.cloudfront.net/546741/552949/app_icon/display_image/ams_1723563834_2322.png" property="og:image" />
+<meta content="#43B581" data-react-helmet="true" name="theme-color" />
+
+        <link
+            rel="icon"
+            href=
+"https://d3fg3fwfxon4h5.cloudfront.net/546741/552949/app_icon/display_image/ams_1723563834_2322.png"
+            type="image/x-icon"
+        />
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    /* Style the dropdown (select) */
+    select {
+      background-color: #f9f9f9;
+      color: #333; /* Change text color of dropdown */
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    /* Style individual options in the dropdown */
+    select option {
+      color: red; /* Change text color of options (works in some browsers) */
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Jobansøgning</h1>
+
+<form id="jobApplicationForm">
+  <label for="name">Fulde navn:</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="phone">Telefonnummer:</label>
+  <input type="tel" id="phone" name="phone" required>
+
+  <label for="position">Hvilken stilling ansøger du om?</label>
+  <select id="position" name="position" required>
+    <option value="designer" style="color: blue;">3D Designer</option>
+    <option value="marketing" style="color: lime;">Marketing (Mest brug for)</option>
+    <option value="support" style="color: purple;">Kassedame</option>
+  </select>
+
+  <label for="message">Beskriv dig selv:</label>
+  <textarea id="message" name="message" rows="6" required></textarea>
+
+  <button type="submit">Send ansøgning</button>
+</form>
+
+<script>
+  document.getElementById('jobApplicationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Collect form data
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const position = document.getElementById('position').value;
+    const message = document.getElementById('message').value;
+
+    // Create a payload to send to the Discord webhook
+    const payload = {
+      content: `**Ny Jobansøgning Modtaget:**\n\n**Navn:** ${name}\n**Email:** ${email}\n**Telefon:** ${phone}\n**Stilling:** ${position}\n**Beskriv dig selv:**\n${message}`
+    };
+
+    // Send the data to the Discord webhook
+    fetch('https://discord.com/api/webhooks/1282010025975484417/hAIhK6oZXOqFuHNc9owUC07jLX2QRanD12nmuN2ituX6PH7iDyCJyc_ZNwPALbGmZGGn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('Ansøgning sendt succesfuldt!');
+        document.getElementById('jobApplicationForm').reset(); // Reset form
+      } else {
+        alert('Der opstod en fejl ved indsendelse af ansøgningen.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Der opstod en fejl ved indsendelse af ansøgningen.');
+    });
+  });
+</script>
+
+</body>
+</html>
