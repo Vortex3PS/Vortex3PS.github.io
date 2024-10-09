@@ -209,16 +209,16 @@
         <div class="checkout-section" id="checkout-section">
             <h3>Delivery Options</h3>
             <select id="delivery" onchange="toggleDeliveryInfo()">
+                <option value="0">Pickup (Free)</option>
                 <option value="55">DAO til dør (55 DKK)</option>
                 <option value="50">DAO pakkeshop (50 DKK)</option>
-                <option value="0">Pickup (Free)</option>
             </select>
 
             <div class="delivery-info" id="delivery-info">
                 <h3>Delivery Information</h3>
                 <input type="text" id="fullName" placeholder="Full Name" required>
                 <input type="text" id="phoneNumber" placeholder="Phone Number" required>
-                <input type="text" id="address" placeholder="Address" required>
+                <input type="text" id="address" placeholder="Address">
             </div>
 
             <h3>Coupon Code</h3>
@@ -275,10 +275,10 @@
             const finalTotal = total + deliveryCost;
             const fullName = document.getElementById("fullName").value;
             const phoneNumber = document.getElementById("phoneNumber").value;
-            const address = document.getElementById("address").value;
+            const address = deliveryCost > 0 ? document.getElementById("address").value : "";
 
-            if (deliveryCost > 0 && (!fullName || !phoneNumber || !address)) {
-                alert("Please fill in all delivery details.");
+            if (!fullName || !phoneNumber || (deliveryCost > 0 && !address)) {
+                alert("Please fill in all required details.");
                 return;
             }
 
