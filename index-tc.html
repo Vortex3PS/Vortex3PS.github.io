@@ -78,6 +78,10 @@
         .checkout-section {
             display: none;
         }
+
+        .delivery-info {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -95,16 +99,33 @@
             <div class="product">
                 <h3>T-Shirt</h3>
                 <p>Price: 200 DKK</p>
+                <label for="size-men-tshirt">Size:</label>
+                <select id="size-men-tshirt">
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
                 <button onclick="addToCart('Men T-Shirt', 200)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Jeans</h3>
                 <p>Price: 300 DKK</p>
+                <label for="size-men-jeans">Size:</label>
+                <select id="size-men-jeans">
+                    <option value="30">30</option>
+                    <option value="32">32</option>
+                    <option value="34">34</option>
+                </select>
                 <button onclick="addToCart('Men Jeans', 300)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Shorts</h3>
                 <p>Price: 150 DKK</p>
+                <label for="size-men-shorts">Size:</label>
+                <select id="size-men-shorts">
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                </select>
                 <button onclick="addToCart('Men Shorts', 150)">Buy Now</button>
             </div>
         </div>
@@ -114,16 +135,33 @@
             <div class="product">
                 <h3>T-Shirt</h3>
                 <p>Price: 200 DKK</p>
+                <label for="size-women-tshirt">Size:</label>
+                <select id="size-women-tshirt">
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                </select>
                 <button onclick="addToCart('Women T-Shirt', 200)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Jeans</h3>
                 <p>Price: 300 DKK</p>
+                <label for="size-women-jeans">Size:</label>
+                <select id="size-women-jeans">
+                    <option value="28">28</option>
+                    <option value="30">30</option>
+                    <option value="32">32</option>
+                </select>
                 <button onclick="addToCart('Women Jeans', 300)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Shorts</h3>
                 <p>Price: 150 DKK</p>
+                <label for="size-women-shorts">Size:</label>
+                <select id="size-women-shorts">
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                </select>
                 <button onclick="addToCart('Women Shorts', 150)">Buy Now</button>
             </div>
         </div>
@@ -133,16 +171,33 @@
             <div class="product">
                 <h3>T-Shirt</h3>
                 <p>Price: 100 DKK</p>
+                <label for="size-kids-tshirt">Size:</label>
+                <select id="size-kids-tshirt">
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                </select>
                 <button onclick="addToCart('Kids T-Shirt', 100)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Jeans</h3>
                 <p>Price: 150 DKK</p>
+                <label for="size-kids-jeans">Size:</label>
+                <select id="size-kids-jeans">
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                </select>
                 <button onclick="addToCart('Kids Jeans', 150)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Shorts</h3>
                 <p>Price: 80 DKK</p>
+                <label for="size-kids-shorts">Size:</label>
+                <select id="size-kids-shorts">
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                </select>
                 <button onclick="addToCart('Kids Shorts', 80)">Buy Now</button>
             </div>
         </div>
@@ -153,10 +208,18 @@
 
         <div class="checkout-section" id="checkout-section">
             <h3>Delivery Options</h3>
-            <select id="delivery">
+            <select id="delivery" onchange="toggleDeliveryInfo()">
                 <option value="55">DAO til dør (55 DKK)</option>
                 <option value="50">DAO pakkeshop (50 DKK)</option>
+                <option value="0">Pickup (Free)</option>
             </select>
+
+            <div class="delivery-info" id="delivery-info">
+                <h3>Delivery Information</h3>
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <input type="text" id="phoneNumber" placeholder="Phone Number" required>
+                <input type="text" id="address" placeholder="Address" required>
+            </div>
 
             <h3>Coupon Code</h3>
             <input type="text" id="coupon" placeholder="Enter coupon code">
@@ -186,6 +249,16 @@
             document.getElementById("final-total").innerText = total;
         }
 
+        function toggleDeliveryInfo() {
+            const delivery = document.getElementById("delivery").value;
+            const deliveryInfo = document.getElementById("delivery-info");
+            if (delivery === "0") {
+                deliveryInfo.style.display = 'none';
+            } else {
+                deliveryInfo.style.display = 'block';
+            }
+        }
+
         function applyCoupon() {
             const coupon = document.getElementById("coupon").value;
             if (coupon === "DISCOUNT10") {
@@ -200,10 +273,18 @@
         function checkout() {
             const deliveryCost = parseInt(document.getElementById("delivery").value);
             const finalTotal = total + deliveryCost;
-            
+            const fullName = document.getElementById("fullName").value;
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const address = document.getElementById("address").value;
+
+            if (deliveryCost > 0 && (!fullName || !phoneNumber || !address)) {
+                alert("Please fill in all delivery details.");
+                return;
+            }
+
             const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
             const purchaseDetails = {
-                content: `New Order:\nTotal: ${finalTotal.toFixed(2)} DKK (including delivery)`,
+                content: `New Order:\nTotal: ${finalTotal.toFixed(2)} DKK (including delivery)\nFull Name: ${fullName}\nPhone Number: ${phoneNumber}\nAddress: ${address}`,
             };
 
             fetch(webhookUrl, {
