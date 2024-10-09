@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 10 Update</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #2e2e2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .update-screen {
+            background-color: #1c1c1c;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            width: 500px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #444;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress {
+            width: 0;
+            height: 30px;
+            background-color: #0078d7;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            transition: width 0.1s;
+        }
+
+        .status {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="update-screen">
+        <h1>Updating Windows</h1>
+        <p>Please do not turn off your computer.</p>
+        <p>Installing updates: 0%</p>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress">0%</div>
+        </div>
+
+        <p class="status" id="status">Updating...</p>
+    </div>
+
+    <script>
+        let progress = 0;
+        const progressBar = document.getElementById('progress');
+        const status = document.getElementById('status');
+
+        const interval = setInterval(() => {
+            if (progress < 100) {
+                progress++;
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = progress + '%';
+            } else {
+                clearInterval(interval);
+                status.textContent = 'Update complete!';
+            }
+        }, 100); // Adjust speed of progress here
+    </script>
+</body>
+</html>
