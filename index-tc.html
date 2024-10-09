@@ -45,6 +45,10 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        .checkout-section {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -61,18 +65,24 @@
             <button onclick="addToCart('Jeans', 300)">Buy Now</button>
         </div>
 
-        <h3>Delivery Options</h3>
-        <select id="delivery">
-            <option value="55">DAO til dør (55 DKK)</option>
-            <option value="50">DAO pakkeshop (50 DKK)</option>
-        </select>
-
-        <h3>Coupon Code</h3>
-        <input type="text" id="coupon" placeholder="Enter coupon code">
-        <button onclick="applyCoupon()">Apply</button>
-
+        <h3>Cart</h3>
         <h3>Total: <span id="total">0</span> DKK</h3>
-        <button onclick="checkout()">Checkout</button>
+        <button onclick="showCheckout()">Checkout</button>
+
+        <div class="checkout-section" id="checkout-section">
+            <h3>Delivery Options</h3>
+            <select id="delivery">
+                <option value="55">DAO til dør (55 DKK)</option>
+                <option value="50">DAO pakkeshop (50 DKK)</option>
+            </select>
+
+            <h3>Coupon Code</h3>
+            <input type="text" id="coupon" placeholder="Enter coupon code">
+            <button onclick="applyCoupon()">Apply</button>
+
+            <h3>Final Total: <span id="final-total">0</span> DKK</h3>
+            <button onclick="checkout()">Confirm Order</button>
+        </div>
     </div>
 
     <script>
@@ -83,11 +93,16 @@
             document.getElementById("total").innerText = total;
         }
 
+        function showCheckout() {
+            document.getElementById("checkout-section").style.display = 'block';
+            document.getElementById("final-total").innerText = total;
+        }
+
         function applyCoupon() {
             const coupon = document.getElementById("coupon").value;
             if (coupon === "DISCOUNT10") {
                 total *= 0.9; // 10% discount
-                document.getElementById("total").innerText = total.toFixed(2);
+                document.getElementById("final-total").innerText = total.toFixed(2);
                 alert("Coupon applied!");
             } else {
                 alert("Invalid coupon code.");
