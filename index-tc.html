@@ -21,11 +21,32 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1, h2, h3 {
+        h1 {
             text-align: center;
         }
 
+        .navbar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .navbar button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .navbar button:hover {
+            background-color: #0056b3;
+        }
+
         .category {
+            display: none;
             margin: 20px 0;
         }
 
@@ -63,7 +84,13 @@
     <div class="container">
         <h1>Clothing Shop</h1>
 
-        <div class="category">
+        <div class="navbar">
+            <button onclick="showCategory('men')">Men</button>
+            <button onclick="showCategory('women')">Women</button>
+            <button onclick="showCategory('kids')">Kids</button>
+        </div>
+
+        <div class="category" id="men">
             <h2>Men</h2>
             <div class="product">
                 <h3>T-Shirt</h3>
@@ -82,7 +109,7 @@
             </div>
         </div>
 
-        <div class="category">
+        <div class="category" id="women">
             <h2>Women</h2>
             <div class="product">
                 <h3>T-Shirt</h3>
@@ -101,7 +128,7 @@
             </div>
         </div>
 
-        <div class="category">
+        <div class="category" id="kids">
             <h2>Kids</h2>
             <div class="product">
                 <h3>T-Shirt</h3>
@@ -146,6 +173,12 @@
         function addToCart(item, price) {
             total += price;
             document.getElementById("total").innerText = total;
+        }
+
+        function showCategory(category) {
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(cat => cat.style.display = 'none'); // Hide all categories
+            document.getElementById(category).style.display = 'block'; // Show selected category
         }
 
         function showCheckout() {
