@@ -105,7 +105,7 @@
                     <option value="L">L</option>
                     <option value="XL">XL</option>
                 </select>
-                <button onclick="addToCart('Men T-Shirt', 200)">Buy Now</button>
+                <button onclick="addToCart('Men T-Shirt', 200, 'Size: ' + document.getElementById('size-men-tshirt').value)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Jeans</h3>
@@ -116,7 +116,7 @@
                     <option value="32">32</option>
                     <option value="34">34</option>
                 </select>
-                <button onclick="addToCart('Men Jeans', 300)">Buy Now</button>
+                <button onclick="addToCart('Men Jeans', 300, 'Size: ' + document.getElementById('size-men-jeans').value)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Shorts</h3>
@@ -126,7 +126,7 @@
                     <option value="M">M</option>
                     <option value="L">L</option>
                 </select>
-                <button onclick="addToCart('Men Shorts', 150)">Buy Now</button>
+                <button onclick="addToCart('Men Shorts', 150, 'Size: ' + document.getElementById('size-men-shorts').value)">Buy Now</button>
             </div>
         </div>
 
@@ -141,7 +141,7 @@
                     <option value="M">M</option>
                     <option value="L">L</option>
                 </select>
-                <button onclick="addToCart('Women T-Shirt', 200)">Buy Now</button>
+                <button onclick="addToCart('Women T-Shirt', 200, 'Size: ' + document.getElementById('size-women-tshirt').value)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Jeans</h3>
@@ -152,7 +152,7 @@
                     <option value="30">30</option>
                     <option value="32">32</option>
                 </select>
-                <button onclick="addToCart('Women Jeans', 300)">Buy Now</button>
+                <button onclick="addToCart('Women Jeans', 300, 'Size: ' + document.getElementById('size-women-jeans').value)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Shorts</h3>
@@ -162,7 +162,7 @@
                     <option value="S">S</option>
                     <option value="M">M</option>
                 </select>
-                <button onclick="addToCart('Women Shorts', 150)">Buy Now</button>
+                <button onclick="addToCart('Women Shorts', 150, 'Size: ' + document.getElementById('size-women-shorts').value)">Buy Now</button>
             </div>
         </div>
 
@@ -177,7 +177,7 @@
                     <option value="6">6</option>
                     <option value="8">8</option>
                 </select>
-                <button onclick="addToCart('Kids T-Shirt', 100)">Buy Now</button>
+                <button onclick="addToCart('Kids T-Shirt', 100, 'Size: ' + document.getElementById('size-kids-tshirt').value)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Jeans</h3>
@@ -188,7 +188,7 @@
                     <option value="6">6</option>
                     <option value="8">8</option>
                 </select>
-                <button onclick="addToCart('Kids Jeans', 150)">Buy Now</button>
+                <button onclick="addToCart('Kids Jeans', 150, 'Size: ' + document.getElementById('size-kids-jeans').value)">Buy Now</button>
             </div>
             <div class="product">
                 <h3>Shorts</h3>
@@ -198,7 +198,7 @@
                     <option value="4">4</option>
                     <option value="6">6</option>
                 </select>
-                <button onclick="addToCart('Kids Shorts', 80)">Buy Now</button>
+                <button onclick="addToCart('Kids Shorts', 80, 'Size: ' + document.getElementById('size-kids-shorts').value)">Buy Now</button>
             </div>
         </div>
 
@@ -216,10 +216,12 @@
 
             <div class="delivery-info" id="delivery-info">
                 <h3>Delivery Information</h3>
-                <input type="text" id="fullName" placeholder="Full Name" required>
-                <input type="text" id="phoneNumber" placeholder="Phone Number" required>
                 <input type="text" id="address" placeholder="Address">
             </div>
+
+            <h3>Customer Information</h3>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="phoneNumber" placeholder="Phone Number" required>
 
             <h3>Coupon Code</h3>
             <input type="text" id="coupon" placeholder="Enter coupon code">
@@ -232,9 +234,11 @@
 
     <script>
         let total = 0;
+        let cartItems = [];
 
-        function addToCart(item, price) {
+        function addToCart(item, price, size) {
             total += price;
+            cartItems.push(`${item} (${size})`);
             document.getElementById("total").innerText = total;
         }
 
@@ -284,7 +288,7 @@
 
             const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your Discord webhook URL
             const purchaseDetails = {
-                content: `New Order:\nTotal: ${finalTotal.toFixed(2)} DKK (including delivery)\nFull Name: ${fullName}\nPhone Number: ${phoneNumber}\nAddress: ${address}`,
+                content: `New Order:\nItems: ${cartItems.join(', ')}\nTotal: ${finalTotal.toFixed(2)} DKK (including delivery)\nFull Name: ${fullName}\nPhone Number: ${phoneNumber}\nAddress: ${address}`,
             };
 
             fetch(webhookUrl, {
@@ -295,6 +299,7 @@
             .then(response => {
                 if (response.ok) {
                     alert("Order placed successfully!");
+                    resetCart();
                 } else {
                     alert("Failed to place order.");
                 }
@@ -302,6 +307,17 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+        }
+
+        function resetCart() {
+            total = 0;
+            cartItems = [];
+            document.getElementById("total").innerText = total;
+            document.getElementById("checkout-section").style.display = 'none';
+            document.getElementById("fullName").value = '';
+            document.getElementById("phoneNumber").value = '';
+            document.getElementById("address").value = '';
+            document.getElementById("coupon").value = '';
         }
     </script>
 </body>
