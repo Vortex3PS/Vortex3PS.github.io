@@ -13,7 +13,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: auto;
             background: white;
             padding: 20px;
@@ -21,8 +21,16 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        .category {
+            margin: 20px 0;
+        }
+
         .product {
-            margin-bottom: 20px;
+            margin: 10px 0;
         }
 
         button {
@@ -54,15 +62,62 @@
 <body>
     <div class="container">
         <h1>Clothing Shop</h1>
-        <div class="product">
-            <h2>T-Shirt</h2>
-            <p>Price: 200 DKK</p>
-            <button onclick="addToCart('T-Shirt', 200)">Buy Now</button>
+
+        <div class="category">
+            <h2>Men</h2>
+            <div class="product">
+                <h3>T-Shirt</h3>
+                <p>Price: 200 DKK</p>
+                <button onclick="addToCart('Men T-Shirt', 200)">Buy Now</button>
+            </div>
+            <div class="product">
+                <h3>Jeans</h3>
+                <p>Price: 300 DKK</p>
+                <button onclick="addToCart('Men Jeans', 300)">Buy Now</button>
+            </div>
+            <div class="product">
+                <h3>Shorts</h3>
+                <p>Price: 150 DKK</p>
+                <button onclick="addToCart('Men Shorts', 150)">Buy Now</button>
+            </div>
         </div>
-        <div class="product">
-            <h2>Jeans</h2>
-            <p>Price: 300 DKK</p>
-            <button onclick="addToCart('Jeans', 300)">Buy Now</button>
+
+        <div class="category">
+            <h2>Women</h2>
+            <div class="product">
+                <h3>T-Shirt</h3>
+                <p>Price: 200 DKK</p>
+                <button onclick="addToCart('Women T-Shirt', 200)">Buy Now</button>
+            </div>
+            <div class="product">
+                <h3>Jeans</h3>
+                <p>Price: 300 DKK</p>
+                <button onclick="addToCart('Women Jeans', 300)">Buy Now</button>
+            </div>
+            <div class="product">
+                <h3>Shorts</h3>
+                <p>Price: 150 DKK</p>
+                <button onclick="addToCart('Women Shorts', 150)">Buy Now</button>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2>Kids</h2>
+            <div class="product">
+                <h3>T-Shirt</h3>
+                <p>Price: 100 DKK</p>
+                <button onclick="addToCart('Kids T-Shirt', 100)">Buy Now</button>
+            </div>
+            <div class="product">
+                <h3>Jeans</h3>
+                <p>Price: 150 DKK</p>
+                <button onclick="addToCart('Kids Jeans', 150)">Buy Now</button>
+            </div>
+            <div class="product">
+                <h3>Shorts</h3>
+                <p>Price: 80 DKK</p>
+                <button onclick="addToCart('Kids Shorts', 80)">Buy Now</button>
+            </div>
         </div>
 
         <h3>Cart</h3>
