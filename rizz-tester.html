@@ -64,6 +64,17 @@
     </div>
 
     <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+        }
+
         function testRizz() {
             const name = document.getElementById("nameInput").value.trim();
             let rizz;
@@ -71,7 +82,14 @@
             if (name.toLowerCase() === "anthon") {
                 rizz = 0; // Special case for Anthon
             } else {
-                rizz = Math.floor(Math.random() * 101); // Random percentage from 0 to 100
+                // Check if the score is already saved in cookies
+                const existingScore = getCookie(name);
+                if (existingScore) {
+                    rizz = existingScore; // Use the existing score
+                } else {
+                    rizz = Math.floor(Math.random() * 101); // Generate a new random score
+                    setCookie(name, rizz, 7); // Save the score in cookies for 7 days
+                }
             }
 
             document.getElementById("result").innerText = `Your Rizz: ${rizz}%`;
