@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rizz Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rizz Tester</h1>
+        <input type="text" id="nameInput" placeholder="Enter your name">
+        <button onclick="testRizz()">Check Rizz</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function testRizz() {
+            const name = document.getElementById("nameInput").value.trim();
+            let rizz;
+
+            if (name.toLowerCase() === "anthon") {
+                rizz = 0; // Special case for Anthon
+            } else {
+                rizz = Math.floor(Math.random() * 101); // Random percentage from 0 to 100
+            }
+
+            document.getElementById("result").innerText = `Your Rizz: ${rizz}%`;
+        }
+    </script>
+</body>
+</html>
