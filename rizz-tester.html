@@ -81,7 +81,11 @@
 
             if (name.toLowerCase() === "anthon") {
                 rizz = 0; // Special case for Anthon
-            } else {
+            } else
+            
+            if (name.toLowerCase() === "Jens") {
+                rizz = 90; // Special case for Jens
+            } else{
                 // Check if the score is already saved in cookies
                 const existingScore = getCookie(name);
                 if (existingScore) {
