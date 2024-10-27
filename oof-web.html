@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt Os</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .contact-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .success-message {
+            text-align: center;
+            color: green;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contact-container">
+    <h2>Kom i kontakt med vores webdesigner og bestil en hjemmeside i dag!</h2>
+    <form id="contactForm">
+        <label for="name">Navn</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Telefon</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="message">Beskriv dig selv og beskriv hvad du vil hav lavet</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+
+        <button type="submit">Send</button>
+        <p class="success-message" id="successMessage">Beskeden er sendt!</p>
+    </form>
+</div>
+
+<script>
+    document.getElementById("contactForm").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent form from submitting traditionally
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const message = document.getElementById("message").value;
+
+        const webhookURL = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL_HERE"; // Replace with your webhook URL
+
+        // Format message payload for Discord
+        const payload = {
+            content: `**Ny besked fra kontaktformularen:**\n\n**Navn:** ${name}\n**Email:** ${email}\n**Telefon:** ${phone}\n**Besked:**\n${message}`
+        };
+
+        try {
+            // Send data to Discord webhook
+            const response = await fetch(webhookURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                document.getElementById("successMessage").style.display = "block"; // Show success message
+                document.getElementById("contactForm").reset(); // Reset form fields
+            } else {
+                alert("Der opstod en fejl. Prøv venligst igen.");
+            }
+        } catch (error) {
+            console.error("Error sending data:", error);
+            alert("Der opstod en fejl. Prøv venligst igen.");
+        }
+    });
+</script>
+
+</body>
+</html>
