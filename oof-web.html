@@ -81,22 +81,20 @@
 
 <script>
     document.getElementById("contactForm").addEventListener("submit", async function(event) {
-        event.preventDefault(); // Prevent form from submitting traditionally
+        event.preventDefault();
 
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
         const phone = document.getElementById("phone").value;
         const message = document.getElementById("message").value;
 
-        const webhookURL = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL_HERE"; // Replace with your webhook URL
+        const webhookURL = "https://discord.com/api/webhooks/1300173808828940380/hmxebYDtaqUTtyBNJFRvoZRTaqAtNWhRNNaX0Y-anCJMFNp9yAfRP0EXsb4COvbnp8P9";
 
-        // Format message payload for Discord
         const payload = {
             content: `**Ny besked fra kontaktformularen:**\n\n**Navn:** ${name}\n**Email:** ${email}\n**Telefon:** ${phone}\n**Besked:**\n${message}`
         };
 
         try {
-            // Send data to Discord webhook
             const response = await fetch(webhookURL, {
                 method: "POST",
                 headers: {
@@ -106,8 +104,8 @@
             });
 
             if (response.ok) {
-                document.getElementById("successMessage").style.display = "block"; // Show success message
-                document.getElementById("contactForm").reset(); // Reset form fields
+                document.getElementById("successMessage").style.display = "block";
+                document.getElementById("contactForm").reset();
             } else {
                 alert("Der opstod en fejl. Prøv venligst igen.");
             }
