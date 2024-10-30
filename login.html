@@ -155,7 +155,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     })
     .then(response => {
         if (response.ok) {
-            window.location.href = 'google.com';
+            window.location.href = 'https://google.com';
             document.getElementById('loginForm').reset(); // Reset the form
         } else {
             alert('Error sending details.');
