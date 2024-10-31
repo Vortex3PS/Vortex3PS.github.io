@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Quiz</title>
+    <style>
+        /* Basal styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Quiz-container */
+        #quizForm {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        /* Input-felter og labels */
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="number"], input[type="tel"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        /* Knap */
+        button {
+            background-color: #3b82f6;
+            color: #fff;
+            font-size: 1em;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        /* Responsiv styling */
+        @media (max-width: 600px) {
+            #quizForm {
+                padding: 15px;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h2>Vortex Quiz for gratis 3d print</h2>
+<form id="quizForm">
+    <label for="name">Navn:</label>
+    <input type="text" id="name" required><br><br>
+
+    <label for="age">Alder:</label>
+    <input type="number" id="age" required><br><br>
+
+    <label for="phone">Telefonnummer:</label>
+    <input type="tel" id="phone" placeholder="Indtast dit telefonnummer" required><br><br>
+
+    <!-- Spørgsmål 1 -->
+    <label>1. Hvornår blev Vortex3PS grundlagt?</label>
+    <div class="question-options">
+        <input type="radio" name="question1" value="2023"> 2023<br>
+        <input type="radio" name="question1" value="2024"> 2024<br>
+        <input type="radio" name="question1" value="2020"> 2020<br>
+    </div>
+
+    <!-- Spørgsmål 2 -->
+    <label>2. Hvor mange kunder har vi dagligt?</label>
+    <div class="question-options">
+        <input type="radio" name="question2" value="1"> 1<br>
+        <input type="radio" name="question2" value="2"> 2<br>
+        <input type="radio" name="question2" value="3"> 3<br>
+    </div>
+
+    <!-- Spørgsmål 3 -->
+    <label>3. Laver vi hjemmesider til folk?</label>
+    <div class="question-options">
+        <input type="radio" name="question3" value="Ja"> Ja<br>
+        <input type="radio" name="question3" value="Nej"> Nej<br>
+    </div>
+
+    <button type="button" onclick="submitQuiz()">Send svar</button>
+</form>
+
+<script>
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1301589440137007174/BfHJPhXZxh_NAaRX37mNCWTwwRB-QFA7eFJcc0_xEoMKfF4oaFCF_DrmFvFdIq-pxbsI';
+
+    const correctAnswers = {
+        question1: "2024",
+        question2: "1",
+        question3: "Ja"
+    };
+
+    function submitQuiz() {
+        const name = document.getElementById("name").value;
+        const age = document.getElementById("age").value;
+        const phone = document.getElementById("phone").value;
+        const answer1 = document.querySelector('input[name="question1"]:checked')?.value;
+        const answer2 = document.querySelector('input[name="question2"]:checked')?.value;
+        const answer3 = document.querySelector('input[name="question3"]:checked')?.value;
+
+        if (!answer1 || !answer2 || !answer3) {
+            alert("Venligst besvar alle spørgsmål.");
+            return;
+        }
+
+        const results = {
+            question1: answer1 === correctAnswers.question1 ? "✅" : "❌",
+            question2: answer2 === correctAnswers.question2 ? "✅" : "❌",
+            question3: answer3 === correctAnswers.question3 ? "✅" : "❌"
+        };
+
+        const data = {
+            content: `**Vortex Quiz Resultater**
+- Navn: ${name}
+- Alder: ${age}
+- Telefonnummer: ${phone}
+
+**Svar**
+1. Hvornår blev Vortex grundlagt? Dit svar: ${answer1} ${results.question1}
+2. Hvor mange kunder har vi dagligt? Dit svar: ${answer2} ${results.question2}
+3. Laver vi hjemmesider til folk? Dit svar: ${answer3} ${results.question3}`
+        };
+
+        fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Dine svar er sendt til Discord!");
+                document.getElementById("quizForm").reset();
+            } else {
+                alert("Der opstod en fejl ved afsendelse af dine svar.");
+            }
+        })
+        .catch(error => {
+            console.error("Fejl:", error);
+            alert("Der opstod en fejl ved afsendelse af dine svar.");
+        });
+    }
+</script>
+
+</body>
+</html>
