@@ -63,56 +63,99 @@
         #check-out-btn:hover {
             background-color: #d32f2f;
         }
+        /* Popup styles */
+        #nfc-popup {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
+            text-align: center;
+        }
+        #popup-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for popup */
+        }
+        #close-popup {
+            background-color: #f44336; /* Red for cancel button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px; /* Space above button */
+        }
+        #close-popup:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
     </style>
 </head>
 <body>
     <h1>Personale Login</h1>
-    <button onclick="authenticateUsingNFC()">Scan Kort</button>
+    <button onclick="openNfcPopup()">Scan Kort</button>
     
+    <div id="nfc-popup">
+        <div id="popup-content">
+            <h2>Scan Kort</h2>
+            <p>Placer kortet tæt på telefonen.</p>
+            <button id="close-popup" onclick="closePopup()">Afbryd</button>
+        </div>
+    </div>
+
     <div id="staff-content">
         <h2 id="welcome-message"></h2>
 
         <!-- Fixed Announcement Section (Editable Directly in HTML) -->
         <h3>Seneste Annoncering</h3>
-        <p id="announcementMessage">
-            Vær venlig at udfylde alle noter og ideer inden arbejdsdagens slutning.
-        </p>
+        <p id="announcementMessage">Her kan du skrive dine annonceringer til personalet.</p>
 
-        <!-- Note-taking area -->
+        <!-- Notes and Ideas Input -->
         <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea><br>
         <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
 
-        <!-- Ideas Submission Section -->
-        <h3>Indsend Ide</h3>
-        <input type="text" id="ideaInput" placeholder="Skriv din ide her..."><br>
-        <button onclick="submitIdea()">Indsend ide</button>
+        <h3>Tilføj Ideer</h3>
+        <input type="text" id="ideaInput" placeholder="Skriv din idé her...">
+        <button onclick="submitIdea()">Send Idé</button>
         <p id="idea-message" style="color: green;"></p>
 
-        <!-- Checkout Button -->
-        <p>
-            <button onclick="checkOut()" id="check-out-btn" style="display: none;">Udtjek</button>
-        </p>
-        
-        <p id="status-message" style="color: green;"></p>
+        <button id="check-out-btn" onclick="checkOut()">Udtjek</button>
     </div>
 
     <p id="error-message"></p>
 
     <script>
+        // Define the expected staff IDs and their corresponding names
         const authorizedStaffIds = {
             "Vortex3PS-Pass-Owner-Markus": "Markus",
             "Vortex3PS-Pass-Co-Owner-Rani": "Rani",
             "Vortex3PS-Pass-Staff": "Staff"
         };
-        let currentUser = "";
 
+        let isCheckedIn = false; // Flag to track check-in status
+
+        // Load notes from cookies on page load
         window.onload = function() {
             const savedNotes = getCookie("staffNotes");
             if (savedNotes) {
                 document.getElementById("noteArea").value = savedNotes;
             }
         };
+
+        function openNfcPopup() {
+            // Show the NFC prompt popup
+            document.getElementById("nfc-popup").style.display = "block";
+        }
 
         async function authenticateUsingNFC() {
             if ('NDEFReader' in window) {
@@ -123,81 +166,122 @@
                         const decoder = new TextDecoder();
                         for (const record of event.message.records) {
                             const nfcData = decoder.decode(record.data);
+                            
                             if (authorizedStaffIds[nfcData]) {
-                                currentUser = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
+                                const userName = authorizedStaffIds[nfcData];
+                                document.getElementById("welcome-message").textContent = `Velkommen ${userName} til personale note siden`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
-                                checkIn(); // Auto check-in on successful login
+                                closePopup(); // Close the popup on successful scan
+
+                                // Check-in logic
+                                if (!isCheckedIn) {
+                                    isCheckedIn = true;
+                                    logCheckIn(userName);
+                                } else {
+                                    document.getElementById("error-message").textContent = "Du er allerede tjekket ind.";
+                                }
                             } else {
                                 document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
+                                closePopup(); // Close the popup on unsuccessful scan
                             }
                         }
                     };
                 } catch (error) {
                     console.error("NFC scan error:", error);
                     document.getElementById("error-message").textContent = "NFC scan fejlede.";
+                    closePopup(); // Close the popup on scan failure
                 }
             } else {
                 alert("NFC er ikke understøttet.");
+                closePopup(); // Close the popup if NFC is not supported
             }
         }
 
-        function checkIn() {
-            const time = new Date().toLocaleString();
-            postToDiscord(`${currentUser} checked in at ${time}`);
-            document.getElementById("check-out-btn").style.display = "inline"; // Show checkout button
-            document.getElementById("status-message").textContent = "Indtjekning registreret!";
-        }
-
         function checkOut() {
-            const time = new Date().toLocaleString();
-            postToDiscord(`${currentUser} checked out at ${time}`);
-            document.getElementById("check-out-btn").style.display = "none"; // Hide checkout button
-            document.getElementById("status-message").textContent = "Udtjekning registreret!";
+            if (isCheckedIn) {
+                logCheckOut();
+                isCheckedIn = false; // Reset the check-in status
+                document.getElementById("welcome-message").textContent = ""; // Clear welcome message
+                document.getElementById("staff-content").style.display = "none"; // Hide staff content
+            } else {
+                document.getElementById("error-message").textContent = "Du er ikke tjekket ind.";
+            }
         }
 
-        function saveNotes() {
-            const notes = document.getElementById("noteArea").value;
-            setCookie("staffNotes", notes, 365);
-            document.getElementById("success-message").textContent = "Noter gemt!";
+        function logCheckIn(userName) {
+            const currentTime = new Date().toLocaleString();
+            const message = `${userName} tjekkede ind kl. ${currentTime}`;
+            sendToDiscord(message); // Send check-in message to Discord webhook
+        }
+
+        function logCheckOut() {
+            const currentTime = new Date().toLocaleString();
+            const message = `${userName} tjekkede ud kl. ${currentTime}`;
+            sendToDiscord(message); // Send check-out message to Discord webhook
         }
 
         function submitIdea() {
             const idea = document.getElementById("ideaInput").value;
-            postToDiscord(`Ny idé fra ${currentUser}: ${idea}`);
-            document.getElementById("idea-message").textContent = "Din ide er sendt!";
+            if (idea) {
+                sendToDiscord(`Idé: ${idea}`); // Send idea to Discord webhook
+                document.getElementById("idea-message").textContent = "Idé sendt!";
+                document.getElementById("ideaInput").value = ""; // Clear input field
+            } else {
+                document.getElementById("idea-message").textContent = "Indtast en idé, før du sender.";
+            }
         }
 
-        function postToDiscord(message) {
-            fetch("https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb", {
+        function saveNotes() {
+            const notes = document.getElementById("noteArea").value;
+            setCookie("staffNotes", notes, 7); // Save notes in cookies for 7 days
+            document.getElementById("success-message").textContent = "Noter gemt!";
+        }
+
+        function sendToDiscord(message) {
+            // Replace with your Discord webhook URL
+            const webhookUrl = "https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb";
+            fetch(webhookUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ content: message })
-            }).catch(error => console.error("Discord webhook fejlede:", error));
+            }).then(response => {
+                if (!response.ok) {
+                    console.error("Error sending message to Discord:", response);
+                }
+            }).catch(error => console.error("Fetch error:", error));
         }
 
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+        // Cookie management functions
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
 
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let c of ca) {
-                while (c.charAt(0) === ' ') c = c.substring(1);
-                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
+        function getCookie(cname) {
+            const name = cname + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
             }
-            return null;
+            return "";
+        }
+
+        function closePopup() {
+            document.getElementById("nfc-popup").style.display = "none";
+            authenticateUsingNFC(); // Call the NFC authentication when the popup is closed
         }
     </script>
 </body>
