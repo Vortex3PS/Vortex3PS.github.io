@@ -213,6 +213,7 @@
             postToDiscord(`${currentUser} checked out at ${time}`);
             document.getElementById("check-out-btn").style.display = "none"; // Hide checkout button
             document.getElementById("status-message").textContent = "Udtjekning registreret!";
+            document.getElementById("staff-content").style.display = "none"; // Hide staff content
         }
 
         function saveNotes() {
@@ -229,7 +230,7 @@
 
         function postToDiscord(message) {
             if (canSendToDiscord) {
-                canSendToDiscord = false; // Prevent further sends until cooldown
+                canSendToDiscord = false; // Prevent further messages until cooldown
                 fetch("https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb", {
                     method: "POST",
                     headers: {
