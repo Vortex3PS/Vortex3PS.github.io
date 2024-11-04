@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Login with NFC</title>
+    <style>#staff-content { display: none; }</style>
+</head>
+<body>
+    <h1>Staff Login</h1>
+    <button onclick="authenticateUsingNFC()">Scan NFC</button>
+    <div id="staff-content">
+        <h2>Welcome to the Staff Page</h2>
+    </div>
+    <p id="error-message"></p>
+
+    <script>
+        // Define the expected staff ID to grant access
+        const authorizedStaffId = "STAFF123"; 
+
+        async function authenticateUsingNFC() {
+            if ('NDEFReader' in window) {
+                const nfcReader = new NDEFReader();
+                try {
+                    await nfcReader.scan();
+                    nfcReader.onreading = (event) => {
+                        const decoder = new TextDecoder();
+                        for (const record of event.message.records) {
+                            const nfcData = decoder.decode(record.data);
+
+                            if (nfcData === authorizedStaffId) {
+                                document.getElementById("staff-content").style.display = "block";
+                                document.getElementById("error-message").textContent = "";
+                            } else {
+                                document.getElementById("error-message").textContent = "Access denied.";
+                            }
+                        }
+                    };
+                } catch (error) {
+                    console.error("NFC scan error:", error);
+                    document.getElementById("error-message").textContent = "NFC scan failed.";
+                }
+            } else {
+                alert("NFC not supported on this device.");
+            }
+        }
+    </script>
+</body>
+</html>
