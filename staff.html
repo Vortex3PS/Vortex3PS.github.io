@@ -2,20 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Staff Login with NFC</title>
-    <style>#staff-content { display: none; }</style>
+    <title>Staff Note Taking</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 20px; }
+        #staff-content { display: none; }
+        #error-message { color: red; }
+        #noteArea { width: 80%; height: 200px; margin-top: 20px; }
+    </style>
 </head>
 <body>
     <h1>Staff Login</h1>
     <button onclick="authenticateUsingNFC()">Scan NFC</button>
+    
     <div id="staff-content">
         <h2>Welcome to the Staff Page</h2>
+        <textarea id="noteArea" placeholder="Type your notes here..."></textarea><br>
+        <button onclick="saveNotes()">Save Notes</button>
+        <p id="success-message" style="color: green;"></p>
     </div>
+
     <p id="error-message"></p>
 
     <script>
         // Define the expected staff ID to grant access
         const authorizedStaffId = "STAFF123"; 
+
+        // Load notes from cookies on page load
+        window.onload = function() {
+            const savedNotes = getCookie("staffNotes");
+            if (savedNotes) {
+                document.getElementById("noteArea").value = savedNotes;
+            }
+        };
 
         async function authenticateUsingNFC() {
             if ('NDEFReader' in window) {
@@ -26,12 +44,13 @@
                         const decoder = new TextDecoder();
                         for (const record of event.message.records) {
                             const nfcData = decoder.decode(record.data);
-
+                            
                             if (nfcData === authorizedStaffId) {
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
                             } else {
                                 document.getElementById("error-message").textContent = "Access denied.";
+                                document.getElementById("staff-content").style.display = "none";
                             }
                         }
                     };
@@ -42,6 +61,33 @@
             } else {
                 alert("NFC not supported on this device.");
             }
+        }
+
+        function saveNotes() {
+            const notes = document.getElementById("noteArea").value;
+            setCookie("staffNotes", notes, 365); // Save notes in a cookie for a year
+            document.getElementById("success-message").textContent = "Notes saved successfully!";
+        }
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
         }
     </script>
 </body>
