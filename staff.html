@@ -142,7 +142,7 @@
                                 document.getElementById("error-message").textContent = "";
                                 closePopup(); // Close the popup on successful scan
                             } else {
-                                document.getElementById("error-message").textContent = "Access denied.";
+                                document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
                                 closePopup(); // Close the popup on unsuccessful scan
                             }
@@ -154,7 +154,7 @@
                     closePopup(); // Close the popup on scan failure
                 }
             } else {
-                alert("NFC not supported on this device.");
+                alert("NFC er ikke underst&oslash;tet.");
                 closePopup(); // Close the popup if NFC is not supported
             }
         }
@@ -162,7 +162,7 @@
         function saveNotes() {
             const notes = document.getElementById("noteArea").value;
             setCookie("staffNotes", notes, 365); // Save notes in a cookie for 365 days (1 year)
-            document.getElementById("success-message").textContent = "Notes saved successfully!";
+            document.getElementById("success-message").textContent = "Noter gemt!";
         }
 
         function closePopup() {
