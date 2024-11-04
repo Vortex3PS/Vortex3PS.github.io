@@ -15,7 +15,7 @@
     <button onclick="authenticateUsingNFC()">Scan NFC</button>
     
     <div id="staff-content">
-        <h2>Welcome to the Staff Page</h2>
+        <h2 id="welcome-message"></h2>
         <textarea id="noteArea" placeholder="Type your notes here..."></textarea><br>
         <button onclick="saveNotes()">Save Notes</button>
         <p id="success-message" style="color: green;"></p>
@@ -24,8 +24,12 @@
     <p id="error-message"></p>
 
     <script>
-        // Define the expected staff ID to grant access
-        const authorizedStaffId = "STAFF123"; 
+        // Define the expected staff IDs and their corresponding names
+        const authorizedStaffIds = {
+            "Vortex3PS-Pass-Owner-Markus": "Markus",
+            "Vortex3PS-Pass-Co-Owner-Rani": "Rani",
+            "Vortex3PS-Pass-Staff": "Staff"
+        };
 
         // Load notes from cookies on page load
         window.onload = function() {
@@ -45,7 +49,9 @@
                         for (const record of event.message.records) {
                             const nfcData = decoder.decode(record.data);
                             
-                            if (nfcData === authorizedStaffId) {
+                            if (authorizedStaffIds[nfcData]) {
+                                const userName = authorizedStaffIds[nfcData];
+                                document.getElementById("welcome-message").textContent = `Welcome ${userName} to the staff page`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
                             } else {
@@ -65,7 +71,7 @@
 
         function saveNotes() {
             const notes = document.getElementById("noteArea").value;
-            setCookie("staffNotes", notes, 365); // Save notes in a cookie for a year
+            setCookie("staffNotes", notes, 365); // Save notes in a cookie for 365 days (1 year)
             document.getElementById("success-message").textContent = "Notes saved successfully!";
         }
 
