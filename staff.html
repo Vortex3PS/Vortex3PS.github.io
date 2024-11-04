@@ -143,6 +143,7 @@
         };
 
         let isCheckedIn = false; // Flag to track check-in status
+        let currentUserName = ""; // Store the current user's name
 
         // Load notes from cookies on page load
         window.onload = function() {
@@ -168,8 +169,8 @@
                             const nfcData = decoder.decode(record.data);
                             
                             if (authorizedStaffIds[nfcData]) {
-                                const userName = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Velkommen ${userName} til personale note siden`;
+                                currentUserName = authorizedStaffIds[nfcData];
+                                document.getElementById("welcome-message").textContent = `Velkommen ${currentUserName} til personale note siden`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
                                 closePopup(); // Close the popup on successful scan
@@ -177,7 +178,7 @@
                                 // Check-in logic
                                 if (!isCheckedIn) {
                                     isCheckedIn = true;
-                                    logCheckIn(userName);
+                                    logCheckIn(currentUserName);
                                 } else {
                                     document.getElementById("error-message").textContent = "Du er allerede tjekket ind.";
                                 }
@@ -218,7 +219,7 @@
 
         function logCheckOut() {
             const currentTime = new Date().toLocaleString();
-            const message = `${userName} tjekkede ud kl. ${currentTime}`;
+            const message = `${currentUserName} tjekkede ud kl. ${currentTime}`;
             sendToDiscord(message); // Send check-out message to Discord webhook
         }
 
@@ -235,13 +236,13 @@
 
         function saveNotes() {
             const notes = document.getElementById("noteArea").value;
-            setCookie("staffNotes", notes, 7); // Save notes in cookies for 7 days
+            setCookie("staffNotes", notes, 365); // Save notes in cookies for 365 days
             document.getElementById("success-message").textContent = "Noter gemt!";
         }
 
         function sendToDiscord(message) {
             // Replace with your Discord webhook URL
-            const webhookUrl = "https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb";
+            const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL";
             fetch(webhookUrl, {
                 method: "POST",
                 headers: {
