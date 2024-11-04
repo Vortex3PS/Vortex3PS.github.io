@@ -4,16 +4,66 @@
     <meta charset="UTF-8">
     <title>Staff Note Taking</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 20px; }
-        #staff-content { display: none; }
-        #error-message { color: red; }
-        #noteArea { width: 80%; height: 200px; margin-top: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #staff-content {
+            display: none;
+        }
+        #error-message {
+            color: red;
+        }
+        #noteArea {
+            width: 80%;
+            height: 200px;
+            margin-top: 20px;
+        }
+        /* Popup styles */
+        #nfc-popup {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
+            text-align: center;
+        }
+        #popup-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 10px;
+        }
+        #close-popup {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h1>Staff Login</h1>
     <button onclick="authenticateUsingNFC()">Scan NFC</button>
     
+    <div id="nfc-popup">
+        <div id="popup-content">
+            <h2>Scan NFC Card</h2>
+            <p>Place the card on the back of the phone.</p>
+            <button id="close-popup" onclick="closePopup()">Cancel</button>
+        </div>
+    </div>
+
     <div id="staff-content">
         <h2 id="welcome-message"></h2>
         <textarea id="noteArea" placeholder="Type your notes here..."></textarea><br>
@@ -40,6 +90,9 @@
         };
 
         async function authenticateUsingNFC() {
+            // Show the NFC prompt popup
+            document.getElementById("nfc-popup").style.display = "block";
+
             if ('NDEFReader' in window) {
                 const nfcReader = new NDEFReader();
                 try {
@@ -54,18 +107,22 @@
                                 document.getElementById("welcome-message").textContent = `Welcome ${userName} to the staff page`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
+                                closePopup(); // Close the popup on successful scan
                             } else {
                                 document.getElementById("error-message").textContent = "Access denied.";
                                 document.getElementById("staff-content").style.display = "none";
+                                closePopup(); // Close the popup on unsuccessful scan
                             }
                         }
                     };
                 } catch (error) {
                     console.error("NFC scan error:", error);
                     document.getElementById("error-message").textContent = "NFC scan failed.";
+                    closePopup(); // Close the popup on scan failure
                 }
             } else {
                 alert("NFC not supported on this device.");
+                closePopup(); // Close the popup if NFC is not supported
             }
         }
 
@@ -73,6 +130,10 @@
             const notes = document.getElementById("noteArea").value;
             setCookie("staffNotes", notes, 365); // Save notes in a cookie for 365 days (1 year)
             document.getElementById("success-message").textContent = "Notes saved successfully!";
+        }
+
+        function closePopup() {
+            document.getElementById("nfc-popup").style.display = "none"; // Hide the popup
         }
 
         function setCookie(name, value, days) {
