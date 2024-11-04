@@ -63,7 +63,6 @@
         #check-out-btn:hover {
             background-color: #d32f2f;
         }
-        /* Popup styles */
         #nfc-popup {
             display: none; /* Hidden by default */
             position: fixed;
@@ -102,12 +101,12 @@
 </head>
 <body>
     <h1>Personale Login</h1>
-    <button onclick="openNfcPopup()">Scan Kort</button>
+    <button onclick="openNFCPopup()">Scan Kort</button>
     
     <div id="nfc-popup">
         <div id="popup-content">
             <h2>Scan Kort</h2>
-            <p>Placer kortet tæt på telefonen.</p>
+            <p>Placer kortet bag på telefonen.</p>
             <button id="close-popup" onclick="closePopup()">Afbryd</button>
         </div>
     </div>
@@ -117,35 +116,41 @@
 
         <!-- Fixed Announcement Section (Editable Directly in HTML) -->
         <h3>Seneste Annoncering</h3>
-        <p id="announcementMessage">Her kan du skrive dine annonceringer til personalet.</p>
+        <p id="announcementMessage">
+            Vær venlig at udfylde alle noter og ideer inden arbejdsdagens slutning.
+        </p>
 
-        <!-- Notes and Ideas Input -->
+        <!-- Note-taking area -->
         <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea><br>
         <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
 
-        <h3>Tilføj Ideer</h3>
-        <input type="text" id="ideaInput" placeholder="Skriv din idé her...">
-        <button onclick="submitIdea()">Send Idé</button>
+        <!-- Ideas Submission Section -->
+        <h3>Indsend Ide</h3>
+        <input type="text" id="ideaInput" placeholder="Skriv din ide her..."><br>
+        <button onclick="submitIdea()">Indsend ide</button>
         <p id="idea-message" style="color: green;"></p>
 
-        <button id="check-out-btn" onclick="checkOut()">Udtjek</button>
+        <!-- Checkout Button -->
+        <p>
+            <button onclick="checkOut()" id="check-out-btn" style="display: none;">Udtjek</button>
+        </p>
+        
+        <p id="status-message" style="color: green;"></p>
     </div>
 
     <p id="error-message"></p>
 
     <script>
-        // Define the expected staff IDs and their corresponding names
         const authorizedStaffIds = {
             "Vortex3PS-Pass-Owner-Markus": "Markus",
             "Vortex3PS-Pass-Co-Owner-Rani": "Rani",
             "Vortex3PS-Pass-Staff": "Staff"
         };
+        let currentUser = "";
+        let canSendToDiscord = true; // Cooldown flag
+        const cooldownTime = 3000; // 3 seconds cooldown
 
-        let isCheckedIn = false; // Flag to track check-in status
-        let currentUserName = ""; // Store the current user's name
-
-        // Load notes from cookies on page load
         window.onload = function() {
             const savedNotes = getCookie("staffNotes");
             if (savedNotes) {
@@ -153,9 +158,13 @@
             }
         };
 
-        function openNfcPopup() {
-            // Show the NFC prompt popup
-            document.getElementById("nfc-popup").style.display = "block";
+        function openNFCPopup() {
+            document.getElementById("nfc-popup").style.display = "block"; // Show the NFC popup
+            authenticateUsingNFC();
+        }
+
+        function closePopup() {
+            document.getElementById("nfc-popup").style.display = "none"; // Hide the popup
         }
 
         async function authenticateUsingNFC() {
@@ -167,21 +176,13 @@
                         const decoder = new TextDecoder();
                         for (const record of event.message.records) {
                             const nfcData = decoder.decode(record.data);
-                            
                             if (authorizedStaffIds[nfcData]) {
-                                currentUserName = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Velkommen ${currentUserName} til personale note siden`;
+                                currentUser = authorizedStaffIds[nfcData];
+                                document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
-                                closePopup(); // Close the popup on successful scan
-
-                                // Check-in logic
-                                if (!isCheckedIn) {
-                                    isCheckedIn = true;
-                                    logCheckIn(currentUserName);
-                                } else {
-                                    document.getElementById("error-message").textContent = "Du er allerede tjekket ind.";
-                                }
+                                checkIn(); // Auto check-in on successful login
+                                closePopup(); // Close the NFC popup after successful login
                             } else {
                                 document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
@@ -200,89 +201,70 @@
             }
         }
 
+        function checkIn() {
+            const time = new Date().toLocaleString();
+            postToDiscord(`${currentUser} checked in at ${time}`);
+            document.getElementById("check-out-btn").style.display = "inline"; // Show checkout button
+            document.getElementById("status-message").textContent = "Indtjekning registreret!";
+        }
+
         function checkOut() {
-            if (isCheckedIn) {
-                logCheckOut();
-                isCheckedIn = false; // Reset the check-in status
-                document.getElementById("welcome-message").textContent = ""; // Clear welcome message
-                document.getElementById("staff-content").style.display = "none"; // Hide staff content
-            } else {
-                document.getElementById("error-message").textContent = "Du er ikke tjekket ind.";
-            }
-        }
-
-        function logCheckIn(userName) {
-            const currentTime = new Date().toLocaleString();
-            const message = `${userName} tjekkede ind kl. ${currentTime}`;
-            sendToDiscord(message); // Send check-in message to Discord webhook
-        }
-
-        function logCheckOut() {
-            const currentTime = new Date().toLocaleString();
-            const message = `${currentUserName} tjekkede ud kl. ${currentTime}`;
-            sendToDiscord(message); // Send check-out message to Discord webhook
-        }
-
-        function submitIdea() {
-            const idea = document.getElementById("ideaInput").value;
-            if (idea) {
-                sendToDiscord(`Idé: ${idea}`); // Send idea to Discord webhook
-                document.getElementById("idea-message").textContent = "Idé sendt!";
-                document.getElementById("ideaInput").value = ""; // Clear input field
-            } else {
-                document.getElementById("idea-message").textContent = "Indtast en idé, før du sender.";
-            }
+            const time = new Date().toLocaleString();
+            postToDiscord(`${currentUser} checked out at ${time}`);
+            document.getElementById("check-out-btn").style.display = "none"; // Hide checkout button
+            document.getElementById("status-message").textContent = "Udtjekning registreret!";
         }
 
         function saveNotes() {
             const notes = document.getElementById("noteArea").value;
-            setCookie("staffNotes", notes, 365); // Save notes in cookies for 365 days
+            setCookie("staffNotes", notes, 365);
             document.getElementById("success-message").textContent = "Noter gemt!";
         }
 
-        function sendToDiscord(message) {
-            // Replace with your Discord webhook URL
-            const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL";
-            fetch(webhookUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ content: message })
-            }).then(response => {
-                if (!response.ok) {
-                    console.error("Error sending message to Discord:", response);
-                }
-            }).catch(error => console.error("Fetch error:", error));
+        function submitIdea() {
+            const idea = document.getElementById("ideaInput").value;
+            postToDiscord(`Ny idé fra ${currentUser}: ${idea}`);
+            document.getElementById("idea-message").textContent = "Din ide er sendt!";
         }
 
-        // Cookie management functions
-        function setCookie(cname, cvalue, exdays) {
-            const d = new Date();
-            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-            const expires = "expires=" + d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-
-        function getCookie(cname) {
-            const name = cname + "=";
-            const decodedCookie = decodeURIComponent(document.cookie);
-            const ca = decodedCookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
+        function postToDiscord(message) {
+            if (canSendToDiscord) {
+                canSendToDiscord = false; // Prevent further sends until cooldown
+                fetch("YOUR_DISCORD_WEBHOOK_URL", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ content: message })
+                }).then(() => {
+                    // Reset cooldown after the specified time
+                    setTimeout(() => {
+                        canSendToDiscord = true; // Allow sending again
+                    }, cooldownTime);
+                }).catch(error => console.error("Discord webhook fejlede:", error));
+            } else {
+                console.log("Webhook cooldown: Please wait before sending another message.");
             }
-            return "";
         }
 
-        function closePopup() {
-            document.getElementById("nfc-popup").style.display = "none";
-            authenticateUsingNFC(); // Call the NFC authentication when the popup is closed
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let c of ca) {
+                while (c.charAt(0) === ' ') c = c.substring(1);
+                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
+            }
+            return null;
         }
     </script>
 </body>
