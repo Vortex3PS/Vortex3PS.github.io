@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <title>Vortex Personale Noter</title>
@@ -8,80 +8,52 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 20px;
-            background-color: #f4f4f4; /* Light background color */
-            color: #333; /* Darker text for better readability */
+            background-color: #f4f4f4;
+            color: #333;
         }
         #staff-content {
             display: none;
             margin-top: 20px;
             padding: 20px;
-            border: 2px solid #4CAF50; /* Green border */
-            border-radius: 10px; /* Rounded corners */
-            background-color: #fff; /* White background for staff content */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         #error-message {
             color: red;
         }
         #noteArea {
-            width: 90%; /* Increased width */
-            height: 1000px; /* Increased height */
+            width: 90%;
+            height: 150px;
             margin-top: 20px;
-            padding: 10px; /* Padding inside the text area */
-            border: 2px solid #ccc; /* Light gray border */
-            border-radius: 5px; /* Rounded corners */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            font-size: 16px; /* Larger font size */
-            resize: none; /* Disable resizing */
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            resize: none;
         }
-        /* Button styles */
+        #ideaInput {
+            width: 90%;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
         button {
-            background-color: #4CAF50; /* Green */
+            background-color: #4CAF50;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s; /* Smooth transition */
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #45a049; /* Darker green on hover */
-        }
-        /* Popup styles */
-        #nfc-popup {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
-            text-align: center;
-        }
-        #popup-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 300px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for popup */
-        }
-        #close-popup {
-            background-color: #f44336; /* Red for cancel button */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px; /* Space above button */
-        }
-        #close-popup:hover {
-            background-color: #d32f2f; /* Darker red on hover */
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -89,32 +61,46 @@
     <h1>Personale Login</h1>
     <button onclick="authenticateUsingNFC()">Scan Kort</button>
     
-    <div id="nfc-popup">
-        <div id="popup-content">
-            <h2>Scan Kort</h2>
-            <p>Placer kortet bag på telefonenen.</p>
-            <button id="close-popup" onclick="closePopup()">Afbryd</button>
-        </div>
-    </div>
-
     <div id="staff-content">
         <h2 id="welcome-message"></h2>
+
+        <!-- Fixed Announcement Section (Editable Directly in HTML) -->
+        <h3>Seneste Annoncering</h3>
+        <p id="announcementMessage">
+            Vær venlig at udfylde alle noter og ideer inden arbejdsdagens slutning.
+        </p>
+
+        <!-- Note-taking area -->
         <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea><br>
         <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
+
+        <!-- Ideas Submission Section -->
+        <h3>Indsend Ide</h3>
+        <input type="text" id="ideaInput" placeholder="Skriv din ide her..."><br>
+        <button onclick="submitIdea()">Indsend ide</button>
+        <p id="idea-message" style="color: green;"></p>
+
+        <!-- Check-in and Check-out Buttons -->
+        <p>
+            <button onclick="checkIn()" id="check-in-btn">Indtjek</button>
+            <button onclick="checkOut()" id="check-out-btn" style="display: none;">Udtjek</button>
+        </p>
+        
+        <p id="status-message" style="color: green;"></p>
     </div>
 
     <p id="error-message"></p>
 
     <script>
-        // Define the expected staff IDs and their corresponding names
         const authorizedStaffIds = {
             "Vortex3PS-Pass-Owner-Markus": "Markus",
             "Vortex3PS-Pass-Co-Owner-Rani": "Rani",
             "Vortex3PS-Pass-Staff": "Staff"
         };
+        let currentUser = "";
+        let userType = ""; // "Owner", "Co-Owner", or "Staff" with a name
 
-        // Load notes from cookies on page load
         window.onload = function() {
             const savedNotes = getCookie("staffNotes");
             if (savedNotes) {
@@ -123,9 +109,6 @@
         };
 
         async function authenticateUsingNFC() {
-            // Show the NFC prompt popup
-            document.getElementById("nfc-popup").style.display = "block";
-
             if ('NDEFReader' in window) {
                 const nfcReader = new NDEFReader();
                 try {
@@ -134,39 +117,63 @@
                         const decoder = new TextDecoder();
                         for (const record of event.message.records) {
                             const nfcData = decoder.decode(record.data);
-                            
                             if (authorizedStaffIds[nfcData]) {
-                                const userName = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Velkommen ${userName} til personale note siden`;
+                                currentUser = authorizedStaffIds[nfcData];
+                                userType = nfcData.includes("Staff") ? "Staff" : "Owner/Co-Owner";
+                                document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
-                                closePopup(); // Close the popup on successful scan
                             } else {
                                 document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
-                                closePopup(); // Close the popup on unsuccessful scan
                             }
                         }
                     };
                 } catch (error) {
                     console.error("NFC scan error:", error);
                     document.getElementById("error-message").textContent = "NFC scan fejlede.";
-                    closePopup(); // Close the popup on scan failure
                 }
             } else {
-                alert("NFC er ikke underst&oslash;tet.");
-                closePopup(); // Close the popup if NFC is not supported
+                alert("NFC er ikke understøttet.");
             }
+        }
+
+        function checkIn() {
+            const time = new Date().toLocaleString();
+            postToDiscord(`${currentUser} checked in at ${time}`);
+            document.getElementById("check-in-btn").style.display = "none";
+            document.getElementById("check-out-btn").style.display = "inline";
+            document.getElementById("status-message").textContent = "Indtjekning registreret!";
+        }
+
+        function checkOut() {
+            const time = new Date().toLocaleString();
+            postToDiscord(`${currentUser} checked out at ${time}`);
+            document.getElementById("check-in-btn").style.display = "inline";
+            document.getElementById("check-out-btn").style.display = "none";
+            document.getElementById("status-message").textContent = "Udtjekning registreret!";
         }
 
         function saveNotes() {
             const notes = document.getElementById("noteArea").value;
-            setCookie("staffNotes", notes, 365); // Save notes in a cookie for 365 days (1 year)
+            setCookie("staffNotes", notes, 365);
             document.getElementById("success-message").textContent = "Noter gemt!";
         }
 
-        function closePopup() {
-            document.getElementById("nfc-popup").style.display = "none"; // Hide the popup
+        function submitIdea() {
+            const idea = document.getElementById("ideaInput").value;
+            postToDiscord(`Ny idé fra ${currentUser}: ${idea}`);
+            document.getElementById("idea-message").textContent = "Din ide er sendt!";
+        }
+
+        function postToDiscord(message) {
+            fetch("YOUR_DISCORD_WEBHOOK_URL", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ content: message })
+            }).catch(error => console.error("Discord webhook fejlede:", error));
         }
 
         function setCookie(name, value, days) {
@@ -176,17 +183,15 @@
                 date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
                 expires = "; expires=" + date.toUTCString();
             }
-            // Encode the cookie value to ensure it handles all characters
             document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
         }
 
         function getCookie(name) {
             const nameEQ = name + "=";
             const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length)); // Decode the cookie value
+            for (let c of ca) {
+                while (c.charAt(0) === ' ') c = c.substring(1);
+                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
             }
             return null;
         }
