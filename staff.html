@@ -55,6 +55,14 @@
         button:hover {
             background-color: #45a049;
         }
+        #check-out-btn {
+            background-color: #f44336;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        #check-out-btn:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -81,9 +89,8 @@
         <button onclick="submitIdea()">Indsend ide</button>
         <p id="idea-message" style="color: green;"></p>
 
-        <!-- Check-in and Check-out Buttons -->
+        <!-- Checkout Button -->
         <p>
-            <button onclick="checkIn()" id="check-in-btn">Indtjek</button>
             <button onclick="checkOut()" id="check-out-btn" style="display: none;">Udtjek</button>
         </p>
         
@@ -99,7 +106,6 @@
             "Vortex3PS-Pass-Staff": "Staff"
         };
         let currentUser = "";
-        let userType = ""; // "Owner", "Co-Owner", or "Staff" with a name
 
         window.onload = function() {
             const savedNotes = getCookie("staffNotes");
@@ -119,10 +125,10 @@
                             const nfcData = decoder.decode(record.data);
                             if (authorizedStaffIds[nfcData]) {
                                 currentUser = authorizedStaffIds[nfcData];
-                                userType = nfcData.includes("Staff") ? "Staff" : "Owner/Co-Owner";
                                 document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
+                                checkIn(); // Auto check-in on successful login
                             } else {
                                 document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
@@ -141,16 +147,14 @@
         function checkIn() {
             const time = new Date().toLocaleString();
             postToDiscord(`${currentUser} checked in at ${time}`);
-            document.getElementById("check-in-btn").style.display = "none";
-            document.getElementById("check-out-btn").style.display = "inline";
+            document.getElementById("check-out-btn").style.display = "inline"; // Show checkout button
             document.getElementById("status-message").textContent = "Indtjekning registreret!";
         }
 
         function checkOut() {
             const time = new Date().toLocaleString();
             postToDiscord(`${currentUser} checked out at ${time}`);
-            document.getElementById("check-in-btn").style.display = "inline";
-            document.getElementById("check-out-btn").style.display = "none";
+            document.getElementById("check-out-btn").style.display = "none"; // Hide checkout button
             document.getElementById("status-message").textContent = "Udtjekning registreret!";
         }
 
@@ -167,7 +171,7 @@
         }
 
         function postToDiscord(message) {
-            fetch("YOUR_DISCORD_WEBHOOK_URL", {
+            fetch("https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
