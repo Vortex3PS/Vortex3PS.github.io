@@ -137,7 +137,7 @@
                             
                             if (authorizedStaffIds[nfcData]) {
                                 const userName = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Velkommen ${userName} til the personale note siden`;
+                                document.getElementById("welcome-message").textContent = `Velkommen ${userName} til personale note siden`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
                                 closePopup(); // Close the popup on successful scan
