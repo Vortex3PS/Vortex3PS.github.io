@@ -85,18 +85,6 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for popup */
         }
-        #close-popup {
-            background-color: #f44336; /* Red for cancel button */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px; /* Space above button */
-        }
-        #close-popup:hover {
-            background-color: #d32f2f; /* Darker red on hover */
-        }
     </style>
 </head>
 <body>
@@ -148,8 +136,8 @@
             "Vortex3PS-Pass-Staff": "Staff"
         };
         let currentUser = "";
-        let canSendToDiscord = true; // Cooldown flag
-        const cooldownTime = 3000; // 3 seconds cooldown
+        let lastDiscordPostTime = 0; // To control the cooldown for Discord posts
+        const DISCORD_COOLDOWN_MS = 3000; // 3 seconds cooldown
 
         window.onload = function() {
             const savedNotes = getCookie("staffNotes");
@@ -159,7 +147,7 @@
         };
 
         function openNFCPopup() {
-            document.getElementById("nfc-popup").style.display = "block"; // Show the NFC popup
+            document.getElementById("nfc-popup").style.display = "block"; // Show NFC popup
             authenticateUsingNFC();
         }
 
@@ -182,26 +170,29 @@
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
                                 checkIn(); // Auto check-in on successful login
-                                closePopup(); // Close the NFC popup after successful login
                             } else {
                                 document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
-                                closePopup(); // Close the popup on unsuccessful scan
                             }
                         }
                     };
                 } catch (error) {
                     console.error("NFC scan error:", error);
                     document.getElementById("error-message").textContent = "NFC scan fejlede.";
-                    closePopup(); // Close the popup on scan failure
                 }
             } else {
                 alert("NFC er ikke understøttet.");
-                closePopup(); // Close the popup if NFC is not supported
             }
         }
 
         function checkIn() {
+            if (currentUser === "Staff") {
+                const staffName = prompt("Indtast dit navn for indtjekning:");
+                if (staffName) {
+                    currentUser = staffName; // Update currentUser to staffName
+                }
+            }
+
             const time = new Date().toLocaleString();
             postToDiscord(`${currentUser} checked in at ${time}`);
             document.getElementById("check-out-btn").style.display = "inline"; // Show checkout button
@@ -212,8 +203,9 @@
             const time = new Date().toLocaleString();
             postToDiscord(`${currentUser} checked out at ${time}`);
             document.getElementById("check-out-btn").style.display = "none"; // Hide checkout button
-            document.getElementById("status-message").textContent = "Udtjekning registreret!";
+            document.getElementById("welcome-message").style.display = "none"; // Hide welcome message
             document.getElementById("staff-content").style.display = "none"; // Hide staff content
+            document.getElementById("status-message").textContent = "Udtjekning registreret!";
         }
 
         function saveNotes() {
@@ -229,22 +221,18 @@
         }
 
         function postToDiscord(message) {
-            if (canSendToDiscord) {
-                canSendToDiscord = false; // Prevent further messages until cooldown
+            const currentTime = new Date().getTime();
+            if (currentTime - lastDiscordPostTime >= DISCORD_COOLDOWN_MS) {
+                lastDiscordPostTime = currentTime; // Update the last post time
                 fetch("https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ content: message })
-                }).then(() => {
-                    // Reset cooldown after the specified time
-                    setTimeout(() => {
-                        canSendToDiscord = true; // Allow sending again
-                    }, cooldownTime);
                 }).catch(error => console.error("Discord webhook fejlede:", error));
             } else {
-                console.log("Webhook cooldown: Please wait before sending another message.");
+                console.log("Cooldown aktiv; vent venligst 3 sekunder mellem beskeder.");
             }
         }
 
