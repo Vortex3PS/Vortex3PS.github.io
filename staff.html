@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Staff Note Taking</title>
+    <title>Vortex Personale Noter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,16 +91,16 @@
     
     <div id="nfc-popup">
         <div id="popup-content">
-            <h2>Scan NFC Card</h2>
-            <p>Place the card on the back of the phone.</p>
+            <h2>Scan Kort</h2>
+            <p>Placer kortet bag på telefonenen.</p>
             <button id="close-popup" onclick="closePopup()">Cancel</button>
         </div>
     </div>
 
     <div id="staff-content">
         <h2 id="welcome-message"></h2>
-        <textarea id="noteArea" placeholder="Type your notes here..."></textarea><br>
-        <button onclick="saveNotes()">Save Notes</button>
+        <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea><br>
+        <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
     </div>
 
@@ -137,7 +137,7 @@
                             
                             if (authorizedStaffIds[nfcData]) {
                                 const userName = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Welcome ${userName} to the staff page`;
+                                document.getElementById("welcome-message").textContent = `Velkommen ${userName} til the personale note siden`;
                                 document.getElementById("staff-content").style.display = "block";
                                 document.getElementById("error-message").textContent = "";
                                 closePopup(); // Close the popup on successful scan
@@ -150,7 +150,7 @@
                     };
                 } catch (error) {
                     console.error("NFC scan error:", error);
-                    document.getElementById("error-message").textContent = "NFC scan failed.";
+                    document.getElementById("error-message").textContent = "NFC scan fejlede.";
                     closePopup(); // Close the popup on scan failure
                 }
             } else {
