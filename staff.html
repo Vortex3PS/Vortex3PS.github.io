@@ -230,7 +230,7 @@
         function postToDiscord(message) {
             if (canSendToDiscord) {
                 canSendToDiscord = false; // Prevent further sends until cooldown
-                fetch("YOUR_DISCORD_WEBHOOK_URL", {
+                fetch("https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
