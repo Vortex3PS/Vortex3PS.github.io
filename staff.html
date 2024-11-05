@@ -85,12 +85,42 @@
             text-align: left;
             margin: 20px auto;
             max-width: 300px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         #daily-tasks h3 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: #333;
         }
         .task-item {
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .task-item input[type="checkbox"] {
+            appearance: none;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .task-item input[type="checkbox"]:checked {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+        .task-item input[type="checkbox"]:checked:after {
+            content: '✔';
+            color: white;
+            font-size: 16px;
+            display: block;
+            text-align: center;
         }
     </style>
 </head>
@@ -136,9 +166,9 @@
         <!-- Daily Tasks Section -->
         <div id="daily-tasks">
             <h3>Dagsopgaver</h3>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Find en ny måde at få kunder </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Check announcements </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (Til 3d designers) find en ny god 3d printed ting </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemgå e-mails</div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Opdater statusrapporter</div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Deltag i møder</div>
             <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemfør opgaveliste</div>
         </div>
 
@@ -195,34 +225,29 @@
                 try {
                     await nfcReader.scan();
                     nfcReader.onreading = (event) => {
-                        const decoder = new TextDecoder();
-                        for (const record of event.message.records) {
-                            const nfcData = decoder.decode(record.data);
-                            if (authorizedStaffIds[nfcData]) {
-                                currentUser = authorizedStaffIds[nfcData];
-                                displayStaffContent();
-                                checkIn();
-                            } else {
-                                document.getElementById("error-message").textContent = "Ingen adgang.";
-                                document.getElementById("staff-content").style.display = "none";
-                            }
+                        const nfcId = event.message.records[0].data;
+                        const decodedId = new TextDecoder().decode(nfcId);
+                        if (authorizedStaffIds[decodedId]) {
+                            currentUser = authorizedStaffIds[decodedId];
+                            displayStaffContent();
+                        } else {
+                            document.getElementById("error-message").textContent = "Adgang nægtet.";
                         }
                     };
                 } catch (error) {
-                    document.getElementById("error-message").textContent = "NFC scan fejlede.";
+                    document.getElementById("error-message").textContent = "NFC-adgang mislykkedes.";
                 }
             } else {
-                alert("NFC er ikke understøttet.");
+                document.getElementById("error-message").textContent = "Din enhed understøtter ikke NFC.";
             }
         }
 
         function authenticatePassword() {
             const selectedName = document.getElementById("staffNames").value;
-            const enteredPassword = document.getElementById("passwordInput").value;
-            if (authorizedStaff[selectedName] && authorizedStaff[selectedName] === enteredPassword) {
+            const password = document.getElementById("passwordInput").value;
+            if (authorizedStaff[selectedName] === password) {
                 currentUser = selectedName;
                 displayStaffContent();
-                checkIn();
             } else {
                 document.getElementById("error-message").textContent = "Forkert adgangskode.";
             }
@@ -296,7 +321,8 @@
             const tasks = document.querySelectorAll('.task-checkbox');
             const allTasksComplete = Array.from(tasks).every(task => task.checked);
             if (allTasksComplete) {
-                postToDiscord(`${currentUser} has completed all daily tasks! Good job :D`);
+                postToDiscord(`${currentUser} har gennemført alle dagsopgaver!`);
+                document.getElementById("daily-tasks").style.display = "none"; // Hide daily tasks when complete
             }
         }
     </script>
