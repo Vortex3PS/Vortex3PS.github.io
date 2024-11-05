@@ -23,24 +23,18 @@
         #error-message {
             color: red;
         }
-        #noteArea {
+        #noteArea, #ideaInput {
             width: 90%;
-            height: 1000px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
             margin-top: 20px;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            resize: none;
         }
-        #ideaInput {
-            width: 90%;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
+        #noteArea {
+            height: 1000px;
+            resize: none;
         }
         button {
             background-color: #4CAF50;
@@ -51,6 +45,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -58,13 +53,12 @@
         #check-out-btn {
             background-color: #f44336;
             margin-top: 50px;
-            margin-bottom: 50px;
         }
         #check-out-btn:hover {
             background-color: #d32f2f;
         }
-        #nfc-popup {
-            display: none; /* Hidden by default */
+        #nfc-popup, #login-password-content {
+            display: none;
             position: fixed;
             z-index: 1;
             left: 0;
@@ -72,7 +66,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
+            background-color: rgba(0, 0, 0, 0.4);
             text-align: center;
         }
         #popup-content {
@@ -83,76 +77,94 @@
             width: 80%;
             max-width: 300px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for popup */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
     <h1>Personale Login</h1>
     <button onclick="openNFCPopup()">Scan Kort</button>
-    
+    <button onclick="openPasswordLogin()">Login med adgangskode</button>
+
     <div id="nfc-popup">
         <div id="popup-content">
             <h2>Scan Kort</h2>
             <p>Placer kortet bag på telefonen.</p>
-            <button id="close-popup" onclick="closePopup()">Afbryd</button>
+            <button onclick="closePopup()">Afbryd</button>
+        </div>
+    </div>
+
+    <div id="login-password-content">
+        <div id="popup-content">
+            <h2>Login med adgangskode</h2>
+            <label for="staffNames">Vælg dit navn:</label>
+            <select id="staffNames">
+                <option value="">--Vælg Navn--</option>
+                <option value="August">August</option>
+                <option value="William">William</option>
+                <option value="Jens">Jens</option>
+                <option value="Louelum">Louelum</option>
+                <option value="Oskar SS">Oskar SS</option>
+                <option value="Rani">Rani</option>
+                <option value="Markus">Markus</option>
+            </select>
+            <br><br>
+            <input type="password" id="passwordInput" placeholder="Indtast adgangskode">
+            <button onclick="authenticatePassword()">Log ind</button>
         </div>
     </div>
 
     <div id="staff-content">
         <h2 id="welcome-message"></h2>
 
-        <!-- Fixed Announcement Section (Editable Directly in HTML) -->
         <h2>Annoncering</h2>
-        <p id="announcementMessage">
-            Ingen annoncering.
-        </p>
+        <p id="announcementMessage">Ingen annoncering.</p>
 
-        <!-- Note-taking area -->
-        <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea><br>
+        <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea>
         <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
 
-        <!-- Ideas Submission Section -->
         <h3>Indsend Ide</h3>
-        <input type="text" id="ideaInput" placeholder="Skriv din ide her..."><br>
+        <input type="text" id="ideaInput" placeholder="Skriv din ide her...">
         <button onclick="submitIdea()">Indsend ide</button>
         <p id="idea-message" style="color: green;"></p>
 
-        <!-- Checkout Button -->
-        <p>
-            <button onclick="checkOut()" id="check-out-btn" style="display: none;">Udtjek</button>
-        </p>
-        
+        <button onclick="checkOut()" id="check-out-btn">Udtjek</button>
         <p id="status-message" style="color: green;"></p>
     </div>
 
     <p id="error-message"></p>
 
     <script>
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/your-webhook-url";
+        const authorizedStaff = {
+            "August": "Vortex3PS!StaffIsCool",
+            "William": "Vortex3PS!StaffIsCool",
+            "Jens": "Vortex3PS!StaffIsCool",
+            "Louelum": "Vortex3PS!StaffIsCool",
+            "Oskar SS": "Vortex3PS!StaffIsCool",
+            "Rani": "RaniAintHim!",
+            "Markus": "markushermansen"
+        };
         const authorizedStaffIds = {
             "Vortex3PS-Pass-Owner-Markus": "Markus",
             "Vortex3PS-Pass-Co-Owner-Rani": "Rani",
             "Vortex3PS-Pass-Staff": "Staff"
         };
         let currentUser = "";
-        let lastDiscordPostTime = 0; // To control the cooldown for Discord posts
-        const DISCORD_COOLDOWN_MS = 3000; // 3 seconds cooldown
-
-        window.onload = function() {
-            const savedNotes = getCookie("staffNotes");
-            if (savedNotes) {
-                document.getElementById("noteArea").value = savedNotes;
-            }
-        };
 
         function openNFCPopup() {
-            document.getElementById("nfc-popup").style.display = "block"; // Show NFC popup
+            document.getElementById("nfc-popup").style.display = "block";
             authenticateUsingNFC();
         }
 
+        function openPasswordLogin() {
+            document.getElementById("login-password-content").style.display = "block";
+        }
+
         function closePopup() {
-            document.getElementById("nfc-popup").style.display = "none"; // Hide the popup
+            document.getElementById("nfc-popup").style.display = "none";
+            document.getElementById("login-password-content").style.display = "none";
         }
 
         async function authenticateUsingNFC() {
@@ -166,10 +178,8 @@
                             const nfcData = decoder.decode(record.data);
                             if (authorizedStaffIds[nfcData]) {
                                 currentUser = authorizedStaffIds[nfcData];
-                                document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
-                                document.getElementById("staff-content").style.display = "block";
-                                document.getElementById("error-message").textContent = "";
-                                checkIn(); // Auto check-in on successful login
+                                displayStaffContent();
+                                checkIn();
                             } else {
                                 document.getElementById("error-message").textContent = "Ingen adgang.";
                                 document.getElementById("staff-content").style.display = "none";
@@ -177,7 +187,6 @@
                         }
                     };
                 } catch (error) {
-                    console.error("NFC scan error:", error);
                     document.getElementById("error-message").textContent = "NFC scan fejlede.";
                 }
             } else {
@@ -185,26 +194,37 @@
             }
         }
 
-        function checkIn() {
-            if (currentUser === "Staff") {
-                const staffName = prompt("Indtast dit navn for indtjekning:");
-                if (staffName) {
-                    currentUser = staffName; // Update currentUser to staffName
-                }
+        function authenticatePassword() {
+            const selectedName = document.getElementById("staffNames").value;
+            const enteredPassword = document.getElementById("passwordInput").value;
+            if (authorizedStaff[selectedName] && authorizedStaff[selectedName] === enteredPassword) {
+                currentUser = selectedName;
+                displayStaffContent();
+                checkIn();
+            } else {
+                document.getElementById("error-message").textContent = "Forkert adgangskode.";
             }
+        }
 
+        function displayStaffContent() {
+            document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
+            document.getElementById("staff-content").style.display = "block";
+            closePopup();
+        }
+
+        function checkIn() {
             const time = new Date().toLocaleString();
             postToDiscord(`${currentUser} checked in at ${time}`);
-            document.getElementById("check-out-btn").style.display = "inline"; // Show checkout button
+            document.getElementById("check-out-btn").style.display = "inline";
             document.getElementById("status-message").textContent = "Indtjekning registreret!";
         }
 
         function checkOut() {
             const time = new Date().toLocaleString();
             postToDiscord(`${currentUser} checked out at ${time}`);
-            document.getElementById("check-out-btn").style.display = "none"; // Hide checkout button
-            document.getElementById("welcome-message").style.display = "none"; // Hide welcome message
-            document.getElementById("staff-content").style.display = "none"; // Hide staff content
+            document.getElementById("check-out-btn").style.display = "none";
+            document.getElementById("welcome-message").style.display = "none";
+            document.getElementById("staff-content").style.display = "none";
             document.getElementById("status-message").textContent = "Udtjekning registreret!";
         }
 
@@ -221,19 +241,13 @@
         }
 
         function postToDiscord(message) {
-            const currentTime = new Date().getTime();
-            if (currentTime - lastDiscordPostTime >= DISCORD_COOLDOWN_MS) {
-                lastDiscordPostTime = currentTime; // Update the last post time
-                fetch("https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ content: message })
-                }).catch(error => console.error("Discord webhook fejlede:", error));
-            } else {
-                console.log("Cooldown aktiv; vent venligst 3 sekunder mellem beskeder.");
-            }
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ content: message })
+            }).catch(error => console.error("Discord webhook fejlede:", error));
         }
 
         function setCookie(name, value, days) {
