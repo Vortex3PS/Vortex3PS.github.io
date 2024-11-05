@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Vortex Personale Portal</title>
     <style>
+        /* Existing and new styles */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -79,6 +80,18 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+        /* New styles for daily tasks */
+        #daily-tasks {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+        #daily-tasks h3 {
+            margin-bottom: 10px;
+        }
+        .task-item {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -119,6 +132,15 @@
 
         <h2>Annoncering</h2>
         <p id="announcementMessage">Ingen annoncering.</p>
+
+        <!-- Daily Tasks Section -->
+        <div id="daily-tasks">
+            <h3>Dagsopgaver</h3>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Find en ny måde at få kunder </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Check announcements </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (Til 3d designers) find en ny god 3d printed ting </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemfør opgaveliste</div>
+        </div>
 
         <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea>
         <button onclick="saveNotes()">Gem noter</button>
@@ -268,6 +290,14 @@
                 if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
             }
             return null;
+        }
+
+        function checkAllTasks() {
+            const tasks = document.querySelectorAll('.task-checkbox');
+            const allTasksComplete = Array.from(tasks).every(task => task.checked);
+            if (allTasksComplete) {
+                postToDiscord(`${currentUser} has completed all daily tasks! Good job :D`);
+            }
         }
     </script>
 </body>
