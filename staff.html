@@ -5,6 +5,8 @@
     <title>Vortex Personale Portal</title>
     <style>
         /* Existing and new styles */
+
+        
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -122,6 +124,50 @@
             display: block;
             text-align: center;
         }
+
+/* Style for the popup container */
+#personale-politik-popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark background */
+    text-align: center;
+}
+
+/* Style for the popup content */
+#popup-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling the button to close the popup */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+        
     </style>
 </head>
 <body>
@@ -172,6 +218,26 @@
             <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemfør opgaveliste</div>
         </div>
 
+                <!-- Button to trigger Personale Politik popup -->
+        <button onclick="openPersonalePolitik()">Vis Personale Politik</button>
+
+<!-- The Pop-up for Personale Politik -->
+<div id="personale-politik-popup">
+    <div id="popup-content">
+        <h2>Personale Politik</h2>
+        <p>
+            Her kan du læse om virksomhedens personale politik.
+        </p>
+        <p>
+            - Ingen deling af marketingstrategier.<br>
+            - Ingen deling af 3d modeler.<br>
+            - Intet pis.<br>
+            - Gør din ting
+        </p>
+        <button onclick="closePersonalePolitik()">Luk</button>
+    </div>
+</div>
+        
         <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea>
         <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
@@ -325,6 +391,17 @@
                 document.getElementById("daily-tasks").style.display = "none"; // Hide daily tasks when complete
             }
         }
+
+// Function to open the "Personale Politik" popup
+function openPersonalePolitik() {
+    document.getElementById("personale-politik-popup").style.display = "block";
+}
+
+// Function to close the "Personale Politik" popup
+function closePersonalePolitik() {
+    document.getElementById("personale-politik-popup").style.display = "none";
+}
+
     </script>
 </body>
 </html>
