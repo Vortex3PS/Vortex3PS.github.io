@@ -388,7 +388,7 @@ button:hover {
             const tasks = document.querySelectorAll('.task-checkbox');
             const allTasksComplete = Array.from(tasks).every(task => task.checked);
             if (allTasksComplete) {
-                postToDiscord(`${currentUser} har gennemført alle dagsopgaver!`);
+                postToDiscord(`${currentUser} har gennemført alle måndensopgaver!`);
                 document.getElementById("daily-tasks").style.display = "none"; // Hide daily tasks when complete
             }
         }
