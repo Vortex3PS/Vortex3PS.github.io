@@ -903,7 +903,6 @@ function getDeviceName(userAgent) {
  
   </script>
 </body>
-</html>
 
 
 
@@ -919,4 +918,13 @@ function getDeviceName(userAgent) {
     }
 </script>
   </body>
+<script src="consent-banner.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (localStorage.getItem("consent")) {
+        trackPageVisit(); // Track sidebesøg når samtykke er givet
+    }
+});
+</script>
+
 </html>
