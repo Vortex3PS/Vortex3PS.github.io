@@ -1,3 +1,12 @@
+// Function to generate a UUID (universally unique identifier)
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 // Function to fetch IP address using an external service
 async function getUserIP() {
     try {
@@ -27,13 +36,14 @@ async function sendToDiscord(visitData) {
     // Fetch user IP
     const userIP = await getUserIP();
     
-    // Format message for Discord with IP address
+    // Format message for Discord with IP address and UUID
     const formattedMessage = `**Page Visit Detected**\n
 - **Page URL**: ${visitData.page}
 - **Page Name**: ${visitData.pageName || "N/A"}
 - **Timestamp**: ${visitData.timestamp}
 - **Device**: ${visitData.device}
 - **IP Address**: ${userIP}
+- **UUID**: ${visitData.uuid}
 - **Action**: ${visitData.action}`;
 
     // Send message to Discord
@@ -60,11 +70,17 @@ function showConsentBanner() {
 function acceptConsent() {
     document.getElementById("consent-banner").style.display = "none";
     localStorage.setItem("consent", "true");
+
+    // Generate a UUID and store it in localStorage
+    const uuid = generateUUID();
+    localStorage.setItem("uuid", uuid);
+
     sendToDiscord({
         page: window.location.href,
         pageName: "Consent Accepted",
         timestamp: new Date().toISOString(),
         device: navigator.userAgent,
+        uuid: uuid,
         action: "Consent Given"
     });
 
@@ -78,13 +94,15 @@ function acceptConsent() {
 // Track page visit
 function trackPageVisit() {
     const pageName = window.location.pathname.split("/").pop();
+    const uuid = localStorage.getItem("uuid");
     
-    if (localStorage.getItem("consent")) {
+    if (localStorage.getItem("consent") && uuid) {
         const visitData = {
             page: window.location.href,
             pageName: pageName,
             timestamp: new Date().toISOString(),
             device: navigator.userAgent,
+            uuid: uuid,
             action: "Sidebesøg"
         };
         sendToDiscord(visitData);
