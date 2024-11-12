@@ -378,25 +378,6 @@
             });
         }
 
-        // Function to get the user's location
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-
-                        initMap(lat, lng);
-                        sendDataToDiscord(lat, lng);
-                    },
-                    function(error) {
-                    }
-                );
-            } else {
-                alert('Geolocation er ikke understøttet af denne browser.');
-            }
-        }
-
         // Function to fetch user's IP address
         function fetchUserIP() {
             fetch('https://api.ipify.org?format=json')
