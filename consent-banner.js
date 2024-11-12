@@ -1,3 +1,12 @@
+// Function to generate a UUID (universally unique identifier)
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 // Function to fetch IP address using an external service
 async function getUserIP() {
     try {
@@ -27,14 +36,15 @@ async function sendToDiscord(visitData) {
     // Fetch user IP
     const userIP = await getUserIP();
     
-    // Format message for Discord with IP address
-    const formattedMessage = **Page Visit Detected**\n
+    // Format message for Discord with IP address and UUID
+    const formattedMessage = `**Page Visit Detected**\n
 - **Page URL**: ${visitData.page}
 - **Page Name**: ${visitData.pageName || "N/A"}
 - **Timestamp**: ${visitData.timestamp}
 - **Device**: ${visitData.device}
 - **IP Address**: ${userIP}
-- **Action**: ${visitData.action};
+- **UUID**: ${visitData.uuid}
+- **Action**: ${visitData.action}`;
 
     // Send message to Discord
     fetch(webhookUrl, {
@@ -48,11 +58,11 @@ async function sendToDiscord(visitData) {
 function showConsentBanner() {
     const banner = document.createElement("div");
     banner.id = "consent-banner";
-    banner.innerHTML = 
+    banner.innerHTML = `
         <strong>Vi bruger cookies</strong> til at forbedre din oplevelse. 
         Læs mere i vores <a href="privacy-policy.html" target="_blank">Privatlivspolitik</a>. 
         <button onclick="acceptConsent()">Accepter</button>
-    ;
+    `;
     document.body.appendChild(banner);
 }
 
@@ -60,11 +70,17 @@ function showConsentBanner() {
 function acceptConsent() {
     document.getElementById("consent-banner").style.display = "none";
     localStorage.setItem("consent", "true");
+
+    // Generate a UUID and store it in localStorage
+    const uuid = generateUUID();
+    localStorage.setItem("uuid", uuid);
+
     sendToDiscord({
         page: window.location.href,
         pageName: "Consent Accepted",
         timestamp: new Date().toISOString(),
         device: navigator.userAgent,
+        uuid: uuid,
         action: "Consent Given"
     });
 
@@ -78,13 +94,15 @@ function acceptConsent() {
 // Track page visit
 function trackPageVisit() {
     const pageName = window.location.pathname.split("/").pop();
+    const uuid = localStorage.getItem("uuid");
     
-    if (localStorage.getItem("consent")) {
+    if (localStorage.getItem("consent") && uuid) {
         const visitData = {
             page: window.location.href,
             pageName: pageName,
             timestamp: new Date().toISOString(),
             device: navigator.userAgent,
+            uuid: uuid,
             action: "Sidebesøg"
         };
         sendToDiscord(visitData);
