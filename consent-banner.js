@@ -61,7 +61,7 @@ function showConsentBanner() {
     banner.innerHTML = `
         <strong>Vi bruger cookies</strong> til at forbedre din oplevelse. 
         Læs mere i vores <a href="privacy-policy.html" target="_blank">Privatlivspolitik</a>.
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwrmW_SYdKx0ienWQd8wB8zCzBksokW4Gc9w&s" />
+        <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/cookie.png?raw=true" />
         <button onclick="acceptConsent()">Accepter</button>
     `;
     document.body.appendChild(banner);
