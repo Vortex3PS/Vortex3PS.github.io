@@ -60,7 +60,8 @@ function showConsentBanner() {
     banner.id = "consent-banner";
     banner.innerHTML = `
         <strong>Vi bruger cookies</strong> til at forbedre din oplevelse. 
-        Læs mere i vores <a href="privacy-policy.html" target="_blank">Privatlivspolitik</a>. 
+        Læs mere i vores <a href="privacy-policy.html" target="_blank">Privatlivspolitik</a>.
+        <img src="https://discord.com/assets/49afb1c77a109eedc729.svg" alt="Cookie" />
         <button onclick="acceptConsent()">Accepter</button>
     `;
     document.body.appendChild(banner);
