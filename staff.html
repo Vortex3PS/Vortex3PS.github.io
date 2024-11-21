@@ -1,11 +1,60 @@
 <!DOCTYPE html>
 <html lang="da">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>Vortex Personale Portal</title>
     <style>
         /* Existing and new styles */
 
+        /* Chart-specific styles under body-chart */
+body.body-chart {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f9;
+    color: #333;
+}
+
+body.body-chart header {
+    background-color: #6200ea;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+body.body-chart .container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+body.body-chart .total-income {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+body.body-chart .chart-container {
+    margin: 20px auto;
+    position: relative;
+    height: 600px;
+    width: 100%;
+}
+
+body.body-chart .monthly-list {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+    font-size: 18px;
+}
+
+body.body-chart .monthly-list li {
+    margin: 5px 0;
+}
         
         body {
             font-family: Arial, sans-serif;
@@ -243,6 +292,21 @@ button:hover {
         <button onclick="saveNotes()">Gem noter</button>
         <p id="success-message" style="color: green;"></p>
 
+        <div class="container">
+    <!-- Total Income Display -->
+    <div class="total-income">
+        Total Indkomst for året: <span id="totalIncome">0 kr</span>
+    </div>
+
+    <!-- Chart Display -->
+    <div class="chart-container">
+        <canvas id="incomeChart"></canvas>
+    </div>
+
+    <!-- Monthly Income List -->
+    <ul class="monthly-list" id="monthlyIncomeList"></ul>
+</div>
+
         <h3>Indsend Ide</h3>
         <input type="text" id="ideaInput" placeholder="Skriv din ide her...">
         <button onclick="submitIdea()">Indsend ide</button>
@@ -403,6 +467,87 @@ function closePersonalePolitik() {
     document.getElementById("personale-politik-popup").style.display = "none";
 }
 
+// Data for Monthly Income
+const monthlyIncome = {
+    labels: [
+        "Januar", "Februar", "Marts", "April", "Maj", "Juni", 
+        "Juli", "August", "September", "Oktober", "November", "December"
+    ], // Months
+    datasets: [{
+        label: "Indkomst pr. måned (kr)",
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 22, 0], // Income values for each month
+        borderColor: "#6200ea",
+        backgroundColor: "rgba(98, 0, 234, 0.2)",
+        fill: true,
+        tension: 0.4, // Smooth curve
+    }]
+};
+
+// Calculate Total Income
+const totalIncome = monthlyIncome.datasets[0].data.reduce((sum, income) => sum + income, 0);
+
+// Update Total Income in HTML
+document.getElementById('totalIncome').textContent = `${totalIncome} kr`;
+
+// Render the Monthly List Below the Chart
+const monthlyListContainer = document.getElementById('monthlyIncomeList');
+monthlyIncome.labels.forEach((month, index) => {
+    const incomeValue = monthlyIncome.datasets[0].data[index];
+    const listItem = document.createElement('li');
+    listItem.textContent = incomeValue === 0 
+        ? `${month}: Ingen data` 
+        : `${month}: ${incomeValue} kr`;
+    monthlyListContainer.appendChild(listItem);
+});
+
+// Chart Configuration
+const config = {
+    type: 'line',
+    data: monthlyIncome,
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return tooltipItem.raw === 0 
+                            ? "Ingen data" 
+                            : `${tooltipItem.raw} kr`;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Måned'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Indkomst (kr)'
+                },
+                ticks: {
+                    stepSize: 10, // Step size for y-axis
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return value % 10 === 0 ? value : null; // Only show multiples of 10
+                    }
+                }
+            }
+        }
+    }
+};
+
+// Render the Chart
+const ctx = document.getElementById('incomeChart').getContext('2d');
+new Chart(ctx, config);
+        
     </script>
 </body>
 </html>
