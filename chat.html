@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .container { max-width: 800px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h2 { text-align: center; }
+        #chat-box { height: 300px; overflow-y: scroll; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; background: #fafafa; }
+        .message { padding: 5px 10px; margin-bottom: 10px; border-radius: 4px; background-color: #e1f7d5; }
+        .message .user { font-weight: bold; }
+        input[type="text"], input[type="submit"] { padding: 10px; width: 100%; margin-top: 10px; font-size: 16px; }
+        input[type="submit"] { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        input[type="submit"]:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Chat with others!</h2>
+    
+    <!-- Name input form -->
+    <div id="name-form">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" placeholder="Your name" required>
+        <input type="submit" value="Join Chat" onclick="joinChat()">
+    </div>
+
+    <!-- Chat box and message input -->
+    <div id="chat-area" style="display:none;">
+        <div id="chat-box"></div>
+        <input type="text" id="message-input" placeholder="Type your message..." onkeyup="checkEnter(event)">
+        <input type="submit" value="Send" onclick="sendMessage()">
+    </div>
+</div>
+
+<script>
+    let username = "";
+    let chatBox = document.getElementById("chat-box");
+
+    function joinChat() {
+        username = document.getElementById("name").value.trim();
+        if (username) {
+            document.getElementById("name-form").style.display = "none";
+            document.getElementById("chat-area").style.display = "block";
+            loadMessages();
+        } else {
+            alert("Please enter your name.");
+        }
+    }
+
+    function checkEnter(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    }
+
+    function sendMessage() {
+        let message = document.getElementById("message-input").value.trim();
+        if (message) {
+            fetch("https://your-replit-backend-url/message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, message })
+            }).then(response => {
+                document.getElementById("message-input").value = "";
+                loadMessages();
+            });
+        }
+    }
+
+    function loadMessages() {
+        fetch("https://your-replit-backend-url/messages")
+            .then(response => response.json())
+            .then(data => {
+                chatBox.innerHTML = "";
+                data.messages.forEach(msg => {
+                    let messageElem = document.createElement("div");
+                    messageElem.className = "message";
+                    messageElem.innerHTML = `<span class="user">${msg.username}</span>: ${msg.message}`;
+                    chatBox.appendChild(messageElem);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+    }
+</script>
+
+</body>
+</html>
