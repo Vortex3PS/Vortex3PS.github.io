@@ -7,97 +7,88 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      padding: 0;
     }
-    #chat-box {
-      height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
+    #messages {
+      border: 1px solid #ccc;
       padding: 10px;
       margin-bottom: 10px;
-      background-color: #f9f9f9;
+      max-height: 300px;
+      overflow-y: scroll;
     }
-    .message {
-      margin-bottom: 10px;
+    #chatForm {
+      display: flex;
+      justify-content: space-between;
     }
-    .message span {
-      font-weight: bold;
+    input[type="text"] {
+      width: 80%;
     }
-    textarea, input {
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background-color: #0056b3;
+    input[type="submit"] {
+      width: 15%;
     }
   </style>
 </head>
 <body>
-  <h1>Simple Chat</h1>
-  <div id="chat-box"></div>
-  <input type="text" id="username" placeholder="Your Name" />
-  <textarea id="content" placeholder="Type your message here..."></textarea>
-  <button onclick="sendMessage()">Send</button>
 
-  <script>
-    // Replace with your actual Replit backend URL
-    const apiBaseUrl = "https://PythonBackend.markushermanse1.repl.co";
+<h1>Simple Chat</h1>
 
-    async function fetchMessages() {
-      try {
-        const response = await fetch(`${apiBaseUrl}/get_messages`);
-        const messages = await response.json();
+<div id="messages"></div>
 
-        const chatBox = document.getElementById("chat-box");
-        chatBox.innerHTML = ""; // Clear existing messages
-        messages.forEach(msg => {
-          const div = document.createElement("div");
-          div.classList.add("message");
-          div.innerHTML = `<span>${msg.username}:</span> ${msg.content}`;
-          chatBox.appendChild(div);
+<form id="chatForm">
+  <input type="text" id="username" placeholder="Enter your name" required>
+  <input type="text" id="message" placeholder="Type your message" required>
+  <input type="submit" value="Send">
+</form>
+
+<script>
+  // Glitch app URL (replace with your Glitch app URL)
+  const apiBaseUrl = "https://amenable-hyper-skipjack.glitch.me";
+
+  // Fetch and display messages from the backend
+  function fetchMessages() {
+    fetch(`${apiBaseUrl}/get_messages`)
+      .then(response => response.json())
+      .then(messages => {
+        const messagesContainer = document.getElementById('messages');
+        messagesContainer.innerHTML = ''; // Clear the current messages
+        messages.forEach(message => {
+          const messageDiv = document.createElement('div');
+          messageDiv.textContent = `${message.username}: ${message.content} (at ${new Date(message.timestamp).toLocaleTimeString()})`;
+          messagesContainer.appendChild(messageDiv);
         });
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-      }
+      })
+      .catch(err => console.error("Error fetching messages:", err));
+  }
+
+  // Send a message to the backend
+  function sendMessage(event) {
+    event.preventDefault(); // Prevent form from submitting the traditional way
+    const username = document.getElementById('username').value;
+    const content = document.getElementById('message').value;
+    
+    if (username && content) {
+      fetch(`${apiBaseUrl}/send_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, content })
+      })
+      .then(response => response.json())
+      .then(() => {
+        document.getElementById('message').value = ''; // Clear the message input
+        fetchMessages(); // Refresh the chat window
+      })
+      .catch(err => console.error("Error sending message:", err));
     }
+  }
 
-    async function sendMessage() {
-      const username = document.getElementById("username").value;
-      const content = document.getElementById("content").value;
+  // Add event listener to the form
+  document.getElementById('chatForm').addEventListener('submit', sendMessage);
 
-      if (!username || !content) {
-        alert("Please fill out both fields!");
-        return;
-      }
+  // Initial load of messages
+  fetchMessages();
+  
+  // Fetch messages every 5 seconds to keep the chat updated
+  setInterval(fetchMessages, 5000);
+</script>
 
-      try {
-        await fetch(`${apiBaseUrl}/send_message`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, content }),
-        });
-
-        document.getElementById("content").value = ""; // Clear input
-        fetchMessages(); // Refresh chat
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
-    }
-
-    setInterval(fetchMessages, 2000); // Fetch messages every 2 seconds
-    fetchMessages(); // Initial fetch
-  </script>
 </body>
 </html>
