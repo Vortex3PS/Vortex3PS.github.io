@@ -5,96 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Chat</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
-        .container { max-width: 800px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        h2 { text-align: center; }
-        #chat-box { height: 300px; overflow-y: scroll; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; background: #fafafa; }
-        .message { padding: 5px 10px; margin-bottom: 10px; border-radius: 4px; background-color: #e1f7d5; }
-        .message .user { font-weight: bold; }
-        input[type="text"], input[type="submit"] { padding: 10px; width: 100%; margin-top: 10px; font-size: 16px; }
-        input[type="submit"] { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        input[type="submit"]:hover { background-color: #45a049; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+            background-color: #f5f5f5;
+        }
+        #chat-box {
+            width: 80%;
+            max-width: 500px;
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            background-color: white;
+            padding: 10px;
+        }
+        #message-input {
+            width: 80%;
+            max-width: 400px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #username-input {
+            width: 80%;
+            max-width: 400px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            padding: 5px 0;
+        }
+        .message .user {
+            font-weight: bold;
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Chat with others!</h2>
+    <h2>Welcome to the Simple Chat</h2>
     
-    <!-- Name input form -->
-    <div id="name-form">
-        <label for="name">Enter your name:</label>
-        <input type="text" id="name" placeholder="Your name" required>
-        <input type="submit" value="Join Chat" onclick="joinChat()">
-    </div>
+    <!-- Username Input -->
+    <input type="text" id="username-input" placeholder="Enter your name" />
+    <button onclick="joinChat()">Join Chat</button>
 
-    <!-- Chat box and message input -->
-    <div id="chat-area" style="display:none;">
-        <div id="chat-box"></div>
-        <input type="text" id="message-input" placeholder="Type your message..." onkeyup="checkEnter(event)">
-        <input type="submit" value="Send" onclick="sendMessage()">
-    </div>
-</div>
+    <!-- Chat Box -->
+    <div id="chat-box"></div>
 
-<script>
-    let username = "";
-    let chatBox = document.getElementById("chat-box");
+    <!-- Message Input -->
+    <textarea id="message-input" placeholder="Type a message..." rows="3"></textarea>
+    <button onclick="sendMessage()">Send</button>
 
-    // Join chat and hide name form
-    function joinChat() {
-        username = document.getElementById("name").value.trim();
-        if (username) {
-            document.getElementById("name-form").style.display = "none";
-            document.getElementById("chat-area").style.display = "block";
-            loadMessages();  // Load messages on join
-        } else {
-            alert("Please enter your name.");
+    <script>
+        let username = "";
+        
+        // Join the chat by setting the username
+        function joinChat() {
+            const userInput = document.getElementById("username-input").value.trim();
+            if (userInput) {
+                username = userInput;
+                document.getElementById("username-input").disabled = true;
+                loadMessages();
+            } else {
+                alert("Please enter your name.");
+            }
         }
-    }
 
-    // Check for Enter key to send message
-    function checkEnter(event) {
-        if (event.key === "Enter") {
-            sendMessage();
+        // Fetch and load the messages from the backend
+        function loadMessages() {
+            fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/messages")
+                .then(response => response.json())
+                .then(data => {
+                    const chatBox = document.getElementById("chat-box");
+                    chatBox.innerHTML = "";  // Clear current chat
+                    data.messages.forEach(msg => {
+                        const messageElem = document.createElement("div");
+                        messageElem.className = "message";
+                        messageElem.innerHTML = `<span class="user">${msg.username}</span>: ${msg.message}`;
+                        chatBox.appendChild(messageElem);
+                    });
+                    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+                })
+                .catch(err => console.log("Error loading messages:", err));
         }
-    }
 
-    // Send a message to the backend
-    function sendMessage() {
-        let message = document.getElementById("message-input").value.trim();
-        if (message) {
-            fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/message", {  // Replit backend live URL
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, message })
-            })
-            .then(response => {
-                document.getElementById("message-input").value = "";
-                loadMessages();  // Reload messages after sending
-            })
-            .catch(err => console.log("Error sending message: ", err));
+        // Send a new message to the backend
+        function sendMessage() {
+            const message = document.getElementById("message-input").value.trim();
+            if (message) {
+                fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, message })
+                })
+                .then(response => {
+                    document.getElementById("message-input").value = "";  // Clear input
+                    loadMessages();  // Reload messages after sending
+                })
+                .catch(err => console.log("Error sending message:", err));
+            } else {
+                alert("Please type a message.");
+            }
         }
-    }
-
-    // Load chat messages from the backend
-    function loadMessages() {
-        fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/messages")  // Replit backend live URL
-            .then(response => response.json())
-            .then(data => {
-                chatBox.innerHTML = "";  // Clear current messages
-                data.messages.forEach(msg => {
-                    let messageElem = document.createElement("div");
-                    messageElem.className = "message";
-                    messageElem.innerHTML = `<span class="user">${msg.username}</span>: ${msg.message}`;
-                    chatBox.appendChild(messageElem);
-                });
-                chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
-            })
-            .catch(err => console.log("Error loading messages: ", err));
-    }
-</script>
+    </script>
 
 </body>
 </html>
