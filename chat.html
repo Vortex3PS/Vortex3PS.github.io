@@ -1,132 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            justify-content: center;
-            background-color: #f5f5f5;
-        }
-        #chat-box {
-            width: 80%;
-            max-width: 500px;
-            height: 300px;
-            border: 1px solid #ccc;
-            overflow-y: scroll;
-            margin-bottom: 10px;
-            background-color: white;
-            padding: 10px;
-        }
-        #message-input {
-            width: 80%;
-            max-width: 400px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        #username-input {
-            width: 80%;
-            max-width: 400px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .message {
-            padding: 5px 0;
-        }
-        .message .user {
-            font-weight: bold;
-            color: #007BFF;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+    }
+    #chat-box {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin-bottom: 10px;
+    }
+    .message span {
+      font-weight: bold;
+    }
+    textarea, input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
+  <h1>Simple Chat</h1>
+  <div id="chat-box"></div>
+  <input type="text" id="username" placeholder="Your Name" />
+  <textarea id="content" placeholder="Type your message here..."></textarea>
+  <button onclick="sendMessage()">Send</button>
 
-    <h2>Welcome to the Simple Chat</h2>
-    
-    <!-- Username Input -->
-    <input type="text" id="username-input" placeholder="Enter your name" />
-    <button onclick="joinChat()">Join Chat</button>
+  <script>
+    const apiBaseUrl = "https://Backend-Server-for-simple-chat.markushermanse1.repl.co"; // Replace with your Replit backend URL
 
-    <!-- Chat Box -->
-    <div id="chat-box"></div>
+    async function fetchMessages() {
+      try {
+        const response = await fetch(`${apiBaseUrl}/get_messages`);
+        const messages = await response.json();
 
-    <!-- Message Input -->
-    <textarea id="message-input" placeholder="Type a message..." rows="3"></textarea>
-    <button onclick="sendMessage()">Send</button>
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML = ""; // Clear existing messages
+        messages.forEach(msg => {
+          const div = document.createElement("div");
+          div.classList.add("message");
+          div.innerHTML = `<span>${msg.username}:</span> ${msg.content}`;
+          chatBox.appendChild(div);
+        });
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    }
 
-    <script>
-        let username = "";
-        
-        // Join the chat by setting the username
-        function joinChat() {
-            const userInput = document.getElementById("username-input").value.trim();
-            if (userInput) {
-                username = userInput;
-                document.getElementById("username-input").disabled = true;
-                loadMessages();
-            } else {
-                alert("Please enter your name.");
-            }
-        }
+    async function sendMessage() {
+      const username = document.getElementById("username").value;
+      const content = document.getElementById("content").value;
 
-        // Fetch and load the messages from the backend
-        function loadMessages() {
-            fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/messages")
-                .then(response => response.json())
-                .then(data => {
-                    const chatBox = document.getElementById("chat-box");
-                    chatBox.innerHTML = "";  // Clear current chat
-                    data.messages.forEach(msg => {
-                        const messageElem = document.createElement("div");
-                        messageElem.className = "message";
-                        messageElem.innerHTML = `<span class="user">${msg.username}</span>: ${msg.message}`;
-                        chatBox.appendChild(messageElem);
-                    });
-                    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-                })
-                .catch(err => console.log("Error loading messages:", err));
-        }
+      if (!username || !content) {
+        alert("Please fill out both fields!");
+        return;
+      }
 
-        // Send a new message to the backend
-        function sendMessage() {
-            const message = document.getElementById("message-input").value.trim();
-            if (message) {
-                fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/message", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ username, message })
-                })
-                .then(response => {
-                    document.getElementById("message-input").value = "";  // Clear input
-                    loadMessages();  // Reload messages after sending
-                })
-                .catch(err => console.log("Error sending message:", err));
-            } else {
-                alert("Please type a message.");
-            }
-        }
-    </script>
+      try {
+        await fetch(`${apiBaseUrl}/send_message`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, content }),
+        });
 
+        document.getElementById("content").value = ""; // Clear input
+        fetchMessages(); // Refresh chat
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
+
+    setInterval(fetchMessages, 2000); // Fetch messages every 2 seconds
+    fetchMessages(); // Initial fetch
+  </script>
 </body>
 </html>
