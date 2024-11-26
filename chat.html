@@ -40,52 +40,59 @@
     let username = "";
     let chatBox = document.getElementById("chat-box");
 
+    // Join chat and hide name form
     function joinChat() {
         username = document.getElementById("name").value.trim();
         if (username) {
             document.getElementById("name-form").style.display = "none";
             document.getElementById("chat-area").style.display = "block";
-            loadMessages();
+            loadMessages();  // Load messages on join
         } else {
             alert("Please enter your name.");
         }
     }
 
+    // Check for Enter key to send message
     function checkEnter(event) {
         if (event.key === "Enter") {
             sendMessage();
         }
     }
 
+    // Send a message to the backend
     function sendMessage() {
         let message = document.getElementById("message-input").value.trim();
         if (message) {
-            fetch("https://your-replit-backend-url/message", {
+            fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/message", {  // Replit backend live URL
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ username, message })
-            }).then(response => {
+            })
+            .then(response => {
                 document.getElementById("message-input").value = "";
-                loadMessages();
-            });
+                loadMessages();  // Reload messages after sending
+            })
+            .catch(err => console.log("Error sending message: ", err));
         }
     }
 
+    // Load chat messages from the backend
     function loadMessages() {
-        fetch("https://your-replit-backend-url/messages")
+        fetch("https://backend-server-for-simple-chat.markushermanse1.repl.co/messages")  // Replit backend live URL
             .then(response => response.json())
             .then(data => {
-                chatBox.innerHTML = "";
+                chatBox.innerHTML = "";  // Clear current messages
                 data.messages.forEach(msg => {
                     let messageElem = document.createElement("div");
                     messageElem.className = "message";
                     messageElem.innerHTML = `<span class="user">${msg.username}</span>: ${msg.message}`;
                     chatBox.appendChild(messageElem);
                 });
-                chatBox.scrollTop = chatBox.scrollHeight;
-            });
+                chatBox.scrollTop = chatBox.scrollHeight;  // Scroll to the bottom
+            })
+            .catch(err => console.log("Error loading messages: ", err));
     }
 </script>
 
