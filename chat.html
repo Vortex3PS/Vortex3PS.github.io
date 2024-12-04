@@ -5,90 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple Chat</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    #messages {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      max-height: 300px;
-      overflow-y: scroll;
-    }
-    #chatForm {
-      display: flex;
-      justify-content: space-between;
-    }
-    input[type="text"] {
-      width: 80%;
-    }
-    input[type="submit"] {
-      width: 15%;
-    }
+    /* Simple styling for the chat */
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    ul { list-style-type: none; padding: 0; }
+    li { margin-bottom: 10px; padding: 10px; background-color: #f0f0f0; }
+    input[type="text"] { padding: 10px; width: 80%; }
+    button { padding: 10px; }
   </style>
 </head>
 <body>
+  <h1>Simple Chat App</h1>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="input" autocomplete="off" placeholder="Type a message" />
+    <button>Send</button>
+  </form>
 
-<h1>Simple Chat</h1>
+  <script>
+    const apiUrl = 'https://hospitable-famous-jasper.glitch.me/api/messages'; // Your Glitch backend URL
 
-<div id="messages"></div>
-
-<form id="chatForm">
-  <input type="text" id="username" placeholder="Enter your name" required>
-  <input type="text" id="message" placeholder="Type your message" required>
-  <input type="submit" value="Send">
-</form>
-
-<script>
-  // Glitch app URL (replace with your Glitch app URL)
-  const apiBaseUrl = "https://amenable-hyper-skipjack.glitch.me";
-
-  // Fetch and display messages from the backend
-  function fetchMessages() {
-    fetch(`${apiBaseUrl}/get_messages`)
-      .then(response => response.json())
-      .then(messages => {
-        const messagesContainer = document.getElementById('messages');
-        messagesContainer.innerHTML = ''; // Clear the current messages
-        messages.forEach(message => {
-          const messageDiv = document.createElement('div');
-          messageDiv.textContent = `${message.username}: ${message.content} (at ${new Date(message.timestamp).toLocaleTimeString()})`;
-          messagesContainer.appendChild(messageDiv);
+    // Fetch and display all messages
+    async function fetchMessages() {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        const messagesList = document.getElementById('messages');
+        messagesList.innerHTML = ''; // Clear current messages
+        data.forEach(msg => {
+          const li = document.createElement('li');
+          li.textContent = msg;
+          messagesList.appendChild(li);
         });
-      })
-      .catch(err => console.error("Error fetching messages:", err));
-  }
-
-  // Send a message to the backend
-  function sendMessage(event) {
-    event.preventDefault(); // Prevent form from submitting the traditional way
-    const username = document.getElementById('username').value;
-    const content = document.getElementById('message').value;
-    
-    if (username && content) {
-      fetch(`${apiBaseUrl}/send_message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, content })
-      })
-      .then(response => response.json())
-      .then(() => {
-        document.getElementById('message').value = ''; // Clear the message input
-        fetchMessages(); // Refresh the chat window
-      })
-      .catch(err => console.error("Error sending message:", err));
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
     }
-  }
 
-  // Add event listener to the form
-  document.getElementById('chatForm').addEventListener('submit', sendMessage);
+    // Post a new message
+    async function postMessage(message) {
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message }) // Send the message in the request body
+        });
+        const data = await response.json();
+        if (data.success) {
+          console.log('Message added');
+          fetchMessages(); // Reload messages after posting
+        } else {
+          console.error('Failed to add message:', data.message);
+        }
+      } catch (error) {
+        console.error('Error posting message:', error);
+      }
+    }
 
-  // Initial load of messages
-  fetchMessages();
-  
-  // Fetch messages every 5 seconds to keep the chat updated
-  setInterval(fetchMessages, 5000);
-</script>
+    // Handle form submit
+    document.getElementById('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const input = document.getElementById('input');
+      const message = input.value.trim();
+      if (message) {
+        postMessage(message); // Send the message to the backend
+        input.value = ''; // Clear the input field
+      }
+    });
 
+    // Initial load of messages
+    fetchMessages();
+  </script>
 </body>
 </html>
