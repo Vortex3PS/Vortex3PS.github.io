@@ -12,6 +12,7 @@
 
 <html lang="en">
   <head>
+<script src="https://www.google.com/recaptcha/enterprise.js?render=6Lcj-ZMqAAAAANAkD_oa-A9HRm23QCV7fl3-Y24x"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Vortex3PS</title>
@@ -874,6 +875,12 @@ document.addEventListener("DOMContentLoaded", function() {
         trackPageVisit(); // Track sidebesøg når samtykke er givet
     }
 });
+  function onClick(e) {
+    e.preventDefault();
+    grecaptcha.enterprise.ready(async () => {
+      const token = await grecaptcha.enterprise.execute('6Lcj-ZMqAAAAANAkD_oa-A9HRm23QCV7fl3-Y24x', {action: 'LOGIN'});
+    });
+  }
 </script>
 
 </html>
