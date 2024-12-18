@@ -63,7 +63,6 @@ function showConsentBanner() {
         Læs mere i vores <a href="privacy-policy.html" target="_blank">Privatlivspolitik</a>.
         <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/cookie.png?raw=true" />
         <button onclick="acceptConsent()">Accepter</button>
-        <button onclick="deny()">Ikke tryk på mig :D</button>
     `;
     document.body.appendChild(banner);
 }
