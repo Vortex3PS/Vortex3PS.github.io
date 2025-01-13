@@ -26,7 +26,7 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const box = 20; // Size of the snake and food
+    const box = 20;
     const canvasSize = canvas.width / box;
 
     let snake = [{ x: 5 * box, y: 5 * box }];
@@ -37,7 +37,6 @@
     };
     let score = 0;
 
-    // Control the snake
     document.addEventListener('keydown', changeDirection);
 
     function changeDirection(event) {
@@ -48,15 +47,12 @@
     }
 
     function draw() {
-      // Clear the canvas
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw the food
       ctx.fillStyle = 'red';
       ctx.fillRect(food.x, food.y, box, box);
 
-      // Draw the snake
       for (let i = 0; i < snake.length; i++) {
         ctx.fillStyle = i === 0 ? 'green' : 'lightgreen';
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
@@ -64,7 +60,6 @@
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
       }
 
-      // Move the snake
       let headX = snake[0].x;
       let headY = snake[0].y;
 
@@ -73,9 +68,9 @@
       if (direction === 'LEFT') headX -= box;
       if (direction === 'RIGHT') headX += box;
 
-      // Check for collision with the walls or itself
+
       if (
-        headX < 0 || headY < 0 ||
+        headX < -1 || headY < -1 ||
         headX >= canvas.width || headY >= canvas.height ||
         snake.some(segment => segment.x === headX && segment.y === headY)
       ) {
@@ -84,7 +79,6 @@
         return;
       }
 
-      // Check if the snake eats the food
       if (headX === food.x && headY === food.y) {
         score++;
         food = {
