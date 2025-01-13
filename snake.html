@@ -50,13 +50,13 @@
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = 'red';
+      ctx.fillStyle = 'blue';
       ctx.fillRect(food.x, food.y, box, box);
 
       for (let i = 0; i < snake.length; i++) {
         ctx.fillStyle = i === 0 ? 'green' : 'lightgreen';
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
-        ctx.strokeStyle = '#fff';
+        ctx.strokeStyle = '#0000ff';
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
       }
 
@@ -70,7 +70,7 @@
 
 
       if (
-        headX < -1 || headY < -1 ||
+        headX < 0 || headY < 0 ||
         headX >= canvas.width || headY >= canvas.height ||
         snake.some(segment => segment.x === headX && segment.y === headY)
       ) {
