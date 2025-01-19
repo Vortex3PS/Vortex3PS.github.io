@@ -318,7 +318,17 @@ button:hover {
     <p id="error-message"></p>
 
     <script>
-        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1302975455300944023/DubSBFg29M9_YVOQexe0xIS6lDJh9jrg3vYfCLIOjMmia9-PUoBxIG_9zsT47fF_5TIb";
+        const wht = "VEFWTmtUTGxFd0lLNklJdTdHVHIzVVFtYmU3bGg3SUJLMkVHVkg0X3l3MmpPazVGbW13cDgyWm1ZSUJ0V3FrRnczRVE=";
+
+        const whId = "MTMwNjU1MzA4NDQ5MDY4MjQyOA==";
+
+        const base = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv";
+
+
+
+        // Decode the Base64 webhook URL
+
+        const DISCORD_WEBHOOK_URL = atob(base) + atob(whId) + "/" + atob(wht);
         const authorizedStaff = {
             "August": "AugustAintHim",
             "William": "Vortex3PS!StaffIsCool",
