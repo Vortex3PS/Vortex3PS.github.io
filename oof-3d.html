@@ -444,7 +444,7 @@ async function sendOrderToDiscord(orderDetails) {
 
     // Decode the Base64 encoded webhook URL
     const webhookUrl = atob(encodedWebhookUrl);
-
+    console.log("Decoded Webhook URL: ", webhookUrl);
     // Send the order details to Discord
     fetch(webhookUrl, {
         method: 'POST',
