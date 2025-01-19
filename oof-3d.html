@@ -437,16 +437,33 @@
                 total: total + deliveryFee - discountAmount
             };
 
-            // Send order to Discord webhook
-            fetch("https://discord.com/api/webhooks/1306553084490682428/TAVNkTLlEwIK6IIu7GTr3UQmbe7lh7IBK2EGVH4_yw2jOk5Fmmwp82ZmYIBtWqkFw3EQ", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    content: `**New Order**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK`
-                })
-            });
+// Function to send order to Discord webhook with Base64 encoding for URL
+async function sendOrderToDiscord(orderDetails) {
+    // Base64 encoded webhook URL
+    const encodedWebhookUrl = 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMwNjU1MzA4NDQ5MDY4MjQyOC9UQVZOS1RMbEV3SUt4SklpdTdnVHJvM1VDbWJlN2xoN0lCSStiMkVHVkg0X3l3MmpPaDVGbW13cDgyWm1ZSUI0d1FrRnc1RUVn';
+
+    // Decode the Base64 encoded webhook URL
+    const webhookUrl = atob(encodedWebhookUrl);
+
+    // Send the order details to Discord
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: `**New Order**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK`
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Order sent successfully:", data);
+    })
+    .catch(error => {
+        console.error("Error sending order:", error);
+    });
+}
+
 
             alert(`Tak for dit køb, ${name}! Din ordre er blevet bekræftet.`);
             window.location.reload(); // Simulate page reload after confirmation
