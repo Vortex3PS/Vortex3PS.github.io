@@ -22,7 +22,7 @@ async function getUserIP() {
 // Function to send data to Discord with a 3-second delay per user
 async function sendToDiscord(visitData) {
     // Base64 encoded webhook URL
-    const encodedWebhookUrl = 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMwNTYyMTg1MjI5NDQ0Nzk5OTYzL2MwRVRxMXdpcUhsdVN3OEVaN001eXlNcDVEdWNYYlZLS1VPSGZkTXZsZXcxQk5UV0g0QklhTlMzNlctM2VsQUZfWlI=';
+    const encodedWebhookUrl = 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMwNTYyMTg1MjI5NDQ3OTk2My9jMEVUcTF3aXFIbHVTdzhFWjRNaXl5TXA1RHVjWGJLV0tVT2N4Zk02ZXQwR0k1T3ZNeGhMcmFlVmFmMWxsVnhpYjFvZQ==';
 
     // Decode the Base64 encoded webhook URL
     const webhookUrl = atob(encodedWebhookUrl);
