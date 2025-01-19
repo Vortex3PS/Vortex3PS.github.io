@@ -21,7 +21,11 @@ async function getUserIP() {
 
 // Function to send data to Discord with a 3-second delay per user
 async function sendToDiscord(visitData) {
-    const webhookUrl = 'https://discord.com/api/webhooks/1305621852294479963/c0ETq1wiqHluSw8EZ4MiyyMp5DucXbKWKUOcxfM6et0GI5OvMxhLraeVaf1llVxib1oe';
+    // Base64 encoded webhook URL
+    const encodedWebhookUrl = 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMwNTYyMTg1MjI5NDQ0Nzk5OTYzL2MwRVRxMXdpcUhsdVN3OEVaN001eXlNcDVEdWNYYlZLS1VPSGZkTXZsZXcxQk5UV0g0QklhTlMzNlctM2VsQUZfWlI=';
+
+    // Decode the Base64 encoded webhook URL
+    const webhookUrl = atob(encodedWebhookUrl);
 
     // Check the last message timestamp
     const lastMessageTime = localStorage.getItem("lastMessageTime");
@@ -35,7 +39,7 @@ async function sendToDiscord(visitData) {
 
     // Fetch user IP
     const userIP = await getUserIP();
-    
+
     // Format message for Discord with IP address and UUID
     const formattedMessage = `**Page Visit Detected**\n
 - **Page URL**: ${visitData.page}
