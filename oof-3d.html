@@ -439,14 +439,15 @@
 
 // Function to send order to Discord webhook with Base64 encoding for URL
 async function sendOrderToDiscord(orderDetails) {
-    // Base64 encoded webhook URL
-    const encodedWebhookUrl = 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMwNjU1MzA4NDQ5MDY4MjQyOC9UQVZOa1RMbEV3SUs2SUl1N0dUcjNVUW1iZTdsaDdJQksyRUdWSDRfeXcyak9rNUZtbXdwODJabVlJQnRXcWtGdzNFUQ==';
+    const wht = "VEFWTmtUTGxFd0lLNklJdTdHVHIzVVFtYmU3bGg3SUJLMkVHVkg0X3l3MmpPazVGbW13cDgyWm1ZSUJ0V3FrRnczRVE=";
+    const whId = "MTMwNjU1MzA4NDQ5MDY4MjQyOA==";
+    const base = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv";
 
-    // Decode the Base64 encoded webhook URL
-    const webhookUrl = atob(encodedWebhookUrl);
-    console.log("Decoded Webhook URL: ", webhookUrl);
+    // Decode the Base64 webhook URL
+    const DISCORD_WEBHOOK_URL = atob(base) + atob(whId) + "/" + atob(wht);
+
     // Send the order details to Discord
-    fetch(webhookUrl, {
+    fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -462,7 +463,11 @@ async function sendOrderToDiscord(orderDetails) {
     .catch(error => {
         console.error("Error sending order:", error);
     });
+    
+    alert(`Tak for dit køb, ${orderDetails.name}! Din ordre er blevet bekræftet.`);
+    window.location.reload(); // Simulate page reload after confirmation
 }
+
 
 
             alert(`Tak for dit køb, ${name}! Din ordre er blevet bekræftet.`);
