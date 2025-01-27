@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Vortex Webshop</title>
+    <link rel="icon" href="https://d3fg3fwfxon4h5.cloudfront.net/546741/552949/app_icon/display_image/ams_1723563834_2322.png" type="image/x-icon">
+    <script src="consent-banner.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            background-image: url('https://i.ibb.co/wpQ12kc/billede-2024-09-10-160352489.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            color: #222;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Left Column (Products) */
+        #product-section {
+            flex: 3;
+        }
+
+        /* Right Column (Cart) */
+        #cart-section {
+            flex: 1;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Product Grid */
+        #webshop {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .product h2 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .product p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .product button {
+            background-color: #7EBD01;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .product button:hover {
+            background-color: #C70039;
+        }
+
+        /* Cart Summary */
+        .cart-summary {
+            background-color: #e9f5ff;
+            border: 1px solid #007bff;
+            color: #333;
+            padding: 20px;
+            margin: 40px 0;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-summary h3 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .cart-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cart-summary li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-summary li:last-child {
+            border-bottom: none;
+        }
+
+        /* Checkout Area */
+        #checkout-area {
+            display: none;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #checkout-area h2 {
+            color: #28a745;
+        }
+
+        .checkout-details {
+            margin-bottom: 20px;
+        }
+
+        .checkout-details label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .checkout-details input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        button#checkout-confirm {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button#checkout-confirm:hover {
+            background-color: #218838;
+        }
+
+        .delivery-methods button {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .delivery-methods button.active {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            #webshop {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Product Section -->
+        <div id="product-section">
+            <h1>Velkommen til PC Shoppen</h1>
+            <div id="webshop">
+                <div class="product">
+                    <h2>Vortex Bulldog</h2>
+                    <p>Pris: 7000 DKK</p>
+                    <button onclick="addToCart('Death card', 5)">Læg i kurv</button>
+                </div>
+                <div class="product">
+                    <h2>Vortex Rabbit</h2>
+                    <p>Pris: 4500 DKK</p>
+                    <button onclick="addToCart('Spiral', 25)">Læg i kurv</button>
+                    <button onclick="window.open('https://raw.githubusercontent.com/Vortex3PS/Vortex3PS.github.io/refs/heads/main/Vortex%20Spiral.png', '_blank')">Se billede</button>
+                </div>
+                <div class="product">
+                    <h2>Squishy</h2>
+                    <p>Pris: 25 DKK</p>
+                    <button onclick="addToCart('Squishy', 25)">Læg i kurv</button>
+                    <button onclick="window.open('https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/squishy.png?raw=true', '_blank')">Se billede</button>
+                </div>
+                <div class="product">
+                    <h2>Boomerang</h2>
+                    <p>Pris: 15 DKK</p>
+                    <button onclick="addToCart('Boomerang', 15)">Læg i kurv</button>
+                </div>
+                <div class="product">
+                    <h2>Catapult</h2>
+                    <p>Pris: 25 DKK</p>
+                    <button onclick="addToCart('Catapult', 25)">Læg i kurv</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div id="cart-section">
+            <div class="cart-summary">
+                <h3>Din Kurv</h3>
+                <ul id="cart-items"></ul>
+                <p>Total: <span id="cart-total">0</span> DKK</p>
+                <button id="Checkout_Button" onclick="showCheckout()">Gå til Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Area -->
+    <div id="checkout-area">
+        <h2>Checkout</h2>
+        <div id="checkout-products"></div>
+
+        <!-- Delivery Method Selection -->
+        <div class="delivery-methods">
+            <h3>Vælg Leveringsmetode:</h3>
+            <button id="pickup-button" class="active" onclick="selectDelivery('pickup')">Pickup (Gratis)</button>
+            <button id="levering-button" onclick="selectDelivery('levering')">Levering</button>
+        </div>
+
+        <div id="delivery-options" style="display: none;">
+            <label for="delivery-method">Leveringsmulighed:</label>
+            <select id="delivery-method" onchange="updateTotal()">
+                <option value="DAO Pakkeshop - 50 DKK" data-price="50">DAO Pakkeshop - 50 DKK</option>
+                <option value="DAO Til Dør - 55 DKK" data-price="55">DAO Til Dør - 55 DKK</option>
+            </select>
+        </div>
+
+        <div class="checkout-details">
+            <label for="name">Navn:</label>
+            <input type="text" id="name" placeholder="Indtast dit navn" required>
+
+            <label for="address">Adresse:</label>
+            <input type="text" id="address" placeholder="Indtast din adresse" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Indtast din email" required>
+
+            <label for="phone">Telefonnummer:</label>
+            <input type="tel" id="phone" placeholder="Indtast dit telefonnummer" required>
+
+            <!-- Discount Code -->
+            <label for="discount-code">Rabatkode:</label>
+            <input type="text" id="discount-code" placeholder="Indtast rabatkode" oninput="applyDiscount()">
+            <p id="discount-message" style="color: red;"></p>
+        </div>
+        <p>Total inkl. levering: <span id="checkout-total">0</span> DKK</p>
+        <button id="checkout-confirm" onclick="confirmCheckout()">Bekræft Køb</button>
+    </div>
+
+    <script>
+        let cart = [];
+        let total = 0;
+        let deliveryFee = 0;
+        let discountAmount = 0;
+        let discountApplied = false;
+        let freeShipping = false;
+        let selectedDeliveryMethod = 'pickup'; // Default to 'pickup'
+
+        function addToCart(product, price) {
+            cart.push({ product, price });
+            total += price;
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${item.product} - ${item.price} DKK`;
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Fjern';
+                removeButton.className = 'remove-button';
+                removeButton.onclick = () => removeFromCart(index);
+                listItem.appendChild(removeButton);
+                cartItems.appendChild(listItem);
+            });
+
+            document.getElementById('cart-total').textContent = total;
+        }
+
+        function removeFromCart(index) {
+            total -= cart[index].price;
+            cart.splice(index, 1);
+            updateCartSummary();
+        }
+
+        function showCheckout() {
+            if (cart.length === 0) {
+                alert("Din kurv er tom!");
+                return;
+            }
+
+            // Hide the product and cart sections
+            document.getElementById('product-section').style.display = 'none';
+            document.getElementById('cart-section').style.display = 'none';
+
+            // Display the checkout area
+            document.getElementById('checkout-area').style.display = 'block';
+
+            // Populate checkout products list
+            const checkoutProducts = document.getElementById('checkout-products');
+            checkoutProducts.innerHTML = `<h3>Produkter i din kurv:</h3>`;
+            cart.forEach(item => {
+                checkoutProducts.innerHTML += `<p>${item.product} - ${item.price} DKK</p>`;
+            });
+
+            updateTotal();
+        }
+
+        function selectDelivery(method) {
+            selectedDeliveryMethod = method;
+
+            const pickupButton = document.getElementById('pickup-button');
+            const leveringButton = document.getElementById('levering-button');
+            const deliveryOptions = document.getElementById('delivery-options');
+
+            if (method === 'pickup') {
+                deliveryFee = 0;
+                deliveryOptions.style.display = 'none';
+                pickupButton.classList.add('active');
+                leveringButton.classList.remove('active');
+            } else {
+                deliveryFee = freeShipping ? 0 : 50; // Default delivery fee for DAO Pakkeshop
+                deliveryOptions.style.display = 'block';
+                leveringButton.classList.add('active');
+                pickupButton.classList.remove('active');
+            }
+
+            updateTotal();
+        }
+
+        function applyDiscount() {
+            const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
+            const discountMessage = document.getElementById('discount-message');
+            discountMessage.textContent = '';
+            discountAmount = 0;
+            freeShipping = false;
+
+            if (discountCode === 'XMAS') {
+                discountAmount = total * 0.2; // 20% discount
+                discountMessage.textContent = '20% rabat anvendt!';
+            } else if (discountCode === 'JuleRabat') {
+                discountAmount = total * 0.1; // 10% DKK discount
+                discountMessage.textContent = '10% rabat anvendt!';
+        //    } else if (discountCode === 'FREESHIP') {
+        //        freeShipping = true; // Free shipping
+        //        deliveryFee = 0;
+        //        discountMessage.textContent = 'Gratis levering anvendt!';
+            } else if (discountCode !== '') {
+                discountMessage.textContent = 'Ugyldig rabatkode!';
+            }
+
+            updateTotal();
+        }
+
+        function updateTotal() {
+            if (selectedDeliveryMethod === 'levering' && !freeShipping) {
+                const selectedDelivery = document.getElementById('delivery-method');
+                deliveryFee = parseFloat(selectedDelivery.options[selectedDelivery.selectedIndex].dataset.price);
+            }
+
+            const finalTotal = total + deliveryFee - discountAmount;
+            document.getElementById('checkout-total').textContent = Math.max(finalTotal, 0).toFixed(2) + ' DKK';
+        }
+
+        function confirmCheckout() {
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            if (!name || !address || !email || !phone) {
+                alert("Udfyld venligst alle felter.");
+                return;
+            }
+
+            // Prepare order details
+            const deliveryMethod = selectedDeliveryMethod === 'pickup' ? 'Pickup' : document.getElementById('delivery-method').value;
+            const orderDetails = {
+                name,
+                address,
+                email,
+                phone,
+                deliveryMethod,
+                items: cart,
+                total: total + deliveryFee - discountAmount
+            };
+
+// Function to send order to Discord webhook with Base64 encoding for URL
+async function sendOrderToDiscord(orderDetails) {
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1331952676954570784/MfVbDQBVCo02fiXXZ0dvOLUbLzzXSlq8kzzbSl_-OeqCdX4Uo_8XAO-KTK4RfWeIppR9"
+
+    // Decode the Base64 webhook URL
+    const DISCORD_WEBHOOK_URL = atob(base) + atob(whId) + "/" + atob(wht);
+
+    // Send the order details to Discord
+    fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content: `**New Order**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK`
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Order sent successfully:", data);
+    })
+    .catch(error => {
+        console.error("Error sending order:", error);
+    });
+    
+    alert(`Tak for dit køb, ${orderDetails.name}! Din ordre er blevet bekræftet.`);
+    window.location.reload(); // Simulate page reload after confirmation
+}
+
+
+
+            alert(`Tak for dit køb, ${name}! Din ordre er blevet bekræftet.`);
+            window.location.reload(); // Simulate page reload after confirmation
+        }
+    </script>
+</body>
+</html>
