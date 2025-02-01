@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaseVortex Translator</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1e1e1e; color: #f0f0f0; padding: 20px; }
+        .container { max-width: 500px; margin: auto; padding: 20px; background: #292929; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        textarea, button { width: 100%; margin: 10px 0; padding: 10px; border: none; border-radius: 5px; }
+        textarea { background: #333; color: #fff; resize: vertical; }
+        button { background: #5c6bc0; color: white; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #3f51b5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BaseVortex Translator</h1>
+        <textarea id="inputText" rows="4" placeholder="Enter text here..."></textarea>
+        <button onclick="encodeVortex()">Encode</button>
+        <button onclick="decodeVortex()">Decode</button>
+        <textarea id="outputText" rows="4" placeholder="Output will appear here..." readonly></textarea>
+    </div>
+
+    <script>
+        const vortexChars = 'qWeRtYuIoPAsDfGhJkLzXcVbNm1234567890ZxCvBnMqPlOkJiUhYtGrEdSfAa !@#$%^&*()-_=+[]{}|;:",.<>?/`~'; // Expanded characters
+        const secretKey = 7; // Secret key for shifting
+
+        function encodeVortex() {
+            const input = document.getElementById('inputText').value;
+            let encoded = '';
+
+            for (let i = 0; i < input.length; i++) {
+                const charCode = input.charCodeAt(i);
+                const shiftedCode = (charCode + secretKey) % 256; // Apply secret shift
+                const firstChar = vortexChars[Math.floor(shiftedCode / vortexChars.length) % vortexChars.length];
+                const secondChar = vortexChars[shiftedCode % vortexChars.length];
+                encoded += firstChar + secondChar; // Encode as 2 characters
+            }
+
+            document.getElementById('outputText').value = encoded;
+        }
+
+        function decodeVortex() {
+            const input = document.getElementById('inputText').value;
+            let decoded = '';
+
+            for (let i = 0; i < input.length; i += 2) {
+                const firstCharIndex = vortexChars.indexOf(input[i]);
+                const secondCharIndex = vortexChars.indexOf(input[i + 1]);
+
+                if (firstCharIndex !== -1 && secondCharIndex !== -1) {
+                    const shiftedCode = (firstCharIndex * vortexChars.length + secondCharIndex - secretKey + 256) % 256; // Reverse shift
+                    decoded += String.fromCharCode(shiftedCode);
+                }
+            }
+
+            document.getElementById('outputText').value = decoded;
+        }
+    </script>
+</body>
+</html>
