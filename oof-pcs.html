@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCS Vortex Webshop</title>
+    <title>3D Vortex Webshop</title>
     <link rel="icon" href="https://d3fg3fwfxon4h5.cloudfront.net/546741/552949/app_icon/display_image/ams_1723563834_2322.png" type="image/x-icon">
     <script src="consent-banner.js"></script>
     <style>
@@ -211,17 +211,17 @@
     <div class="container">
         <!-- Product Section -->
         <div id="product-section">
-            <h1>Velkommen til PC Shoppen</h1>
+            <h1>Velkommen til 3D Shoppen</h1>
             <div id="webshop">
                 <div class="product">
-                    <h2>Vortex Bulldog</h2>
-                    <p>Pris: 7000 DKK</p>
-                    <button onclick="addToCart('Vortex Bulldog', 7000)">Læg i kurv</button>
+                    <h2>Vortex Rabbit</h2>
+                    <p>Pris: 5000 DKK</p>
+                    <button onclick="addToCart('Vortex Rabbit', 5000)">Læg i kurv</button>
                 </div>
                 <div class="product">
-                    <h2>Vortex Rabbit</h2>
-                    <p>Pris: 4500 DKK</p>
-                    <button onclick="addToCart('Vortex Rabbit', 4500)">Læg i kurv</button>
+                    <h2>Spiral</h2>
+                    <p>Pris: 25 DKK</p>
+                    <button onclick="addToCart('Spiral', 25)">Læg i kurv</button>
                     <button onclick="window.open('https://raw.githubusercontent.com/Vortex3PS/Vortex3PS.github.io/refs/heads/main/Vortex%20Spiral.png', '_blank')">Se billede</button>
                 </div>
                 <div class="product">
@@ -414,33 +414,42 @@
             document.getElementById('checkout-total').textContent = Math.max(finalTotal, 0).toFixed(2) + ' DKK';
         }
 
-        function confirmCheckout() {
-            const name = document.getElementById('name').value;
-            const address = document.getElementById('address').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
+ function confirmCheckout() {
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const discountCode = document.getElementById('discount-code').value.trim().toUpperCase(); // Capture the discount code
 
-            if (!name || !address || !email || !phone) {
-                alert("Udfyld venligst alle felter.");
-                return;
-            }
+    if (!name || !address || !email || !phone) {
+        alert("Udfyld venligst alle felter.");
+        return;
+    }
 
-            // Prepare order details
-            const deliveryMethod = selectedDeliveryMethod === 'pickup' ? 'Pickup' : document.getElementById('delivery-method').value;
-            const orderDetails = {
-                name,
-                address,
-                email,
-                phone,
-                deliveryMethod,
-                items: cart,
-                total: total + deliveryFee - discountAmount
-            };
+    // Prepare order details
+    const deliveryMethod = selectedDeliveryMethod === 'pickup' ? 'Pickup' : document.getElementById('delivery-method').value;
+    const orderDetails = {
+        name,
+        address,
+        email,
+        phone,
+        deliveryMethod,
+        items: cart,
+        total: total + deliveryFee - discountAmount,
+        discountCode: discountCode || 'None' // Include the discount code or 'None' if not applied
+    };
+
+    // Send the order details to Discord
+    sendOrderToDiscord(orderDetails);
+
+    alert(`Tak for dit køb, ${name}! Din ordre er blevet bekræftet.`);
+    window.location.reload(); // Simulate page reload after confirmation
+}
+
 
 // Function to send order to Discord webhook with Base64 encoding for URL
 async function sendOrderToDiscord(orderDetails) {
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1335885007058763776/sKZgzaPcMct_RbVAXB3qxMrfggUPOAOHgUDStgF9a1ghtEuZdrB9j0TIOcRHPlFFG0Nf"
-
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1335885007058763776/sKZgzaPcMct_RbVAXB3qxMrfggUPOAOHgUDStgF9a1ghtEuZdrB9j0TIOcRHPlFFG0Nf";
 
     // Send the order details to Discord
     fetch(DISCORD_WEBHOOK_URL, {
@@ -449,7 +458,7 @@ async function sendOrderToDiscord(orderDetails) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: `**New Order PCS!**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK`
+            content: `**New Order PCs!**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK\nDiscount Code: ${orderDetails.discountCode || 'None'}`
         })
     })
     .then(response => response.json())
@@ -459,16 +468,8 @@ async function sendOrderToDiscord(orderDetails) {
     .catch(error => {
         console.error("Error sending order:", error);
     });
-    
-    alert(`Tak for dit køb, ${orderDetails.name}! Din ordre er blevet bekræftet.`);
-    window.location.reload(); // Simulate page reload after confirmation
 }
-
-
-
-            alert(`Tak for dit køb, ${name}! Din ordre er blevet bekræftet.`);
-            window.location.reload(); // Simulate page reload after confirmation
-        }
     </script>
 </body>
 </html>
+
