@@ -439,7 +439,7 @@
 
 // Function to send order to Discord webhook with Base64 encoding for URL
 async function sendOrderToDiscord(orderDetails) {
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1331952676954570784/MfVbDQBVCo02fiXXZ0dvOLUbLzzXSlq8kzzbSl_-OeqCdX4Uo_8XAO-KTK4RfWeIppR9"
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1335885007058763776/sKZgzaPcMct_RbVAXB3qxMrfggUPOAOHgUDStgF9a1ghtEuZdrB9j0TIOcRHPlFFG0Nf"
 
 
     // Send the order details to Discord
@@ -449,7 +449,7 @@ async function sendOrderToDiscord(orderDetails) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: `**New Order**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK`
+            content: `**New Order PCS!**\nName: ${orderDetails.name}\nAddress: ${orderDetails.address}\nEmail: ${orderDetails.email}\nPhone: ${orderDetails.phone}\nDelivery Method: ${orderDetails.deliveryMethod}\nItems: ${orderDetails.items.map(item => `${item.product} - ${item.price} DKK`).join(', ')}\nTotal: ${orderDetails.total.toFixed(2)} DKK`
         })
     })
     .then(response => response.json())
