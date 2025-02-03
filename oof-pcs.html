@@ -441,8 +441,6 @@
 async function sendOrderToDiscord(orderDetails) {
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1331952676954570784/MfVbDQBVCo02fiXXZ0dvOLUbLzzXSlq8kzzbSl_-OeqCdX4Uo_8XAO-KTK4RfWeIppR9"
 
-    // Decode the Base64 webhook URL
-    const DISCORD_WEBHOOK_URL = atob(base) + atob(whId) + "/" + atob(wht);
 
     // Send the order details to Discord
     fetch(DISCORD_WEBHOOK_URL, {
