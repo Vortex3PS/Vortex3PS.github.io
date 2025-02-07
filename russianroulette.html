@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russian Roulette</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #2a2a2a;
+            color: white;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .table {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #8B4513 30%, #5a2d0c 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            border: 8px solid #5a2d0c;
+        }
+        .player {
+            position: absolute;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.5s, transform 0.2s;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            transform: translate(-50%, -50%);
+        }
+        .shoot-button {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(to bottom, #ff0000, #8b0000);
+            color: white;
+            border: 3px solid black;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #550000;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .shoot-button:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #550000;
+        }
+        .orange { background-color: orange; transform: scale(1.1); }
+        .green { background-color: green; }
+        .red { background-color: red; }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        input { width: 200px; }
+        button {
+            background: #ff9800;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #e68900; }
+        .play-again {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 18px;
+            background: #00c853;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .play-again:hover { background: #009624; }
+        .challenges {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff9800;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .challenge-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .challenge-modal h3 {
+            margin-top: 0;
+        }
+        .challenge-modal button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Russian Roulette</h2>
+        <input type="number" id="numPlayers" min="2" max="6" placeholder="Number of players">
+        <button onclick="setupGame()">Start</button>
+        <div id="playerInputs"></div>
+    </div>
+
+    <div class="table" id="table" style="display: none;">
+        <button class="shoot-button" onclick="shoot()">Shoot</button>
+    </div>
+
+    <button class="play-again" id="playAgain" onclick="restartGame()">Play Again</button>
+    <div class="challenges" id="challenges" style="display: none;">Challenges for Losers</div>
+
+    <div class="challenge-modal" id="challengeModal">
+        <h3>Challenge for the Loser:</h3>
+        <p id="challengeText"></p>
+        <button onclick="closeChallengeModal()">Close</button>
+    </div>
+
+    <script>
+        let players = [];
+        let currentIndex = 0;
+        const challenges = [
+            "Do 10 push-ups!",
+            "Sing a song!",
+            "Dance for 15 seconds!",
+            "Tell a joke!",
+            "Say 'Im a loser' in front of everyone!",
+            "Pretend to be a celebrity!",
+            "Run in the hallways!",
+            "Speak in an British/Indian accent for the next 3 minutes!",
+            "Go outside and touch grass!",
+            "Do 20 jumping jacks!"
+        ];
+
+        function setupGame() {
+            let numPlayers = document.getElementById("numPlayers").value;
+            if (numPlayers < 2 || numPlayers > 6) {
+                alert("Enter a number between 2 and 6.");
+                return;
+            }
+
+            let inputContainer = document.getElementById("playerInputs");
+            inputContainer.innerHTML = "";
+
+            for (let i = 0; i < numPlayers; i++) {
+                let input = document.createElement("input");
+                input.type = "text";
+                input.placeholder = `Player ${i + 1} Name`;
+                inputContainer.appendChild(input);
+            }
+
+            let startButton = document.createElement("button");
+            startButton.innerText = "Play";
+            startButton.onclick = () => startGame(inputContainer);
+            inputContainer.appendChild(startButton);
+        }
+
+        function startGame(inputContainer) {
+            players = [];
+            let inputs = inputContainer.getElementsByTagName("input");
+            for (let input of inputs) {
+                if (input.value.trim() === "") {
+                    alert("Enter all player names.");
+                    return;
+                }
+                players.push({ name: input.value.trim(), element: null });
+            }
+
+            inputContainer.innerHTML = "";
+            document.getElementById("table").style.display = "flex";
+            document.getElementById("playAgain").style.display = "none";
+            document.getElementById("challenges").style.display = "block";  // Show challenges button
+            renderPlayers();
+        }
+
+        function renderPlayers() {
+            let table = document.getElementById("table");
+            let radius = 130;
+            let angleStep = (2 * Math.PI) / players.length;
+
+            document.querySelectorAll(".player").forEach(el => el.remove());
+
+            players.forEach((player, index) => {
+                let angle = index * angleStep - Math.PI / 2;
+                let x = radius * Math.cos(angle) + 160;
+                let y = radius * Math.sin(angle) + 160;
+
+                let playerDiv = document.createElement("div");
+                playerDiv.classList.add("player");
+                playerDiv.innerText = player.name;
+                playerDiv.style.left = `${x}px`;
+                playerDiv.style.top = `${y}px`;
+
+                table.appendChild(playerDiv);
+                player.element = playerDiv;
+            });
+
+            highlightCurrentPlayer();
+        }
+
+        function highlightCurrentPlayer() {
+            players.forEach(p => p.element.classList.remove("orange", "green", "red"));
+            players[currentIndex].element.classList.add("orange");
+        }
+
+        function shoot() {
+            if (players.length === 1) {
+                alert(`${players[0].name} wins!`);
+                showPlayAgainButton();
+                return;
+            }
+
+            let shot = Math.random() < 0.2; // 20% chance of getting shot
+            let currentPlayer = players[currentIndex];
+
+            if (shot) {
+                currentPlayer.element.classList.add("red");
+                setTimeout(() => {
+                    currentPlayer.element.remove();
+                    players.splice(currentIndex, 1);
+
+                    if (players.length === 1) {
+                        alert(`${players[0].name} wins!`);
+                        showPlayAgainButton();
+                    } else {
+                        if (currentIndex >= players.length) currentIndex = 0;
+                        highlightCurrentPlayer();
+                    }
+
+                    showChallenge(currentPlayer.name);
+                }, 1000);
+            } else {
+                currentPlayer.element.classList.add("green");
+                setTimeout(() => {
+                    currentPlayer.element.classList.remove("green");
+                    currentIndex = (currentIndex + 1) % players.length;
+                    highlightCurrentPlayer();
+                }, 1000);
+            }
+        }
+
+        function showChallenge(loserName) {
+            let challenge = challenges[Math.floor(Math.random() * challenges.length)];
+            document.getElementById("challengeText").innerText = `${loserName}, ${challenge}`;
+            document.getElementById("challengeModal").style.display = "block";
+        }
+
+        function closeChallengeModal() {
+            document.getElementById("challengeModal").style.display = "none";
+        }
+
+        function showPlayAgainButton() {
+            document.getElementById("playAgain").style.display = "block";
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>
