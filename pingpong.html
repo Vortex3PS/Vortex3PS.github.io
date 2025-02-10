@@ -25,31 +25,31 @@
     const canvas = document.getElementById('pingPongCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Game variables
-    const paddleWidth = 10;
+    // Speed and vari
+    const paddleWidth = 100;
     const paddleHeight = 100;
-    const ballSize = 10;
+    const ballSize = 30;
 
     let leftPaddleY = (canvas.height - paddleHeight) / 2;
     let rightPaddleY = (canvas.height - paddleHeight) / 2;
     let paddleSpeed = 5;
     let ballX = canvas.width / 2;
     let ballY = canvas.height / 2;
-    let ballSpeedX = 10;
-    let ballSpeedY = 1;
+    let ballSpeedX = 3;
+    let ballSpeedY = 3;
     let leftPaddleSpeed = 0;
     let rightPaddleSpeed = 0;
     let leftScore = 0;
     let rightScore = 0;
 
-    // Draw paddles
+
     function drawPaddles() {
       ctx.fillStyle = 'white';
       ctx.fillRect(0, leftPaddleY, paddleWidth, paddleHeight); // Left paddle
       ctx.fillRect(canvas.width - paddleWidth, rightPaddleY, paddleWidth, paddleHeight); // Right paddle
     }
 
-    // Draw ball
+
     function drawBall() {
       ctx.beginPath();
       ctx.arc(ballX, ballY, ballSize, 0, Math.PI * 2);
