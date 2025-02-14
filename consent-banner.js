@@ -7,10 +7,10 @@ function generateUUID() {
     });
 }
 
-// Function to fetch IP address using an external service
+// Function to fetch IP address using an alternative service (ipify)
 async function getUserIP() {
     try {
-        const response = await fetch('https://ipinfo.io/json?token=YOUR_TOKEN_HERE');
+        const response = await fetch('https://api.ipify.org?format=json');
         const data = await response.json();
         return data.ip;
     } catch (error) {
@@ -19,35 +19,42 @@ async function getUserIP() {
     }
 }
 
+// Function to fetch geolocation data using an alternative service (ipwhois)
+async function getGeoLocation(ip) {
+    try {
+        const response = await fetch(`https://ipwho.is/${ip}`);
+        const data = await response.json();
+        return data.success ? `${data.city}, ${data.country}` : "Location Unavailable";
+    } catch (error) {
+        console.error("Failed to fetch geolocation:", error);
+        return "Location Unavailable";
+    }
+}
+
 // Function to send data to Discord with a 3-second delay per user
 async function sendToDiscord(visitData) {
-    // Plain Discord webhook URL (replace with your actual webhook URL)
     const webhookUrl = 'https://discord.com/api/webhooks/1331696915993329684/A7Uf6-TOryJ7YcU94bMg0LwpEkjbpJXb1AdUbvivj6sBtwE2wnuQvCHUnWYBjLCK0zTl';
 
-    // Check the last message timestamp
     const lastMessageTime = localStorage.getItem("lastMessageTime");
     const currentTime = Date.now();
 
-    // If 3 seconds haven't passed since the last message, do not send
     if (lastMessageTime && (currentTime - lastMessageTime) < 3000) return;
 
-    // Update the last message timestamp
     localStorage.setItem("lastMessageTime", currentTime);
 
-    // Fetch user IP
     const userIP = await getUserIP();
+    const userLocation = await getGeoLocation(userIP);
 
-    // Format message for Discord with IP address and UUID
     const formattedMessage = `**Page Visit Detected**\n
 - **Page URL**: ${visitData.page}
 - **Page Name**: ${visitData.pageName || "Index"}
 - **Timestamp**: ${visitData.timestamp}
 - **Device**: ${visitData.device}
 - **IP Address**: ${userIP}
+- **Location**: ${userLocation}
 - **UUID**: ${visitData.uuid}
 - **Action**: ${visitData.action}`;
 
-    // Send message to Discord
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -81,7 +88,6 @@ function acceptConsent() {
     document.getElementById("consent-banner").style.display = "none";
     localStorage.setItem("consent", "true");
 
-    // Generate a UUID and store it in localStorage
     const uuid = generateUUID();
     localStorage.setItem("uuid", uuid);
 
@@ -94,18 +100,14 @@ function acceptConsent() {
         action: "Consent Given"
     });
 
-    // Prompt to reload the page
-    const reload = confirm("For at sikre at samtykke træder i kraft, skal du opdatere siden. Vil du opdatere nu?");
-    if (reload) {
-        location.reload();
-    }
+    location.reload();
 }
 
 // Track page visit
 function trackPageVisit() {
     const pageName = window.location.pathname.split("/").pop();
     const uuid = localStorage.getItem("uuid");
-    
+
     if (localStorage.getItem("consent") && uuid) {
         const visitData = {
             page: window.location.href,
