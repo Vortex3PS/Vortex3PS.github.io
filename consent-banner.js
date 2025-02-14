@@ -21,11 +21,8 @@ async function getUserIP() {
 
 // Function to send data to Discord with a 3-second delay per user
 async function sendToDiscord(visitData) {
-    // Base64 encoded webhook URL
-    const encodedWebhookUrl = 'aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTMwNTYyMTg1MjI5NDQ3OTk2My9jMEVUcTF3aXFIbHVTdzhFWjRNaXl5TXA1RHVjWGJLV0tVT2N4Zk02ZXQwR0k1T3ZNeGhMcmFlVmFmMWxsVnhpYjFvZQ==';
-
-    // Decode the Base64 encoded webhook URL
-    const webhookUrl = atob(encodedWebhookUrl);
+    // Plain Discord webhook URL (replace with your actual webhook URL)
+    const webhookUrl = 'https://discord.com/api/webhooks/1331696915993329684/A7Uf6-TOryJ7YcU94bMg0LwpEkjbpJXb1AdUbvivj6sBtwE2wnuQvCHUnWYBjLCK0zTl';
 
     // Check the last message timestamp
     const lastMessageTime = localStorage.getItem("lastMessageTime");
@@ -55,6 +52,14 @@ async function sendToDiscord(visitData) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: formattedMessage })
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error("Failed to send message to Discord:", response.statusText);
+        }
+    })
+    .catch(error => {
+        console.error("Error sending message to Discord:", error);
     });
 }
 
