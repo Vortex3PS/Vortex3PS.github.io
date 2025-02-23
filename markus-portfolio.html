@@ -76,7 +76,7 @@
             padding: 10px;
             margin-top: 10px;
             border-radius: 8px;
-            display: none; 
+            display: none; /* Hide project info by default */
         }
         .overlay {
             position: fixed;
@@ -111,7 +111,7 @@
             cursor: zoom-in;
         }
         .overlay-images img.zoomed {
-            transform: scale(2); 
+            transform: scale(3); /* Increased zoom level */
             cursor: zoom-out;
             z-index: 1100;
         }
@@ -134,7 +134,7 @@
             background-color: #444;
         }
         .project-item h3 {
-            text-align: center; 
+            text-align: center; /* Center the project title */
         }
     </style>
 </head>
@@ -183,14 +183,6 @@
                 <p>Coming March 30 - Click to learn more!</p>
                 <div class="project-info">
                     <p>A Roblox horror game set to release on March 30. Get ready for a thrilling experience!</p>
-                </div>
-            </div>
-            <div class="project-item" data-project="3">
-                <img src="#" alt="Project 3" class="project-img">
-                <h3>Project 3</h3>
-                <p>Click to learn more!</p>
-                <div class="project-info">
-                    <p>Details about this project coming soon!</p>
                 </div>
             </div>
         </div>
@@ -260,13 +252,13 @@
 
         function closeOverlay() {
             overlay.style.display = 'none';
-   
+            // Reset zoom when closing overlay
             document.querySelectorAll('.overlay-images img').forEach(img => {
                 img.classList.remove('zoomed');
             });
         }
 
-
+        // Smooth scrolling
         document.querySelectorAll('nav a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
