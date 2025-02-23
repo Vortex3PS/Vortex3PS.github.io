@@ -76,7 +76,7 @@
             padding: 10px;
             margin-top: 10px;
             border-radius: 8px;
-            display: none; /* Hide project info by default */
+            display: none; 
         }
         .overlay {
             position: fixed;
@@ -111,7 +111,7 @@
             cursor: zoom-in;
         }
         .overlay-images img.zoomed {
-            transform: scale(3); /* Increased zoom level */
+            transform: scale(3); 
             cursor: zoom-out;
             z-index: 1100;
         }
@@ -134,7 +134,7 @@
             background-color: #444;
         }
         .project-item h3 {
-            text-align: center; /* Center the project title */
+            text-align: center; 
         }
     </style>
 </head>
@@ -260,13 +260,13 @@
 
         function closeOverlay() {
             overlay.style.display = 'none';
-            // Reset zoom when closing overlay
+   
             document.querySelectorAll('.overlay-images img').forEach(img => {
                 img.classList.remove('zoomed');
             });
         }
 
-        // Smooth scrolling
+
         document.querySelectorAll('nav a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
