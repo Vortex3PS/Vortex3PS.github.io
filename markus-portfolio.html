@@ -70,6 +70,14 @@
             max-width: 100%;
             border-radius: 8px;
         }
+        .project-info {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none; /* Hide project info by default */
+        }
         .overlay {
             position: fixed;
             top: 0;
@@ -103,7 +111,7 @@
             cursor: zoom-in;
         }
         .overlay-images img.zoomed {
-            transform: scale(2);
+            transform: scale(3); /* Increased zoom level */
             cursor: zoom-out;
             z-index: 1100;
         }
@@ -125,6 +133,9 @@
             transform: scale(1.1);
             background-color: #444;
         }
+        .project-item h3 {
+            text-align: center; /* Center the project title */
+        }
     </style>
 </head>
 <body>
@@ -141,6 +152,19 @@
         <h1>Hello, I'm Markus!</h1>
         <p>Certified Ethical Hacker and Programmer.</p>
     </section>
+    <section class="section" id="about">
+        <h2>About Me</h2>
+        <p>Certified ethical hacker with expertise in Lua, HTML, CSS, and JavaScript. Skilled in C# and C++.</p>
+        <p>Country: Denmark | Timezone: CET +1</p>
+    </section>
+    <section class="section skills" id="skills">
+        <h2>Skills</h2>
+        <ul>
+            <li>Ethical Hacking</li>
+            <li>Lua, HTML, CSS, JavaScript</li>
+            <li>C#, C++</li>
+        </ul>
+    </section>
     <section class="section projects" id="projects">
         <h2>Projects</h2>
         <div class="project-gallery">
@@ -148,11 +172,26 @@
                 <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" alt="My Website" class="project-img">
                 <h3>My business website!</h3>
                 <p>Vortex3ps.github.io - Click to learn more!</p>
+                <div class="project-info">
+                    <p>A website for my business Vortex3PS.</p>
+                    <a href="https://vortex3ps.github.io" target="_blank">Visit Website</a>
+                </div>
             </div>
             <div class="project-item" data-project="2">
                 <img src="https://tr.rbxcdn.com/180DAY-7a19052a817edfe1ba296325b778cef6/768/432/Image/Png/noFilter" alt="Roblox Horror Game" class="project-img">
                 <h3>The phantom</h3>
                 <p>Coming March 30 - Click to learn more!</p>
+                <div class="project-info">
+                    <p>A Roblox horror game set to release on March 30. Get ready for a thrilling experience!</p>
+                </div>
+            </div>
+            <div class="project-item" data-project="3">
+                <img src="#" alt="Project 3" class="project-img">
+                <h3>Project 3</h3>
+                <p>Click to learn more!</p>
+                <div class="project-info">
+                    <p>Details about this project coming soon!</p>
+                </div>
             </div>
         </div>
     </section>
@@ -169,6 +208,13 @@
             <button class="close-btn" onclick="closeOverlay()">Close</button>
         </div>
     </div>
+    <section class="section contact" id="contact">
+        <h2>Contact</h2>
+        <p>Connect with me on social media!</p>
+        <ul>
+            <li>Discord: Markushd_real</li>
+        </ul>
+    </section>
     <footer>
         <p>&copy; 2023 - 2025 Markus</p>
     </footer>
@@ -214,7 +260,20 @@
 
         function closeOverlay() {
             overlay.style.display = 'none';
+            // Reset zoom when closing overlay
+            document.querySelectorAll('.overlay-images img').forEach(img => {
+                img.classList.remove('zoomed');
+            });
         }
+
+        // Smooth scrolling
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
     </script>
 </body>
 </html>
