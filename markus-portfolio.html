@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markus' Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #111;
+            padding: 20px;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #222;
+        }
+        .hero h1 {
+            color: red;
+        }
+        .section {
+            padding: 40px 20px;
+        }
+        .skills, .projects, .contact {
+            background-color: #111;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .skills h2, .projects h2, .contact h2 {
+            color: red;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #111;
+        }
+    .project-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .project-item {
+            background-color: #222;
+            border-radius: 8px;
+            padding: 15px;
+            width: 300px;
+            text-align: center;
+        }
+        .project-img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Markus' Portfolio</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h1>Hello, I'm Markus!</h1>
+        <p>Certified Ethical Hacker and Programmer.</p>
+    </section>
+    <section class="section" id="about">
+        <h2>About Me</h2>
+        <p>Certified ethical hacker with expertise in Lua, HTML, CSS, and JavaScript. Skilled in C# and C++.</p>
+        <p>Country: Denmark | Timezone: CET +1</p>
+    </section>
+    <section class="section skills" id="skills">
+        <h2>Skills</h2>
+        <ul>
+            <li>Ethical Hacking</li>
+            <li>Lua, HTML, CSS, JavaScript</li>
+            <li>C#, C++</li>
+        </ul>
+    </section>
+    <section class="section projects" id="projects">
+        <h2>Projects</h2>
+        <div class="project-gallery">
+            <div class="project-item">
+                <img src="#" alt="Project 1" class="project-img">
+                <h3>My website</h3>
+                <p>vortex3ps.github.io a website for my business</p>
+            </div>
+            <div class="project-item">
+                <img src="#" alt="Project 2" class="project-img">
+                <h3>The Phantom</h3>
+                <p>A roblox horror game, looking to release 30 march 2025</p>
+            </div>
+            <div class="project-item">
+                <img src="#" alt="Project 3" class="project-img">
+                <h3>Project Title 3</h3>
+                <p>Short description of the project. Click to learn more!</p>
+            </div>
+        </div>
+        <h2>Projects</h2>
+        <p>Coming soon...</p>
+    </section>
+    <section class="section contact" id="contact">
+        <h2>Contact</h2>
+        <p>Connect with me on social media!</p>
+    </section>
+    <footer>
+        <p>&copy; 2025 Markus</p>
+    </footer>
+</body>
+</html>
