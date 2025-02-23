@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markus' Portfolio</title>
     <style>
+        .project-info {
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+        .project-item.active .project-info {
+            max-height: 200px;
+            opacity: 1;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #000;
@@ -64,6 +74,13 @@
             max-width: 100%;
             border-radius: 8px;
         }
+    .project-info {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -97,30 +114,69 @@
         <h2>Projects</h2>
         <div class="project-gallery">
             <div class="project-item">
-                <img src="#" alt="Project 1" class="project-img">
-                <h3>My website</h3>
-                <p>vortex3ps.github.io a website for my business</p>
+                <div class="project-info" style="display: none;">
+                    <p>A website for my business Vortex3PS.</p>
+                    <a href="https://vortex3ps.github.io" target="_blank">Visit Website</a>
+                </div>
+                <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" alt="My Website" class="project-img">
+                <h3>My business website!</h3>
+                <p>Vortex3ps.github.io - Click to learn more!</p>
             </div>
             <div class="project-item">
-                <img src="#" alt="Project 2" class="project-img">
-                <h3>The Phantom</h3>
-                <p>A roblox horror game, looking to release 30 march 2025</p>
+                <div class="project-info" style="display: none;">
+                    <p>A Roblox horror game set to release on March 30. Get ready for a thrilling experience!</p>
+                </div>
+                <img src="https://tr.rbxcdn.com/180DAY-7a19052a817edfe1ba296325b778cef6/768/432/Image/Png/noFilter" alt="Roblox Horror Game" class="project-img">
+                <h3>The phantom</h3>
+                <p>Coming March 30 - Click to learn more!</p>
             </div>
             <div class="project-item">
+                <div class="project-info" style="display: none;">
+                    <p>Details about this project coming soon!</p>
+                </div>
                 <img src="#" alt="Project 3" class="project-img">
-                <h3>Project Title 3</h3>
-                <p>Short description of the project. Click to learn more!</p>
+                <h3>Project 3</h3>
+                <p>Click to learn more!</p>
             </div>
         </div>
-        <h2>Projects</h2>
-        <p>Coming soon...</p>
+        
     </section>
     <section class="section contact" id="contact">
         <h2>Contact</h2>
         <p>Connect with me on social media!</p>
+        <ul>
+            <li>Discord: Markushd_real</li>
+        </ul>
     </section>
     <footer>
-        <p>&copy; 2025 Markus</p>
+        <p>&copy; 2023 - 2025 Markus</p>
     </footer>
+<script>
+        // Smooth scrolling
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Project info toggle
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const info = this.querySelector('.project-info');
+                if (info.style.display === 'block') {
+                    info.style.display = 'none';
+                } else {
+                    info.style.display = 'block';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
