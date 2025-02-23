@@ -5,16 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markus' Portfolio</title>
     <style>
-        .project-info {
-            transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-        }
-        .project-item.active .project-info {
-            max-height: 200px;
-            opacity: 1;
-        }
         body {
             font-family: Arial, sans-serif;
             background-color: #000;
@@ -31,6 +21,11 @@
             color: #fff;
             margin: 0 15px;
             text-decoration: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        nav a:hover {
+            transform: scale(1.1);
+            background-color: #444;
         }
         .hero {
             text-align: center;
@@ -57,7 +52,7 @@
             padding: 10px;
             background-color: #111;
         }
-    .project-gallery {
+        .project-gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
@@ -69,17 +64,66 @@
             padding: 15px;
             width: 300px;
             text-align: center;
+            cursor: pointer;
         }
         .project-img {
             max-width: 100%;
             border-radius: 8px;
         }
-    .project-info {
-            background-color: #333;
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
             color: #fff;
-            padding: 10px;
-            margin-top: 10px;
+            z-index: 1000;
+        }
+        .overlay-content {
+            max-width: 80%;
+            background: #111;
+            padding: 20px;
             border-radius: 8px;
+            text-align: center;
+        }
+        .overlay-images {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .overlay-images img {
+            max-width: 45%;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+        .overlay-images img.zoomed {
+            transform: scale(2);
+            cursor: zoom-out;
+            z-index: 1100;
+        }
+        .overlay-text {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .close-btn {
+            background: red;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .close-btn:hover {
+            transform: scale(1.1);
+            background-color: #444;
         }
     </style>
 </head>
@@ -97,86 +141,80 @@
         <h1>Hello, I'm Markus!</h1>
         <p>Certified Ethical Hacker and Programmer.</p>
     </section>
-    <section class="section" id="about">
-        <h2>About Me</h2>
-        <p>Certified ethical hacker with expertise in Lua, HTML, CSS, and JavaScript. Skilled in C# and C++.</p>
-        <p>Country: Denmark | Timezone: CET +1</p>
-    </section>
-    <section class="section skills" id="skills">
-        <h2>Skills</h2>
-        <ul>
-            <li>Ethical Hacking</li>
-            <li>Lua, HTML, CSS, JavaScript</li>
-            <li>C#, C++</li>
-        </ul>
-    </section>
     <section class="section projects" id="projects">
         <h2>Projects</h2>
         <div class="project-gallery">
-            <div class="project-item">
-                <div class="project-info" style="display: none;">
-                    <p>A website for my business Vortex3PS.</p>
-                    <a href="https://vortex3ps.github.io" target="_blank">Visit Website</a>
-                </div>
+            <div class="project-item" data-project="1">
                 <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" alt="My Website" class="project-img">
                 <h3>My business website!</h3>
                 <p>Vortex3ps.github.io - Click to learn more!</p>
             </div>
-            <div class="project-item">
-                <div class="project-info" style="display: none;">
-                    <p>A Roblox horror game set to release on March 30. Get ready for a thrilling experience!</p>
-                </div>
+            <div class="project-item" data-project="2">
                 <img src="https://tr.rbxcdn.com/180DAY-7a19052a817edfe1ba296325b778cef6/768/432/Image/Png/noFilter" alt="Roblox Horror Game" class="project-img">
                 <h3>The phantom</h3>
                 <p>Coming March 30 - Click to learn more!</p>
             </div>
-            <div class="project-item">
-                <div class="project-info" style="display: none;">
-                    <p>Details about this project coming soon!</p>
-                </div>
-                <img src="#" alt="Project 3" class="project-img">
-                <h3>Secret project</h3>
-                <p>Coming soon...</p>
-            </div>
         </div>
-        
     </section>
-    <section class="section contact" id="contact">
-        <h2>Contact</h2>
-        <p>Connect with me on social media!</p>
-        <ul>
-            <li>Discord: Markushd_real</li>
-        </ul>
-    </section>
+    <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <div class="overlay-images">
+                <img src="" alt="Image 1" class="overlay-img-1">
+                <img src="" alt="Image 2" class="overlay-img-2">
+            </div>
+            <div class="overlay-text">
+                <h2 class="overlay-title"></h2>
+                <p class="overlay-description"></p>
+            </div>
+            <button class="close-btn" onclick="closeOverlay()">Close</button>
+        </div>
+    </div>
     <footer>
         <p>&copy; 2023 - 2025 Markus</p>
     </footer>
-<script>
-        // Smooth scrolling
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
+    <script>
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.querySelector('.overlay-title');
+        const overlayDescription = document.querySelector('.overlay-description');
+        const overlayImg1 = document.querySelector('.overlay-img-1');
+        const overlayImg2 = document.querySelector('.overlay-img-2');
+
+        const projects = {
+            1: {
+                title: "My Business Website",
+                description: "A website for my business Vortex3PS. It's in danish",
+                img1: "https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/Vortex3PS-Main-page-english-explained.png?raw=true",
+                img2: "https://via.placeholder.com/400x300.png?text=Vortex+Image+2"
+            },
+            2: {
+                title: "The Phantom",
+                description: "A Roblox horror game set to release on March 30. Get ready for a thrilling experience!",
+                img1: "https://via.placeholder.com/400x300.png?text=Phantom+Image+1",
+                img2: "https://via.placeholder.com/400x300.png?text=Phantom+Image+2"
+            }
+        };
+
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                const project = projects[projectId];
+                overlayTitle.textContent = project.title;
+                overlayDescription.textContent = project.description;
+                overlayImg1.src = project.img1;
+                overlayImg2.src = project.img2;
+                overlay.style.display = 'flex';
             });
         });
 
-        // Project info toggle
-        document.querySelectorAll('.project-item').forEach(item => {
-            item.addEventListener('click', function() {
-                this.classList.toggle('active');
+        document.querySelectorAll('.overlay-images img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('zoomed');
             });
         });
-        document.querySelectorAll('.project-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const info = this.querySelector('.project-info');
-                if (info.style.display === 'block') {
-                    info.style.display = 'none';
-                } else {
-                    info.style.display = 'block';
-                }
-            });
-        });
+
+        function closeOverlay() {
+            overlay.style.display = 'none';
+        }
     </script>
 </body>
 </html>
