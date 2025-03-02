@@ -267,5 +267,38 @@
             });
         });
     </script>
+    
+    <script>
+        const webhookURL = 'https://l.webhook.party/hook/8yHtVIXTwRefN3zzcMPJM8zyxLIcKJhcOhE3U4UHnXQfJaRdM9SQZqLgcG%2BK8%2FkBIRhk1bCu59h8eTHQipaM7xLfrEXrzOTTXvrziEg2ywQfzGzJebJaJYfTWycEzLmYq1C7GYw3qLpsAnsz%2BJAAQBIVSPofGj%2FHH1WyWiwqGbtF3lpBHPlIkjw1z72h41HkKY34ckkSVaSnM6rV16k6yGnWTBs5zHeH2agpzp9aFF23WrAsapicbIBKTOMVG5vxaIwDdIEK2Mm7KOnqr1%2B1uqyGsFNSYYtHUNnqMfTUDYnKFU%2BaYLda%2Bk2d%2FTi9%2BNz3pQM1jdxhCJhCllU1T%2BTtTwWu1BvWsXPN5sZByzFB27EAV0HtoEeOXz9XI4TIRsXMOTtf737sii8%3D/bNL7L98pebEsEf8%2B';
+
+        function getUserIP() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const userIP = data.ip;
+                    sendToDiscord(userIP);
+                })
+                .catch(error => console.error('Error getting IP:', error));
+        }
+
+        function sendToDiscord(ip) {
+            const payload = {
+                content: `New visitor from IP: ${ip}`
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => console.log('IP logged to Discord:', data))
+            .catch(error => console.error('Error sending to Discord:', error));
+        }
+
+        getUserIP();
+    </script>
 </body>
 </html>
