@@ -380,29 +380,35 @@
             updateTotal();
         }
 
-        function applyDiscount() {
-            const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
-            const discountMessage = document.getElementById('discount-message');
-            discountMessage.textContent = '';
-            discountAmount = 0;
-            freeShipping = false;
+function applyDiscount() {
+    const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
+    const discountMessage = document.getElementById('discount-message');
+    discountMessage.textContent = '';
+    discountAmount = 0;
+    freeShipping = false;
 
-            if (discountCode === 'q-WsW4WhWqWmW3W5WhW9') {
-                discountAmount = total * 0.2; // 20% discount
-                discountMessage.textContent = '10% rabat anvendt!';
-            } else if (discountCode === 'VortexGo') {
-                discountAmount = total * 0.1; // 10% DKK discount
-                discountMessage.textContent = '10% rabat anvendt!';
-        //    } else if (discountCode === 'FREESHIP') {
-        //        freeShipping = true; // Free shipping
-        //        deliveryFee = 0;
-        //        discountMessage.textContent = 'Gratis levering anvendt!';
-            } else if (discountCode !== '') {
-                discountMessage.textContent = 'Ugyldig rabatkode!';
-            }
+    console.log("Entered Discount Code:", discountCode); // Debugging
 
-            updateTotal();
-        }
+    if (discountCode === 'Q-WSW4WHWQWMW3W5WHW9') {
+        discountAmount = total * 0.2; // 20% discount
+        discountMessage.textContent = '20% rabat anvendt!';
+        console.log("20% Discount Applied"); // Debugging
+    } else if (discountCode === 'VORTEXGO') {
+        discountAmount = total * 0.1; // 10% discount
+        discountMessage.textContent = '10% rabat anvendt!';
+        console.log("10% Discount Applied"); // Debugging
+    } else if (discountCode === 'FREESHIP') {
+        freeShipping = true; // Free shipping
+        deliveryFee = 0;
+        discountMessage.textContent = 'Gratis levering anvendt!';
+        console.log("Free Shipping Applied"); // Debugging
+    } else if (discountCode !== '') {
+        discountMessage.textContent = 'Ugyldig rabatkode!';
+        console.log("Invalid Discount Code"); // Debugging
+    }
+
+    updateTotal();
+}
 
         function updateTotal() {
             if (selectedDeliveryMethod === 'levering' && !freeShipping) {
