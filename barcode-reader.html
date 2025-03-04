@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Scanner</title>
+    <title>Code-128 Barcode Scanner</title>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <style>
         body {
@@ -27,11 +27,12 @@
     </style>
 </head>
 <body>
-    <h1>Barcode Scanner</h1>
+    <h1>Code-128 Barcode Scanner</h1>
     <div id="reader"></div>
     <div id="product-info">Scan a Code-128 barcode to see details here.</div>
 
     <script>
+        // Product database
         const products = {
             "00001": { name: "Spiral", price: "25 DKK" },
             "00002": { name: "Squishy", price: "25 DKK" },
@@ -44,6 +45,7 @@
         function onScanSuccess(decodedText, decodedResult) {
             console.log(`Code-128 barcode scanned: ${decodedText}`);
 
+            // Check if the scanned code exists in our products
             const product = products[decodedText];
             if (product) {
                 document.getElementById('product-info').innerHTML = 
@@ -54,21 +56,26 @@
             }
         }
 
+        // Callback function for when the scanning is completed or an error occurs
         function onScanFailure(error) {
             console.warn(`Scan error: ${error}`);
         }
 
+        // Initialize the barcode scanner for Code-128 only
         function startScanner() {
             const html5QrCode = new Html5Qrcode("reader");
 
             const config = {
                 fps: 10,
                 qrbox: 250,
-                supportedScanTypes: [Html5Qrcode.SCAN_TYPE_CODE_128],
+                supportedScanTypes: [Html5Qrcode.SCAN_TYPE_CODE_128], // Only scan Code-128
             };
 
+            // Start the scanner with permission check
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
                 .then(function (stream) {
+                    console.log("Camera permission granted");
+                    // Camera permission granted, start scanner
                     html5QrCode.start(
                         { facingMode: "environment" },
                         config,
@@ -79,13 +86,22 @@
                     });
                 })
                 .catch(function (error) {
+                    // Handle error if permission is denied or camera is unavailable
                     console.error("Camera permission denied or unavailable: ", error);
                     document.getElementById('product-info').innerText = "Camera access is required to scan barcodes.";
                 });
         }
 
-
-        window.onload = startScanner;
+        // Start scanning when the page loads
+        window.onload = function() {
+            // Check if camera permissions are requested
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                startScanner();
+            } else {
+                console.error("Media Devices API is not supported");
+                document.getElementById('product-info').innerText = "Camera is not available on your device.";
+            }
+        };
     </script>
 </body>
 </html>
