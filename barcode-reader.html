@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #reader {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        #product-info {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Code-128 Barcode Scanner</h1>
+    <div id="reader"></div>
+    <div id="product-info">Scan a barcode to see details here.</div>
+
+    <script>
+        const products = {
+            "00001": { name: "Spiral", price: "25 DKK" },
+            "00002": { name: "Squishy", price: "25 DKK" },
+            "00003": { name: "Death card", price: "5 DKK" },
+            "00004": { name: "Boomerang", price: "15 DKK" },
+            "00005": { name: "Catapult", price: "25 DKK" },
+        };
+
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Code-128 barcode scanned: ${decodedText}`);
+
+            const product = products[decodedText];
+            if (product) {
+                document.getElementById('product-info').innerHTML = 
+                    `Product: ${product.name} <br> Price: ${product.price}`;
+            } else {
+                document.getElementById('product-info').innerHTML = 
+                    'Product not found in the database.';
+            }
+        }
+
+
+        function onScanFailure(error) {
+            console.warn(`QR Code scan error: ${error}`);
+        }
+
+
+        function startScanner() {
+            const html5QrCode = new Html5Qrcode("reader");
+
+            const config = {
+                fps: 10,
+                qrbox: 250,
+                supportedScanTypes: [Html5Qrcode.SCAN_TYPE_CODE_128]
+            };
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                config,
+                onScanSuccess,
+                onScanFailure
+            ).catch(err => {
+                console.log("Error starting the barcode scanner: ", err);
+            });
+        }
+
+        window.onload = startScanner;
+    </script>
+</body>
+</html>
