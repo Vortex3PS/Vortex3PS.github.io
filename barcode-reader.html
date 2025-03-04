@@ -27,9 +27,9 @@
     </style>
 </head>
 <body>
-    <h1>Code-128 Barcode Scanner</h1>
+    <h1>Barcode Scanner</h1>
     <div id="reader"></div>
-    <div id="product-info">Scan a barcode to see details here.</div>
+    <div id="product-info">Scan a Code-128 barcode to see details here.</div>
 
     <script>
         const products = {
@@ -40,6 +40,7 @@
             "00005": { name: "Catapult", price: "25 DKK" },
         };
 
+        // Callback function when a barcode is scanned
         function onScanSuccess(decodedText, decodedResult) {
             console.log(`Code-128 barcode scanned: ${decodedText}`);
 
@@ -53,11 +54,9 @@
             }
         }
 
-
         function onScanFailure(error) {
-            console.warn(`QR Code scan error: ${error}`);
+            console.warn(`Scan error: ${error}`);
         }
-
 
         function startScanner() {
             const html5QrCode = new Html5Qrcode("reader");
@@ -65,18 +64,26 @@
             const config = {
                 fps: 10,
                 qrbox: 250,
-                supportedScanTypes: [Html5Qrcode.SCAN_TYPE_CODE_128]
+                supportedScanTypes: [Html5Qrcode.SCAN_TYPE_CODE_128],
             };
 
-            html5QrCode.start(
-                { facingMode: "environment" },
-                config,
-                onScanSuccess,
-                onScanFailure
-            ).catch(err => {
-                console.log("Error starting the barcode scanner: ", err);
-            });
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function (stream) {
+                    html5QrCode.start(
+                        { facingMode: "environment" },
+                        config,
+                        onScanSuccess,
+                        onScanFailure
+                    ).catch(err => {
+                        console.log("Error starting the barcode scanner: ", err);
+                    });
+                })
+                .catch(function (error) {
+                    console.error("Camera permission denied or unavailable: ", error);
+                    document.getElementById('product-info').innerText = "Camera access is required to scan barcodes.";
+                });
         }
+
 
         window.onload = startScanner;
     </script>
