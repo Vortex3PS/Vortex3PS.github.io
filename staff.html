@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <title>Vortex Personale Portal</title>
     <style>
-        /* Existing and new styles */
-
-        /* Chart-specific styles under body-chart */
 body.body-chart {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -175,9 +172,8 @@ body.body-chart .monthly-list li {
             text-align: center;
         }
 
-/* Style for the popup container */
 #personale-politik-popup {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -185,11 +181,10 @@ body.body-chart .monthly-list li {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Dark background */
+    background-color: rgba(0, 0, 0, 0.4);
     text-align: center;
 }
 
-/* Style for the popup content */
 #popup-content {
     background-color: white;
     margin: 15% auto;
@@ -201,7 +196,6 @@ body.body-chart .monthly-list li {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Styling the button to close the popup */
 button {
     background-color: #4CAF50;
     color: white;
@@ -247,6 +241,7 @@ button:hover {
                 <option value="Rani">Rani</option>
                 <option value="Markus">Markus</option>
                 <option value="Seb">Seb</option>
+                <option value="Mikkel">Mikkel</option>
             </select>
             <br><br>
             <input type="password" id="passwordInput" placeholder="Indtast adgangskode">
@@ -258,13 +253,16 @@ button:hover {
         <h2 id="welcome-message"></h2>
 
         <h2>Annoncering</h2>
-        <p id="announcementMessage">Ingen annoncering.</p>
+        <p id="announcementMessage">Ny medarberjder, Mikkel!</p>
 
-        <!-- Daily Tasks Section -->
         <div id="daily-tasks">
             <h3>Måndensopgaver</h3>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Deltag i næste møde </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemfør opgaveliste</div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (3D) Lav en ny 3D print </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (3D) Skriv ider på en liste </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (Sælger) Sælg 3 ting </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (PC) Lav en ny PC i PCPartPicker </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (Ejerne)  </div>
+            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemfør opgaveliste </div>
         </div>
 
                 <!-- Button to trigger Personale Politik popup -->
@@ -280,6 +278,8 @@ button:hover {
         <p>
             - Ingen deling af marketingstrategier.<br>
             - Ingen deling af 3d modeler.<br>
+            - Ingen deling af rigtig pris af et produkt.<br>
+            - Ingen deling af din løn.<br>
             - Intet pis.<br>
             - Gør din ting
         </p>
@@ -338,6 +338,7 @@ button:hover {
             "Rani": "RaniAintHim!",
             "Markus": "markushermansen",
             "Seb": "BrawlStars"
+            "Mikkel": "Vortex3PS!StaffIsCool"
         };
         const authorizedStaffIds = {
             "Vortex3PS-Pass-Owner-Markus": "Markus",
@@ -477,7 +478,6 @@ function closePersonalePolitik() {
     document.getElementById("personale-politik-popup").style.display = "none";
 }
 
-// Data for Monthly Income
 const monthlyIncome = {
     labels: [
         "Januar", "Februar", "Marts", "April", "Maj", "Juni", 
@@ -485,11 +485,11 @@ const monthlyIncome = {
     ], // Months
     datasets: [{
         label: "Indkomst pr. måned (kr)",
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Income values for each month
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         borderColor: "#6200ea",
         backgroundColor: "rgba(98, 0, 234, 0.2)",
         fill: true,
-        tension: 0.4, // Smooth curve
+        tension: 0.4,
     }]
 };
 
