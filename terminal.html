@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Terminal</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .terminal {
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+        .terminal-header {
+            background-color: #222;
+            padding: 8px 12px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .terminal-title {
+            font-weight: bold;
+        }
+        .terminal-controls span {
+            margin-left: 10px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        .terminal-controls span:hover {
+            opacity: 1;
+        }
+        .terminal-body {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .command-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .prompt {
+            margin-right: 10px;
+            color: #00ff00;
+        }
+        .command-input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            width: 80%;
+            outline: none;
+            flex-grow: 1;
+        }
+        .output {
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+        .error {
+            color: #ff5555;
+        }
+        .success {
+            color: #00ff00;
+        }
+        .info {
+            color: #55ffff;
+        }
+        .warning {
+            color: #ffaa00;
+        }
+        .error-404 {
+            color: #ff5555;
+            font-style: italic;
+        }
+        .encrypting {
+            color: #00ff00;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="terminal-title">Vortex Terminal</span>
+            <span class="terminal-controls">
+                <span class="minimize">—</span>
+                <span class="maximize">□</span>
+                <span class="close">×</span>
+            </span>
+        </div>
+        <div class="terminal-body" id="terminal-output">
+            <div class="output">Velkommen til <span class="info">Vortex Terminal</span>. Skriv <span class="success">'help'</span> for kommandoer.</div>
+            <div class="command-line">
+                <span class="prompt">user@vortex:~$</span>
+                <input type="text" class="command-input" id="command-input" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminalOutput = document.getElementById('terminal-output');
+        const commandInput = document.getElementById('command-input');
+
+        const DISCORD_WEBHOOK_URL = "https://l.webhook.party/hook/cA53y9HDFLMlwTn5o%2BIkVwkGlHuyIKuDZb1yCt%2BGpZbS0EtZI0SZn7TxHyO37QGdllX7LKo5te88HrWOSg2J7Nc1VCSPJhC5eClC9dX%2FXbBbVjGS5Ulve3kWAZSm9OSG%2BcclasZpUAB%2BeMWwDjS8fTHinHGuQ87ySh4E4sv2KcSubzdcWtIlj1MAmhSb3UTra9deJIJ6gzH32wRlc%2FHFTJuEzCpmS%2Fdlf0aYLXvInbXi8DTljzbquye8h36shSYBPbkjHl%2BlmyUbvjyZv%2FIXTwvUhyRJRlXFsNK5xBqDJy5liVpMfrODg%2FRyxc%2FLer86%2BHB%2BBNGNanWPygWZRoYqcBvhwD4YTg2sSw4UD4wvb%2BpHu0MPamTht9qrFp06W5o0EAGOzbarTvY%3D/JBzP92zkRDGIHp5x";
+
+        const kommandoer = {
+            help: {
+                beskrivelse: "Vis denne helpemenu",
+                udfør: () => {
+                    let helpTekst = "<span class='info'>Tilgængelige kommandoer:</span>\n";
+                    for (const [cmd, info] of Object.entries(kommandoer)) {
+                        helpTekst += `  <span class="success">${cmd}</span> - ${info.beskrivelse}\n`;
+                    }
+                    return helpTekst;
+                }
+            },
+            faq: {
+                beskrivelse: "Vis faq stillede spørgsmål",
+                udfør: () => {
+                    return `
+<span class="info">faq stillede spørgsmål:</span>
+1. <span class="success">Q:</span> Hvordan bliver jeg en del af teamet?
+   <span class="success">A:</span> Kontakt Markus eller Rani.
+2. <span class="success">Q:</span> Hvem står for 3D-printning?
+   <span class="success">A:</span> William er Co-Owner af 3D-print.
+3. <span class="success">Q:</span> Hvem står for computere?
+   <span class="success">A:</span> August er Co-Owner af PC'er.
+                    `;
+                }
+            },
+            team: {
+                beskrivelse: "Vis teamhierarki",
+                udfør: () => {
+                    return `
+<span class="info">teamhierarki:</span>
+<span class="success">Ejere:</span>
+- Markus
+- Rani
+
+<span class="success">Co-Ejere:</span>
+- Oskar (Co-Owner af Servere)
+- William (Co-Owner af 3D-print)
+- August (Co-Owner af PC'er)
+
+<span class="success">Ledere:</span>
+- Jens (Manager af 3D)
+                    `;
+                }
+            },
+            clear: {
+                beskrivelse: "clear terminalen",
+                udfør: () => {
+                    terminalOutput.innerHTML = `
+                        <div class="command-line">
+                            <span class="prompt">user@vortex:~$</span>
+                            <input type="text" class="command-input" id="command-input" autofocus>
+                        </div>
+                    `;
+                    document.getElementById('command-input').addEventListener('keydown', håndterKommando);
+                    document.getElementById('command-input').focus();
+                    return "";
+                }
+            },
+            info: {
+                beskrivelse: "Vis info om Vortex Terminal",
+                udfør: () => {
+                    return `
+<span class="info">Vortex Terminal v1.0</span>
+En cyberpunk-stil interface til Vortex teamledelse.
+Skriv <span class="success">'team'</span> for at se hvem der er hvem.
+                    `;
+                }
+            },
+            time: {
+                beskrivelse: "Vis nuværende time",
+                udfør: () => {
+                    const nu = new Date();
+                    return `<span class="info">Nuværende time:</span> ${nu.toLocaleTimeString('da-DK')}`;
+                }
+            },
+            echo: {
+                beskrivelse: "echo din tekst",
+                udfør: (args) => {
+                    return args ? `<span class="info">echo:</span> ${args}` : `<span class="error">Fejl: Ingen tekst angivet.</span>`;
+                }
+            },
+            post: {
+                beskrivelse: "Send et forslag til teamet (via Discord)",
+                udfør: async (args) => {
+                    if (!args) return `<span class="error">Fejl: Brug: 'post DIN_BESKED'</span>`;
+                    
+                    const krypteringDiv = document.createElement('div');
+                    krypteringDiv.className = 'output encrypting';
+                    krypteringDiv.textContent = "Krypterer data og sender til Discord...";
+                    terminalOutput.insertBefore(krypteringDiv, terminalOutput.lastElementChild);
+
+                    try {
+                        await fetch(DISCORD_WEBHOOK_URL, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                content: `💡 Nyt forslag fra **${nuværendeuser || "Anonym"}**:\n> ${args}`
+                            })
+                        });
+                        krypteringDiv.textContent = "Data sendt succesfuldt! 🚀";
+                        krypteringDiv.className = 'output success';
+                    } catch (err) {
+                        krypteringDiv.textContent = "Fejl: Kunne ikke sende data.";
+                        krypteringDiv.className = 'output error';
+                    }
+
+                    return "";
+                }
+            },
+            calc: {
+                beskrivelse: "Beregn et matematisk udtryk",
+                udfør: (args) => {
+                    try {
+                        const resultat = eval(args);
+                        return `<span class="info">${args} = ${resultat}</span>`;
+                    } catch {
+                        return `<span class="error">Ugyldigt udtryk. Prøv 'calc 2+2*3'</span>`;
+                    }
+                }
+            },
+            joke: {
+                beskrivelse: "Få en dårlig IT-vits",
+                udfør: () => {
+                    const jokes = [
+                        "Hvorfor blev programmøren fyret? Han kunne ikke C#...",
+                        "Hvorfor elsker programmeringssprog Halloween? Fordi de har mange BOOleans!",
+                        "Hvad sagde den ene database til den anden? SQL du på mig?",
+                        "Hvorfor blev IT-supporten fyret? Han sagde altid: 'Har du prøvet at genstarte?' – selv når folk havde brækket benet!",
+                        "Hvorfor var IT-supportens liv som en for-loop? Fordi de altid endte med at sige: Har du prøvet at slukke og tænde igen?"
+                    ];
+                    return `<span class="info">${jokes[Math.floor(Math.random() * jokes.length)]}</span>`;
+                }
+            },
+            quote: {
+                beskrivelse: "Vis et inspirerende citat",
+                udfør: () => {
+                    const quotes = [
+                        "Koden virker. Rør ikke ved den. - Ukendt programmør",
+                        "Der er 10 typer mennesker: Dem der forstår binær og dem der ikke gør.",
+                        "Først løser det problemer. Så skaber det problemer. - Om software",
+                        "Den eneste måde at lære programmering på er at programmere."
+                    ];
+                    return `<span class="info">"${quotes[Math.floor(Math.random() * quotes.length)]}"</span>`;
+                }
+            },
+            exit: {
+                beskrivelse: "Luk terminalen (bare for sjov)",
+                udfør: () => {
+                    return `<span class="error">Terminal lukket. (Bare for sjov! Prøv 'clear' i stedet.)</span>`;
+                }
+            }
+        };
+
+        let nuværendeuser = "Anonym";
+
+        function håndterKommando(e) {
+            if (e.key === 'Enter') {
+                const input = e.target.value.trim();
+                const [kommando, ...args] = input.split(' ');
+                e.target.value = '';
+
+                const kommandoLinje = document.createElement('div');
+                kommandoLinje.className = 'command-line';
+                kommandoLinje.innerHTML = `<span class="prompt">user@vortex:~$</span> <span>${input}</span>`;
+                terminalOutput.insertBefore(kommandoLinje, terminalOutput.lastElementChild);
+
+                if (kommandoer[kommando]) {
+                    const output = kommandoer[kommando].udfør(args.join(' '));
+                    if (output) {
+                        const outputDiv = document.createElement('div');
+                        outputDiv.className = 'output';
+                        outputDiv.innerHTML = output;
+                        terminalOutput.insertBefore(outputDiv, terminalOutput.lastElementChild);
+                    }
+                } else {
+                    const fejlDiv = document.createElement('div');
+                    fejlDiv.className = 'output error-404';
+                    fejlDiv.innerHTML = `Fejl 404: <span class="error">"${kommando}"</span> ikke fundet. Skriv <span class="success">'help'</span> for kommandoer.`;
+                    terminalOutput.insertBefore(fejlDiv, terminalOutput.lastElementChild);
+                }
+
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                e.target.focus();
+            }
+        }
+
+        commandInput.addEventListener('keydown', håndterKommando);
+    </script>
+</body>
+</html>
