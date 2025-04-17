@@ -48,15 +48,11 @@
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
       flex: 1 1 auto;
+      min-width: 120px;
     }
     .controls button.active {
       background-color: red;
       color: white;
-    }
-    .controls button:hover {
-      background-color: #0f0;
-      color: #000;
-      transform: scale(1.05);
     }
     .bottom-buttons {
       position: absolute;
@@ -80,11 +76,6 @@
       transition: background-color 0.3s, transform 0.2s;
       flex: 1 1 auto;
       min-width: 120px;
-    }
-    .bottom-buttons button:hover {
-      background-color: #0f0;
-      color: #000;
-      transform: scale(1.1);
     }
     #start-overlay {
       position: fixed;
@@ -111,11 +102,6 @@
       transition: background-color 0.3s, transform 0.2s;
       width: 100%;
       max-width: 400px;
-    }
-    #start-overlay button:hover {
-      background-color: #0f0;
-      color: #000;
-      transform: scale(1.05);
     }
     @media (max-width: 768px) {
       .controls button,
@@ -161,7 +147,6 @@
     let gameStarted = false;
 
     let timeLeft = 600; // 10 minutes in seconds
-    const nightHours = ["12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM"];
 
     const batteryDisplay = document.getElementById("battery");
     const usageDisplay = document.getElementById("usage");
@@ -213,24 +198,22 @@
       if (leftLocked) usage += 1;
       if (rightLocked) usage += 1;
       if (lightOn) usage += 1;
+      updateDisplay();
     }
 
     leftDoorBtn.addEventListener("click", () => {
       leftLocked = !leftLocked;
       calculateUsage();
-      updateDisplay();
     });
 
     rightDoorBtn.addEventListener("click", () => {
       rightLocked = !rightLocked;
       calculateUsage();
-      updateDisplay();
     });
 
     lightBtn.addEventListener("click", () => {
       lightOn = !lightOn;
       calculateUsage();
-      updateDisplay();
     });
 
     document.getElementById("add-5").addEventListener("click", () => {
