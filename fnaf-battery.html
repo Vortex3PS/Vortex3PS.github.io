@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNAF Power System</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      margin: 0;
+      overflow: hidden;
+    }
+    .centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .battery-display {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .usage-display {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .controls {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .controls button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #111;
+      color: #0f0;
+      border: 2px solid #0f0;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      flex: 1 1 auto;
+    }
+    .controls button.active {
+      background-color: red;
+      color: white;
+    }
+    .controls button:hover {
+      background-color: #0f0;
+      color: #000;
+      transform: scale(1.05);
+    }
+    .bottom-buttons {
+      position: absolute;
+      bottom: 10%;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+    .bottom-buttons button {
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      background-color: #111;
+      color: #0f0;
+      border: 2px solid #0f0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      flex: 1 1 auto;
+      min-width: 120px;
+    }
+    .bottom-buttons button:hover {
+      background-color: #0f0;
+      color: #000;
+      transform: scale(1.1);
+    }
+    #start-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(8px);
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    #start-overlay button {
+      padding: 20px 40px;
+      font-size: 2rem;
+      background-color: #111;
+      color: #0f0;
+      border: 3px solid #0f0;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      width: 100%;
+      max-width: 400px;
+    }
+    #start-overlay button:hover {
+      background-color: #0f0;
+      color: #000;
+      transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+      .controls button,
+      .bottom-buttons button {
+        font-size: 1rem;
+        padding: 10px;
+      }
+      .battery-display {
+        font-size: 1.5rem;
+      }
+      .usage-display {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="start-overlay">
+    <button id="start-button">Start</button>
+  </div>
+
+  <div class="centered" id="game-ui" style="display: none;">
+    <div class="battery-display" id="battery">Battery: 100%</div>
+    <div class="usage-display" id="usage">Usage: ▓</div>
+    <div class="controls">
+      <button id="left-door">Lock Left Door</button>
+      <button id="right-door">Lock Right Door</button>
+      <button id="light">Turn On Light</button>
+    </div>
+    <div class="bottom-buttons">
+      <button id="add-5">Add 5%</button>
+      <button id="add-10">Add 10%</button>
+    </div>
+  </div>
+
+  <script>
+    let battery = 100;
+    let usage = 0;
+    let leftLocked = false;
+    let rightLocked = false;
+    let lightOn = false;
+    let gameStarted = false;
+
+    const batteryDisplay = document.getElementById("battery");
+    const usageDisplay = document.getElementById("usage");
+    const leftDoorBtn = document.getElementById("left-door");
+    const rightDoorBtn = document.getElementById("right-door");
+    const lightBtn = document.getElementById("light");
+    const gameUI = document.getElementById("game-ui");
+    const startOverlay = document.getElementById("start-overlay");
+    const startButton = document.getElementById("start-button");
+
+    startButton.addEventListener("click", () => {
+      gameStarted = true;
+      startOverlay.style.display = "none";
+      gameUI.style.display = "flex";
+    });
+
+    function updateDisplay() {
+      batteryDisplay.textContent = `Battery: ${Math.max(Math.floor(battery), 0)}%`;
+      leftDoorBtn.classList.toggle("active", leftLocked);
+      rightDoorBtn.classList.toggle("active", rightLocked);
+      lightBtn.classList.toggle("active", lightOn);
+
+      const barCount = Math.min(5, Math.floor(usage));
+      const usageBar = "Usage: " + "▓".repeat(barCount) + "░".repeat(5 - barCount);
+      usageDisplay.textContent = usageBar;
+    }
+
+    function calculateUsage() {
+      usage = 1;
+      if (leftLocked) usage += 1;
+      if (rightLocked) usage += 1;
+      if (lightOn) usage += 1;
+    }
+
+    leftDoorBtn.addEventListener("click", () => {
+      leftLocked = !leftLocked;
+      calculateUsage();
+      updateDisplay();
+    });
+
+    rightDoorBtn.addEventListener("click", () => {
+      rightLocked = !rightLocked;
+      calculateUsage();
+      updateDisplay();
+    });
+
+    lightBtn.addEventListener("click", () => {
+      lightOn = !lightOn;
+      calculateUsage();
+      updateDisplay();
+    });
+
+    document.getElementById("add-5").addEventListener("click", () => {
+      battery = Math.min(battery + 5, 100);
+      updateDisplay();
+    });
+
+    document.getElementById("add-10").addEventListener("click", () => {
+      battery = Math.min(battery + 10, 100);
+      updateDisplay();
+    });
+
+    setInterval(() => {
+      if (gameStarted && battery > 0) {
+        battery -= usage * 0.1;
+        updateDisplay();
+      }
+    }, 1000);
+
+    calculateUsage();
+    updateDisplay();
+  </script>
+</body>
+</html>
