@@ -22,7 +22,7 @@
       padding: 10px;
       box-sizing: border-box;
     }
-    .battery-display {
+    .battery-display, .clock-display {
       font-size: 2rem;
       margin-bottom: 10px;
     }
@@ -123,7 +123,7 @@
         font-size: 1rem;
         padding: 10px;
       }
-      .battery-display {
+      .battery-display, .clock-display {
         font-size: 1.5rem;
       }
       .usage-display {
@@ -138,6 +138,7 @@
   </div>
 
   <div class="centered" id="game-ui" style="display: none;">
+    <div class="clock-display" id="clock">12:00 AM</div>
     <div class="battery-display" id="battery">Battery: 100%</div>
     <div class="usage-display" id="usage">Usage: ▓</div>
     <div class="controls">
@@ -159,8 +160,12 @@
     let lightOn = false;
     let gameStarted = false;
 
+    let minutesPassed = 0;
+    const nightHours = ["12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM"];
+
     const batteryDisplay = document.getElementById("battery");
     const usageDisplay = document.getElementById("usage");
+    const clockDisplay = document.getElementById("clock");
     const leftDoorBtn = document.getElementById("left-door");
     const rightDoorBtn = document.getElementById("right-door");
     const lightBtn = document.getElementById("light");
@@ -183,6 +188,11 @@
       const barCount = Math.min(5, Math.floor(usage));
       const usageBar = "Usage: " + "▓".repeat(barCount) + "░".repeat(5 - barCount);
       usageDisplay.textContent = usageBar;
+    }
+
+    function updateClock() {
+      const hourIndex = Math.min(Math.floor(minutesPassed / 60), nightHours.length - 1);
+      clockDisplay.textContent = nightHours[hourIndex];
     }
 
     function calculateUsage() {
@@ -227,8 +237,16 @@
       }
     }, 1000);
 
+    setInterval(() => {
+      if (gameStarted) {
+        minutesPassed++;
+        updateClock();
+      }
+    }, 1000 * 10);
+
     calculateUsage();
     updateDisplay();
+    updateClock();
   </script>
 </body>
 </html>
