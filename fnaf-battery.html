@@ -237,18 +237,13 @@
       }
     }, 1000);
 
-setInterval(() => {
-  if (gameStarted) {
-    minutesPassed++;
-    updateClock();
-  }
-}, 1000);
+    setInterval(() => {
+      if (gameStarted) {
+        minutesPassed++;
+        updateClock();
+      }
+    }, 1000);
 
-  function updateClock() {
-      const hourIndex = Math.min(Math.floor(minutesPassed / 60), nightHours.length - 1);
-      clockDisplay.textContent = nightHours[hourIndex];
-    }
-    
     calculateUsage();
     updateDisplay();
     updateClock();
