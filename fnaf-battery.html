@@ -138,7 +138,7 @@
   </div>
 
   <div class="centered" id="game-ui" style="display: none;">
-    <div class="clock-display" id="clock">12:00 AM</div>
+    <div class="clock-display" id="clock">10:00</div>
     <div class="battery-display" id="battery">Battery: 100%</div>
     <div class="usage-display" id="usage">Usage: ▓</div>
     <div class="controls">
@@ -160,7 +160,7 @@
     let lightOn = false;
     let gameStarted = false;
 
-    let minutesPassed = 0;
+    let timeLeft = 600; // 10 minutes in seconds
     const nightHours = ["12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM"];
 
     const batteryDisplay = document.getElementById("battery");
@@ -177,6 +177,7 @@
       gameStarted = true;
       startOverlay.style.display = "none";
       gameUI.style.display = "flex";
+      startCountdown();
     });
 
     function updateDisplay() {
@@ -191,8 +192,20 @@
     }
 
     function updateClock() {
-      const hourIndex = Math.min(Math.floor(minutesPassed / 60), nightHours.length - 1);
-      clockDisplay.textContent = nightHours[hourIndex];
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      clockDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }
+
+    function startCountdown() {
+      const countdownInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateClock();
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
     }
 
     function calculateUsage() {
@@ -236,17 +249,6 @@
         updateDisplay();
       }
     }, 1000);
-
-    setInterval(() => {
-      if (gameStarted) {
-        minutesPassed++;
-        updateClock();
-      }
-    }, 1000);
-
-    calculateUsage();
-    updateDisplay();
-    updateClock();
   </script>
 </body>
 </html>
