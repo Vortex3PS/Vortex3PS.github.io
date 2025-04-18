@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FNAF Power System</title>
   <style>
     body {
@@ -28,11 +28,13 @@
     }
     .usage-display {
       font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .recharge-counter {
+      font-size: 1.2rem;
       margin-bottom: 20px;
     }
     .controls {
-      position: relative;
-      z-index: 1;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -46,7 +48,6 @@
       color: #0f0;
       border: 2px solid #0f0;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
       flex: 1 1 auto;
       min-width: 120px;
     }
@@ -55,15 +56,11 @@
       color: white;
     }
     .bottom-buttons {
-      position: absolute;
-      bottom: 10%;
-      width: 100%;
+      margin-top: 30px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
-      padding: 0 10px;
-      box-sizing: border-box;
     }
     .bottom-buttons button {
       padding: 12px 24px;
@@ -73,11 +70,9 @@
       border: 2px solid #0f0;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      flex: 1 1 auto;
       min-width: 120px;
     }
-    #start-overlay {
+    #start-overlay, #challenge-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -91,6 +86,7 @@
       justify-content: center;
       padding: 20px;
       box-sizing: border-box;
+      text-align: center;
     }
     #start-overlay button {
       padding: 20px 40px;
@@ -99,22 +95,10 @@
       color: #0f0;
       border: 3px solid #0f0;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      width: 100%;
-      max-width: 400px;
     }
-    @media (max-width: 768px) {
-      .controls button,
-      .bottom-buttons button {
-        font-size: 1rem;
-        padding: 10px;
-      }
-      .battery-display, .clock-display {
-        font-size: 1.5rem;
-      }
-      .usage-display {
-        font-size: 1.2rem;
-      }
+    #challenge-text {
+      font-size: 2rem;
+      color: yellow;
     }
   </style>
 </head>
@@ -123,10 +107,15 @@
     <button id="start-button">Start</button>
   </div>
 
+  <div id="challenge-overlay" style="display: none;">
+    <div id="challenge-text">Challenge incoming...</div>
+  </div>
+
   <div class="centered" id="game-ui" style="display: none;">
-    <div class="clock-display" id="clock">10:00</div>
+    <div class="clock-display" id="clock">20:00</div>
     <div class="battery-display" id="battery">Battery: 100%</div>
     <div class="usage-display" id="usage">Usage: ▓</div>
+    <div class="recharge-counter" id="recharge-counter">Recharges used: 0</div>
     <div class="controls">
       <button id="left-door">Lock Left Door</button>
       <button id="right-door">Lock Right Door</button>
@@ -139,58 +128,48 @@
   </div>
 
   <script>
-    let battery = 100;
-    let usage = 0;
-    let leftLocked = false;
-    let rightLocked = false;
-    let lightOn = false;
-    let gameStarted = false;
+    var battery = 100;
+    var usage = 0;
+    var rechargeCount = 0;
+    var leftLocked = false;
+    var rightLocked = false;
+    var lightOn = false;
+    var gameStarted = false;
 
-    let timeLeft = 600; // 10 minutes in seconds
+    var timeLeft = 1200;
+    var challengesShown = 0;
+    const challengeTimes = [];
 
     const batteryDisplay = document.getElementById("battery");
     const usageDisplay = document.getElementById("usage");
     const clockDisplay = document.getElementById("clock");
+    const rechargeCounter = document.getElementById("recharge-counter");
     const leftDoorBtn = document.getElementById("left-door");
     const rightDoorBtn = document.getElementById("right-door");
     const lightBtn = document.getElementById("light");
     const gameUI = document.getElementById("game-ui");
     const startOverlay = document.getElementById("start-overlay");
+    const challengeOverlay = document.getElementById("challenge-overlay");
+    const challengeText = document.getElementById("challenge-text");
     const startButton = document.getElementById("start-button");
-
-    startButton.addEventListener("click", () => {
-      gameStarted = true;
-      startOverlay.style.display = "none";
-      gameUI.style.display = "flex";
-      startCountdown();
-    });
 
     function updateDisplay() {
       batteryDisplay.textContent = `Battery: ${Math.max(Math.floor(battery), 0)}%`;
       leftDoorBtn.classList.toggle("active", leftLocked);
       rightDoorBtn.classList.toggle("active", rightLocked);
       lightBtn.classList.toggle("active", lightOn);
-
       const barCount = Math.min(5, Math.floor(usage));
-      const usageBar = "Usage: " + "▓".repeat(barCount) + "░".repeat(5 - barCount);
-      usageDisplay.textContent = usageBar;
+      usageDisplay.textContent = "Usage: " + "▓".repeat(barCount) + "░".repeat(5 - barCount);
+    }
+
+    function updateRechargeCounter() {
+      rechargeCounter.textContent = `Recharges used: ${rechargeCount}`;
     }
 
     function updateClock() {
-      let minutes = Math.floor(timeLeft / 60);
-      let seconds = timeLeft % 60;
+      var minutes = Math.floor(timeLeft / 60);
+      var seconds = timeLeft % 60;
       clockDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    }
-
-    function startCountdown() {
-      const countdownInterval = setInterval(() => {
-        if (timeLeft > 0) {
-          timeLeft--;
-          updateClock();
-        } else {
-          clearInterval(countdownInterval);
-        }
-      }, 1000);
     }
 
     function calculateUsage() {
@@ -200,6 +179,68 @@
       if (lightOn) usage += 1;
       updateDisplay();
     }
+
+    function showChallenge() {
+      const challenges = [
+        "Challenge 1: Open all doors",
+        "Challenge 2: Close all doors",
+        "Challenge 3: Toggle the light"
+      ];
+      const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+      challengeText.textContent = challenge;
+      challengeOverlay.style.display = "flex";
+
+      if (challenge.includes("Open")) {
+        leftLocked = false;
+        rightLocked = false;
+      } else if (challenge.includes("Close")) {
+        leftLocked = true;
+        rightLocked = true;
+      } else if (challenge.includes("light")) {
+        lightOn = !lightOn;
+      }
+
+      calculateUsage();
+      updateDisplay();
+
+      setTimeout(() => {
+        challengeOverlay.style.display = "none";
+      }, 10000);
+    }
+
+    function scheduleChallenges() {
+      while (challengeTimes.length < 3) {
+        var t = Math.floor(Math.random() * 1100) + 60;
+        if (!challengeTimes.includes(t)) {
+          challengeTimes.push(t);
+        }
+      }
+    }
+
+    function startCountdown() {
+      const countdownInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateClock();
+
+          if (challengeTimes.includes(timeLeft) && challengesShown < 3) {
+            showChallenge();
+            challengesShown++;
+          }
+
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+    }
+
+    startButton.addEventListener("click", () => {
+      gameStarted = true;
+      startOverlay.style.display = "none";
+      gameUI.style.display = "flex";
+      scheduleChallenges();
+      startCountdown();
+    });
 
     leftDoorBtn.addEventListener("click", () => {
       leftLocked = !leftLocked;
@@ -218,11 +259,15 @@
 
     document.getElementById("add-5").addEventListener("click", () => {
       battery = Math.min(battery + 5, 100);
+      rechargeCount++;
+      updateRechargeCounter();
       updateDisplay();
     });
 
     document.getElementById("add-10").addEventListener("click", () => {
       battery = Math.min(battery + 10, 100);
+      rechargeCount++;
+      updateRechargeCounter();
       updateDisplay();
     });
 
