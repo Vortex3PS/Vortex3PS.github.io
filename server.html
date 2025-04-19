@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vortex Minecraft Server</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: #e0ffe0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .logo {
+      max-width: 160px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 8px #66ff66);
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #66ff66;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      color: #c4f7c4;
+      margin-bottom: 30px;
+    }
+
+    .info-box {
+      background: #1f1f1f;
+      border: 2px solid #66ff66;
+      border-radius: 10px;
+      padding: 15px 25px;
+      margin: 10px;
+      display: inline-block;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background 0.2s ease;
+    }
+
+    .info-box:hover {
+      background: #2a2a2a;
+    }
+
+    .description {
+      max-width: 700px;
+      font-size: 1.1em;
+      margin: 30px 0;
+      color: #ccffcc;
+    }
+
+    .video {
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 16/9;
+      margin: 30px 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+    }
+
+    footer {
+      font-size: 0.9em;
+      color: #888;
+      margin-top: auto;
+      padding-top: 40px;
+    }
+
+    .copied {
+      font-size: 0.9em;
+      color: #99ff99;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" alt="Vortex Logo" class="logo" />
+
+  <h1>Vortex</h1>
+  <div class="subtitle">Your Next Minecraft Adventure Starts Here</div>
+
+  <div class="info-box" onclick="copyToClipboard('play.vortexmc.net', 'ipCopied')">
+    Server IP: vortexreal.falixsrv.me
+    <div id="ipCopied" class="copied"></div>
+  </div>
+
+  <div class="info-box" onclick="copyToClipboard('https://discord.gg/YOURINVITE', 'discordCopied')">
+    Discord: discord.gg/h5wTtZrRyy
+    <div id="discordCopied" class="copied"></div>
+  </div>
+
+  <div class="description">
+    Join Vortex, a custom Minecraft server with survival, community events, PvP arenas, and more. Whether you're a builder, a redstone wizard, or just here to vibe with friends, there's a place for you in the storm.
+  </div>
+
+  <div class="video">
+    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
+  </div>
+
+  <footer>
+    &copy; 2025 Vortex Minecraft Server. All rights reserved.
+  </footer>
+
+  <script>
+    function copyToClipboard(text, elementId) {
+      navigator.clipboard.writeText(text).then(() => {
+        const el = document.getElementById(elementId);
+        el.textContent = "Copied to clipboard!";
+        setTimeout(() => el.textContent = "", 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
