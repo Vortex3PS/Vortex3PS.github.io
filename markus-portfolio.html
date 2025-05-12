@@ -166,6 +166,30 @@
         #cookie-banner button:hover {
             background-color: #f0f0f0;
         }
+
+        #info {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(80, 0, 40, 0.95);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            z-index: 9999;
+        }
+        #info button {
+            background-color: #fff;
+            color: red;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #info button:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -256,10 +280,14 @@
     <!-- COOKIE BANNER -->
     <div id="cookie-banner">
         This website uses cookies and logs IP addresses to prevent malicious activity and ensure safety from unwanted visitors (e.g., pedos, bots, etc.). By continuing, you agree.
-        By the way, I am doing <strong>free</strong> websites for anyone! (If you can prove you are a content creator you will get priority)
         <button onclick="acceptCookies()">I Understand and accept cookies</button>
     </div>
 
+<div id="info">
+    <button onclick="RemoveInfo()">Remove this card</button>
+    By the way I am doing <strong>free</strong> websites for anyone! (If you can prove you are a content creator you will get priority)
+</div>
+    
 <script>
     // Cookie Banner Logic
     function acceptCookies() {
@@ -269,7 +297,11 @@
     if (localStorage.getItem('cookiesAccepted') === 'true') {
         document.getElementById('cookie-banner').style.display = 'none';
     }
-
+    
+    function RemoveInfo() {
+        document.getElementById('info').style.display = 'none';
+    }
+    
     // Overlay Logic
     const overlay = document.getElementById('overlay');
     const overlayTitle = document.querySelector('.overlay-title');
