@@ -3,210 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vortex3PS</title>
+    <title>Vortex3PS - Din Tech Partner</title>
     <link rel="icon" href="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-highway.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="navigation w3-highway-blue w3-container">
-        <nav class="nav-container w3-padding-large">
-            <div class="logo">
-                <a href="#home">VORTEX<span>3PS</span></a>
+    <!-- Nav -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">VORTEX<span class="logo-accent">3PS</span></span>
             </div>
-            <div class="mobile-button">
-                <span style="float: right;" onclick="toggleMobileNavigation()">&#9776;</span>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Hjem</a>
+                <a href="#about" class="nav-link">Om Os</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#team" class="nav-link">Team</a>
+                <a href="#contact" class="nav-link">Kontakt</a>
             </div>
-            <div class="links">
-                <a href="#about">Om</a>
-                <a href="#services">Services</a>
-                <a href="#team">Team</a>
-                <a href="#Kontakt">Kontakt</a>            
-            </div>
-            <div id="mobile-sidenav" class="mobile-links w3-highway-blue">
-                <div class="mobile-logo" style="display: inline;">
-                    <a href="#home" class="logo">Vortex<span></span></a>
-                    <span style="width: 100%;"></span>
-                    <a href="javascript:void(0)" class="closebtn" onclick="toggleMobileNavigation()">&times;</a>
-                </div>
-                <a href="#about" onclick="toggleMobileNavigation()">Om os</a>
-                <a href="#services" onclick="toggleMobileNavigation()">Services</a>
-                <a href="#team" onclick="toggleMobileNavigation()">Team</a>
-                <a href="#Kontakt" onclick="toggleMobileNavigation()">Kontakt</a>
-            </div>
-        </nav>
-    </div>
-
-    <div class="hero" id="home">
-        <div class="text container">
-            <p class="pre-title">En Ny Verden!</p>
-            <h1 class="title">Vortex<span>3PS</span></h1>
-            <p class="post-title">Mere Sjov med vennerne!</p>
-            <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="#services">VORES PRODUKTER</a> 
-        </div>
-    </div>
-
-    <div class="about container w3-padding-large" id="about">
-        <div class="text-one">
-            <h2>Om os</h2>
-            <p>Vi er en gruppe af unge mennesker der har startet virksomheden Vortex3PS. Vortex3PS er en virksomhed med flere ting til den tit om tech.</p>
-            <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="about.html">Læs mere</a> 
-        </div>
-    </div>
-
-    <div class="w3-panel w3-highway-blue numbers">
-        <h2 class="w3-center w3-xxxlarge">VI HAR</h2>
-        <p class="w3-center w3-xxxlarge show-medium">
-            <?xml version="1.0" encoding="utf-8"?>
-            <svg x="0px" y="0px" width="36" fill="#bed9f3" stroke="#bed9f3" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
-                <g id="Down-arrow">
-                    <path d="M17.2929993,29.7070007c-0.3906994-0.3906002-0.3906994-1.0234013,0-1.4140015
-                        c0.3906002-0.3906002,1.0234013-0.3906002,1.4140015,0L32,41.5858994l13.2929993-13.2929001
-                        c0.3905983-0.3906002,1.0233994-0.3906002,1.4140015,0C46.902298,28.4883003,47,28.7441998,47,29
-                        c0,0.2558994-0.097702,0.5116997-0.2929993,0.7070007l-14,14c-0.3906021,0.3906975-1.0234013,0.3906975-1.4140015,0
-                        L17.2929993,29.7070007z"/>
-                    <path d="M32,64c17.6730957,0,32-14.3269005,32-32S49.6730957,0,32,0C14.3268003,0,0,14.3268995,0,32S14.3268003,64,32,64z M32,62
-                        C15.4579,62,2,48.542099,2,32C2,15.4580002,15.4579,2,32,2s30,13.4580002,30,30C62,48.542099,48.542099,62,32,62z"/>
-                </g>
-            </svg>
-        </p>
-        <div class="container w3-padding-large">
-            <div class="text">
-                <p class="number">1</p>
-                <p>Kunde dagligt</p>
-            </div>
-            <div class="text">
-                <p class="number">10</p>
-                <p>Medarbejdere</p>
-            </div>
-            <div class="text">
-                <p class="number">1</p>
-                <p>Års erfaring</p>
+            <div class="nav-toggle" onclick="toggleMobileNav()">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
-    </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="#home" onclick="toggleMobileNav()">Hjem</a>
+            <a href="#about" onclick="toggleMobileNav()">Om Os</a>
+            <a href="#services" onclick="toggleMobileNav()">Services</a>
+            <a href="#team" onclick="toggleMobileNav()">Team</a>
+            <a href="#contact" onclick="toggleMobileNav()">Kontakt</a>
+        </div>
+    </nav>
 
-    <div class="services container" id="services">
-        <h2 class="w3-center">Vores services</h2>
-        <div class="cards w3-padding-large w3-margin-top">
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Vortex 3D Prints</h3>
-                <div class="card-text">
-                    <p>Vi 3D printer en gadget til dig!</p>
+    <!-- Hero -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Fremtidens Tech
+                    <span class="hero-accent">Løsninger</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Vi skaber innovative teknologiske oplevelser der forbinder mennesker og bygger fremtiden
+                </p>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn btn-primary">Se Vores Services</a>
+                    <a href="#contact" class="btn btn-secondary">Kontakt Os</a>
                 </div>
-                <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="oof-3d.html">Kig ind</a> 
             </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Vortex PCs</h3>
-                <div class="card-text">
-                    <p>Vi bygger en pc til dig!</p>
-                    <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="oof-pcs.html">Kommer snart...</a>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Innovation</h3>
                 </div>
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Vortex Servers</h3>
-                <div class="card-text">
-                    <p>Vi spiller sammen!</p>
+                <div class="floating-card">
+                    <div class="card-icon">⚡</div>
+                    <h3>Hastighed</h3>
                 </div>
-                <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="https://discord.gg/KV2DDAVXUy">Kig ind</a>
-                <h4> --------------- </h4>
-                <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="oof-servers.html">Shop</a> 
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Vortex Hjemmeside lavning</h3>
-                <div class="card-text">
-                    <p>Vi laver en hjemmeside til dig!</p>
+                <div class="floating-card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Præcision</h3>
                 </div>
-                <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="oof-web.html">Kig ind</a> 
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="team container" id="team">
-        <h2 class="w3-center">Vores team</h2>
-        <div class="cards w3-padding-large w3-margin-top">
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Markus Hermansen Dalgaard</h3>
-                <div class="card-text">
-                    <p>Ejer</p>
-                </div>
+    <!-- About Sec -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Om Vortex3PS</h2>
+                <p class="section-subtitle">Vi er passionerede tech-entusiaster der skaber fremtidens løsninger</p>
             </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Rani Tórhalsson Kirke</h3>
-                <div class="card-text">
-                    <p>Med-Ejer af PCs</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Vores Mission</h3>
+                    <p>Som en gruppe unge og innovative udviklere, har vi startet Vortex3PS med en klar vision: at demokratisere teknologi og gøre avancerede tech-løsninger tilgængelige for alle.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Projekter</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Kunder</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">2+</span>
+                            <span class="stat-label">År Erfaring</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>William Houkjær</h3>
-                <div class="card-text">
-                    <p>Med-Ejer af 3D</p>
+                <div class="about-visual">
+                    <div class="tech-grid">
+                        <div class="tech-item">3D Print</div>
+                        <div class="tech-item">PC Build</div>
+                        <div class="tech-item">Web Dev</div>
+                        <div class="tech-item">Servers</div>
+                    </div>
                 </div>
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Louelum Dalgaard / Oskar Sæther</h3>
-                <div class="card-text">
-                    <p>Med-Ejer af Servers</p>
-                </div>
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>August Skov Risager</h3>
-                <div class="card-text">
-                    <p>Manager af PCs</p>
-                </div>
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Jens Jakobsen</h3>
-                <div class="card-text">
-                    <p>Manager af 3D</p>
-                </div>
-            </div>
-            <div class="card w3-card-2 w3-padding-large w3-border w3-border-blue w3-round-large">
-                <h3>Vi søger nye medarbejdere!</h3>
-                <div class="card-text">
-                    <p></p>
-                </div>
-                <a class="w3-button w3-round-large w3-indigo w3-hover-blue" href="job-app.html">Ansøg nu!</a> 
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="Kontakt container" id="Kontakt">
-        <div class="short-Kontakt">
-            <h2>Kontakt os</h2>
-            <p class="w3-xlarge">Vi vil gerne høre fra dig!</p>
-            <div class="w3-large w3-margin-top Kontakt-info">
-                <i class="fa fa-location-arrow"></i><span style="margin-left:10px;"><a href="" target="_blank">Måske kommer?</a></span><br>
-                <i class="fa fa-envelope-o"></i><span style="margin-left:10px;"><a href="mailto:markushermansenbusiness@gmail.com">markushermansenbusiness@gmail.com</a></span><br>
-                <i class="fa fa-phone"></i><span style="margin-left:10px;"><a href="tel:+4544108450">+45 44108450</a></span><br>
+    <!-- Services Sec -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Vores Services</h2>
+                <p class="section-subtitle">Alt fra 3D print til custom PC builds og server hosting</p>
             </div>
-            <div class="w3-large w3-margin-top Kontakt-info">
-                <i class="fa fa-youtube"></i><span style="margin-left:10px;"><a href="https://www.youtube.com/channel/UC-wFyvT6ZB62YgX7hxw0ZbQ" target="_blank" style="text-decoration: none;">- Youtube</a></span><br>
-                <i class="fa fa-paypal"></i><span style="margin-left:10px;"><a href="https://www.paypal.com/paypalme/Vortex3PS?country.x=DK&locale.x=da_DK" target="_blank" style="text-decoration: none;">- Paypal</a></span><br>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🖨️</div>
+                    <h3>Vortex 3D Prints</h3>
+                    <p>Professionel 3D printing af gadgets, prototyper og custom designs med højeste kvalitet.</p>
+                    <a href="oof-3d.html" class="service-link">Udforsk →</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>Vortex PCs</h3>
+                    <p>Custom PC builds tilpasset dine behov - fra gaming rigs til workstations.</p>
+                    <a href="oof-pcs.html" class="service-link">Kommer Snart →</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <h3>Vortex Servers</h3>
+                    <p>Stabile og hurtige server løsninger til gaming og web hosting.</p>
+                    <div class="service-links">
+                        <a href="https://discord.gg/KV2DDAVXUy" class="service-link">Discord →</a>
+                        <a href="oof-servers.html" class="service-link">Shop →</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🚀</div>
+                    <h3>Web Development</h3>
+                    <p>Moderne hjemmesider og web-applikationer bygget med de nyeste teknologier.</p>
+                    <a href="oof-web.html" class="service-link">Se Mere →</a>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="w3-highway-blue w3-padding-large" id="footer">
-        <p class="w3-center logo">&copy; 2024 - 2025 | VORTEX<span>3PS</span> - All rights reserved</p>
-    </div>
+    <!-- Team Sec -->
+    <section id="team" class="team">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Mød Teamet</h2>
+                <p class="section-subtitle">Passionerede tech-eksperter der driver Vortex3PS fremad</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-avatar">MH</div>
+                    <h3>Markus Hermansen Dalgaard</h3>
+                    <p class="member-role">Founder & CEO</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">RT</div>
+                    <h3>Rani Tórhalsson Kirke</h3>
+                    <p class="member-role">Co-Owner PC Division</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">WH</div>
+                    <h3>William Houkjær</h3>
+                    <p class="member-role">Co-Owner 3D Division</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">LD</div>
+                    <h3>Louelum Dalgaard</h3>
+                    <p class="member-role">Co-Owner Servers</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">AS</div>
+                    <h3>August Skov Risager</h3>
+                    <p class="member-role">PC Manager</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar">JJ</div>
+                    <h3>Jens Jakobsen</h3>
+                    <p class="member-role">3D Manager</p>
+                </div>
+            </div>
+            <div class="hiring-card">
+                <h3>Vi Søger Nye Talenter!</h3>
+                <p>Vil du være en del af fremtidens tech-team?</p>
+                <a href="job-app.html" class="btn btn-primary">Ansøg Nu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Sec -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Kom i Kontakt</h2>
+                <p class="section-subtitle">Lad os skabe noget fantastisk sammen</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div>
+                            <h4>Email</h4>
+                            <a href="mailto:markushermansenbusiness@gmail.com">markushermansenbusiness@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div>
+                            <h4>Telefon</h4>
+                            <a href="tel:+4544108450">+45 44108450</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🎥</div>
+                        <div>
+                            <h4>YouTube</h4>
+                            <a href="https://www.youtube.com/channel/UC-wFyvT6ZB62YgX7hxw0ZbQ" target="_blank">Vortex3PS Channel</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💳</div>
+                        <div>
+                            <h4>PayPal</h4>
+                            <a href="https://www.paypal.com/paypalme/Vortex3PS?country.x=DK&locale.x=da_DK" target="_blank">Support Os</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">VORTEX<span class="logo-accent">3PS</span></span>
+                </div>
+                <p>&copy; 2024 - 2025 Vortex3PS. Alle rettigheder forbeholdes.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        function toggleMobileNavigation() {
-            const mobileNavigation = document.getElementById("mobile-sidenav");
-            mobileNavigation.classList.toggle('mobile-links-active');
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('active');
         }
+
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
     </script>
 <script src="consent-banner.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem("consent")) {
-        trackPageVisit(); // Track sidebesøg når samtykke er givet
+        trackPageVisit();
     }
 </script>
 </body>
