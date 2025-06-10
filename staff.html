@@ -1,570 +1,230 @@
 <!DOCTYPE html>
 <html lang="da">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <head>
     <meta charset="UTF-8">
-    <title>Vortex Personale Portal</title>
-    <style>
-body.body-chart {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f4f4f9;
-    color: #333;
-}
-
-body.body-chart header {
-    background-color: #6200ea;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-}
-
-body.body-chart .container {
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-body.body-chart .total-income {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-body.body-chart .chart-container {
-    margin: 20px auto;
-    position: relative;
-    height: 600px;
-    width: 100%;
-}
-
-body.body-chart .monthly-list {
-    margin-top: 20px;
-    padding: 0;
-    list-style: none;
-    font-size: 18px;
-}
-
-body.body-chart .monthly-list li {
-    margin: 5px 0;
-}
-        
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 20px;
-            background-color: #CDC1FF;
-            color: #333;
-        }
-        #staff-content {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            background-color: #CDC1FF;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        #error-message {
-            color: red;
-        }
-        #noteArea, #ideaInput {
-            width: 90%;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        #noteArea {
-            height: 1000px;
-            resize: none;
-            background-color: #ADD8E6;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #check-out-btn {
-            background-color: #f44336;
-            margin-top: 50px;
-        }
-        #check-out-btn:hover {
-            background-color: #d32f2f;
-        }
-        #nfc-popup, #login-password-content {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            text-align: center;
-        }
-        #popup-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 300px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        /* New styles for daily tasks */
-        #daily-tasks {
-            text-align: left;
-            margin: 20px auto;
-            max-width: 300px;
-            background-color: #ADD8E6;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        #daily-tasks h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-        .task-item {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .task-item input[type="checkbox"] {
-            appearance: none;
-            background-color: #fff;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .task-item input[type="checkbox"]:checked {
-            background-color: #4CAF50;
-            border-color: #4CAF50;
-        }
-        .task-item input[type="checkbox"]:checked:after {
-            content: '✔';
-            color: white;
-            font-size: 16px;
-            display: block;
-            text-align: center;
-        }
-
-#personale-politik-popup {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    text-align: center;
-}
-
-#popup-content {
-    background-color: white;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-        
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex3PS - Personale Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="staff-styles.css">
 </head>
 <body>
-    <h1>Personale Login</h1>
-    <button onclick="openNFCPopup()">Scan Kort</button>
-    <button onclick="openPasswordLogin()">Login med adgangskode</button>
-
-    <div id="nfc-popup">
-        <div id="popup-content">
-            <h2>Scan Kort</h2>
-            <p>Placer kortet bag på telefonen.</p>
-            <button onclick="closePopup()">Afbryd</button>
+    <!-- Login Section -->
+    <div id="login-section" class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>VORTEX<span class="accent">3PS</span></h1>
+                <p>Personale Portal</p>
+            </div>
+            
+            <div class="login-methods">
+                <button class="login-btn primary" onclick="openNFCPopup()">
+                    <span class="icon">📱</span>
+                    Scan Kort
+                </button>
+                <button class="login-btn secondary" onclick="openPasswordLogin()">
+                    <span class="icon">🔐</span>
+                    Login med Adgangskode
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="login-password-content">
-        <div id="popup-content">
-            <h2>Login med adgangskode</h2>
-            <label for="staffNames">Vælg dit navn:</label>
-            <select id="staffNames">
-                <option value="">--Vælg Navn--</option>
-                <option value="August">August</option>
-                <option value="William">William</option>
-                <option value="Jens">Jens</option>
-                <option value="Louelum">Louelum</option>
-                <option value="Oskar SS">Oskar SS</option>
-                <option value="Rani">Rani</option>
-                <option value="Markus">Markus</option>
-                <option value="Seb">Seb</option>
-                <option value="Mikkel">Mikkel</option>
-                <option value="Anthon">Anthon</option>
-            </select>
-            <br><br>
-            <input type="password" id="passwordInput" placeholder="Indtast adgangskode">
-            <button onclick="authenticatePassword()">Log ind</button>
+    <!-- NFC Popup -->
+    <div id="nfc-popup" class="modal">
+        <div class="modal-content">
+            <h3>Scan Dit Kort</h3>
+            <div class="nfc-animation">
+                <div class="nfc-icon">📱</div>
+                <div class="nfc-waves"></div>
+            </div>
+            <p>Placer kortet bag på telefonen</p>
+            <button class="btn-secondary" onclick="closePopup()">Afbryd</button>
         </div>
     </div>
 
-    <div id="staff-content">
-        <h2 id="welcome-message"></h2>
-
-        <h2>Annoncering</h2>
-        <p id="announcementMessage">Ny medarberjder, Mikkel!</p>
-
-        <div id="daily-tasks">
-            <h3>Måndensopgaver</h3>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (3D) Lav en ny 3D print </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (3D) Skriv ider på en liste </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (Sælger) Sælg 3 ting </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (PC) Lav en ny PC i PCPartPicker </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> (Ejerne)  </div>
-            <div class="task-item"><input type="checkbox" class="task-checkbox" onclick="checkAllTasks()"> Gennemfør opgaveliste </div>
+    <!-- Password Login Popup -->
+    <div id="login-password-content" class="modal">
+        <div class="modal-content">
+            <h3>Login med Adgangskode</h3>
+            <div class="form-group">
+                <label for="staffNames">Vælg dit navn:</label>
+                <select id="staffNames" class="form-control">
+                    <option value="">--Vælg Navn--</option>
+                    <option value="August">August</option>
+                    <option value="William">William</option>
+                    <option value="Jens">Jens</option>
+                    <option value="Louelum">Louelum</option>
+                    <option value="Oskar SS">Oskar SS</option>
+                    <option value="Rani">Rani</option>
+                    <option value="Markus">Markus</option>
+                    <option value="Seb">Seb</option>
+                    <option value="Mikkel">Mikkel</option>
+                    <option value="Anthon">Anthon</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="password" id="passwordInput" class="form-control" placeholder="Indtast adgangskode">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="authenticatePassword()">Log ind</button>
+                <button class="btn-secondary" onclick="closePopup()">Annuller</button>
+            </div>
         </div>
-
-                <!-- Button to trigger Personale Politik popup -->
-        <button onclick="openPersonalePolitik()">Vis Personale Politik</button>
-
-<!-- The Pop-up for Personale Politik -->
-<div id="personale-politik-popup">
-    <div id="popup-content">
-        <h2>Personale Politik</h2>
-        <p>
-            Her kan du læse om virksomhedens personale politik.
-        </p>
-        <p>
-            - Ingen deling af marketingstrategier.<br>
-            - Ingen deling af 3d modeler.<br>
-            - Ingen deling af rigtig pris af et produkt.<br>
-            - Ingen deling af din løn.<br>
-            - Ingen deling af plugins <br>
-            - Ingen deling af Server ting <br>
-            - Intet pis.<br>
-            - Gør din ting <br> <br>
-          Lav din egne ting = bliv fjernet. <br>
-          Hold på hemligeheder der måske kan skade noget indfor Vortex3PS = bliv fjernet
-        </p>
-        <button onclick="closePersonalePolitik()">Luk</button>
-    </div>
-</div>
-        
-        <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea>
-        <button onclick="saveNotes()">Gem noter</button>
-        <p id="success-message" style="color: green;"></p>
-
-        <div class="container">
-    <!-- Total Income Display -->
-    <div class="total-income">
-        Total Indkomst for året: <span id="totalIncome">0 kr</span>
-      Sidste update: 2024
     </div>
 
-    <!-- Chart Display -->
-    <div class="chart-container">
-        <canvas id="incomeChart"></canvas>
+    <!-- Main Dashboard -->
+    <div id="staff-content" class="dashboard">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="welcome-section">
+                    <h2 id="welcome-message">Velkommen til Vortex3PS</h2>
+                    <p class="current-time" id="current-time"></p>
+                </div>
+                <button class="logout-btn" onclick="checkOut()">
+                    <span class="icon">🚪</span>
+                    Udtjek
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Announcement Card -->
+            <div class="card announcement-card">
+                <div class="card-header">
+                    <h3><span class="icon">📢</span> Annoncering</h3>
+                </div>
+                <div class="card-content">
+                    <p id="announcementMessage">Ny medarbejder, Mikkel!</p>
+                </div>
+            </div>
+
+            <!-- Monthly Tasks Card -->
+            <div class="card tasks-card">
+                <div class="card-header">
+                    <h3><span class="icon">✅</span> Månedens Opgaver</h3>
+                    <span class="task-progress" id="task-progress">0/6</span>
+                </div>
+                <div class="card-content">
+                    <div id="daily-tasks">
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onclick="updateTaskProgress()">
+                            <label>(3D) Lav en ny 3D print</label>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onclick="updateTaskProgress()">
+                            <label>(3D) Skriv ideer på en liste</label>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onclick="updateTaskProgress()">
+                            <label>(Sælger) Sælg 3 ting</label>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onclick="updateTaskProgress()">
+                            <label>(PC) Lav en ny PC i PCPartPicker</label>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onclick="updateTaskProgress()">
+                            <label>(Ejerne) Gennemse månedlige tal</label>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onclick="updateTaskProgress()">
+                            <label>Gennemfør opgaveliste</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Chart Card -->
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h3><span class="icon">📊</span> Årlig Indkomst</h3>
+                    <div class="total-income">
+                        Total: <span id="totalIncome">0 kr</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="chart-container">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Card -->
+            <div class="card notes-card">
+                <div class="card-header">
+                    <h3><span class="icon">📝</span> Mine Noter</h3>
+                    <button class="btn-small" onclick="saveNotes()">Gem</button>
+                </div>
+                <div class="card-content">
+                    <textarea id="noteArea" placeholder="Skriv dine noter her..."></textarea>
+                    <p id="success-message" class="success-msg"></p>
+                </div>
+            </div>
+
+            <!-- Ideas Card -->
+            <div class="card ideas-card">
+                <div class="card-header">
+                    <h3><span class="icon">💡</span> Indsend Ide</h3>
+                </div>
+                <div class="card-content">
+                    <div class="idea-form">
+                        <input type="text" id="ideaInput" class="form-control" placeholder="Skriv din ide her...">
+                        <button class="btn-primary" onclick="submitIdea()">Indsend</button>
+                    </div>
+                    <p id="idea-message" class="success-msg"></p>
+                </div>
+            </div>
+
+            <!-- Policy Card -->
+            <div class="card policy-card">
+                <div class="card-header">
+                    <h3><span class="icon">📋</span> Personale Politik</h3>
+                </div>
+                <div class="card-content">
+                    <button class="btn-secondary full-width" onclick="openPersonalePolitik()">
+                        Vis Personale Politik
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Monthly Income List -->
-    <ul class="monthly-list" id="monthlyIncomeList"></ul>
-</div>
-
-        <h3>Indsend Ide</h3>
-        <input type="text" id="ideaInput" placeholder="Skriv din ide her...">
-        <button onclick="submitIdea()">Indsend ide</button>
-        <p id="idea-message" style="color: green;"></p>
-
-        <button onclick="checkOut()" id="check-out-btn">Udtjek</button>
-        <p id="status-message" style="color: green;"></p>
+    <!-- Personale Politik Popup -->
+    <div id="personale-politik-popup" class="modal">
+        <div class="modal-content large">
+            <h3>Personale Politik</h3>
+            <div class="policy-content">
+                <h4>Fortrolighedsregler:</h4>
+                <ul>
+                    <li>Ingen deling af marketingstrategier</li>
+                    <li>Ingen deling af 3D modeller</li>
+                    <li>Ingen deling af rigtig pris af et produkt</li>
+                    <li>Ingen deling af din løn</li>
+                    <li>Ingen deling af plugins</li>
+                    <li>Ingen deling af server ting</li>
+                </ul>
+                <h4>Generelle regler:</h4>
+                <ul>
+                    <li>Intet pis - vær professionel</li>
+                    <li>Gør din ting - fokuser på dine opgaver</li>
+                </ul>
+                <div class="warning">
+                    <strong>⚠️ Advarsel:</strong>
+                    <p>Lav dine egne ting parallelt = bliv fjernet</p>
+                    <p>Hold på hemmeligheder der kan skade Vortex3PS = bliv fjernet</p>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="closePersonalePolitik()">Forstået</button>
+        </div>
     </div>
 
-    <p id="error-message"></p>
+    <p id="error-message" class="error-message"></p>
 
-    <script>
-        const wht = "VEFWTmtUTGxFd0lLNklJdTdHVHIzVVFtYmU3bGg3SUJLMkVHVkg0X3l3MmpPazVGbW13cDgyWm1ZSUJ0V3FrRnczRVE=";
-
-        const whId = "MTMwNjU1MzA4NDQ5MDY4MjQyOA==";
-
-        const base = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv";
-
-
-
-        // Decode the Base64 webhook URL
-
-        const DISCORD_WEBHOOK_URL = atob(base) + atob(whId) + "/" + atob(wht);
-        const authorizedStaff = {
-            "August": "AugustAintHim",
-            "William": "Vortex3PS!StaffIsCool",
-            "Jens": "Vortex3PS!StaffIsCool",
-            "Louelum": "Vortex3PS!StaffIsCool",
-            "Oskar SS": "Kvisten10b",
-            "Rani": "RaniAintHim!",
-            "Markus": "markushermansen",
-            "Seb": "BrawlStars",
-            "Mikkel": "Vortex3PS!StaffIsCool",
-            "Anthon": "Vortex3PS!StaffIsCool"
-        };
-        const authorizedStaffIds = {
-            "Vortex3PS-Pass-Owner-Markus": "Markus",
-            "Vortex3PS-Pass-Co-Owner-Rani": "Rani",
-            "Vortex3PS-Pass-Staff": "Staff"
-        };
-        let currentUser = "";
-
-        function openNFCPopup() {
-            document.getElementById("nfc-popup").style.display = "block";
-            authenticateUsingNFC();
-        }
-
-        function openPasswordLogin() {
-            document.getElementById("login-password-content").style.display = "block";
-        }
-
-        function closePopup() {
-            document.getElementById("nfc-popup").style.display = "none";
-            document.getElementById("login-password-content").style.display = "none";
-        }
-
-        async function authenticateUsingNFC() {
-            if ('NDEFReader' in window) {
-                const nfcReader = new NDEFReader();
-                try {
-                    await nfcReader.scan();
-                    nfcReader.onreading = (event) => {
-                        const nfcId = event.message.records[0].data;
-                        const decodedId = new TextDecoder().decode(nfcId);
-                        if (authorizedStaffIds[decodedId]) {
-                            currentUser = authorizedStaffIds[decodedId];
-                            displayStaffContent();
-                        } else {
-                            document.getElementById("error-message").textContent = "Adgang nægtet.";
-                        }
-                    };
-                } catch (error) {
-                    document.getElementById("error-message").textContent = "NFC-adgang mislykkedes.";
-                }
-            } else {
-                document.getElementById("error-message").textContent = "Din enhed understøtter ikke NFC.";
-            }
-        }
-
-        function authenticatePassword() {
-            const selectedName = document.getElementById("staffNames").value;
-            const password = document.getElementById("passwordInput").value;
-            if (authorizedStaff[selectedName] === password) {
-                currentUser = selectedName;
-                displayStaffContent();
-            } else {
-                document.getElementById("error-message").textContent = "Forkert adgangskode.";
-            }
-        }
-
-        function displayStaffContent() {
-            document.getElementById("welcome-message").textContent = `Velkommen ${currentUser} til personale side`;
-            document.getElementById("staff-content").style.display = "block";
-            closePopup();
-        }
-
-        function checkIn() {
-            const time = new Date().toLocaleString();
-            postToDiscord(`${currentUser} checked in at ${time}`);
-            document.getElementById("check-out-btn").style.display = "inline";
-            document.getElementById("status-message").textContent = "Indtjekning registreret!";
-        }
-
-        function checkOut() {
-            const time = new Date().toLocaleString();
-            postToDiscord(`${currentUser} checked out at ${time}`);
-            document.getElementById("check-out-btn").style.display = "none";
-            document.getElementById("welcome-message").style.display = "none";
-            document.getElementById("staff-content").style.display = "none";
-            document.getElementById("status-message").textContent = "Udtjekning registreret!";
-        }
-
-        function saveNotes() {
-            const notes = document.getElementById("noteArea").value;
-            setCookie("staffNotes", notes, 365);
-            document.getElementById("success-message").textContent = "Noter gemt!";
-        }
-
-        function submitIdea() {
-            const idea = document.getElementById("ideaInput").value;
-            postToDiscord(`Ny idé fra ${currentUser}: ${idea}`);
-            document.getElementById("idea-message").textContent = "Din ide er sendt!";
-        }
-
-        function postToDiscord(message) {
-            fetch(DISCORD_WEBHOOK_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ content: message })
-            }).catch(error => console.error("Discord webhook fejlede:", error));
-        }
-
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/";
-        }
-
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let c of ca) {
-                while (c.charAt(0) === ' ') c = c.substring(1);
-                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
-            }
-            return null;
-        }
-
-        function checkAllTasks() {
-            const tasks = document.querySelectorAll('.task-checkbox');
-            const allTasksComplete = Array.from(tasks).every(task => task.checked);
-            if (allTasksComplete) {
-                postToDiscord(`${currentUser} har gennemført alle måndensopgaver!`);
-                document.getElementById("daily-tasks").style.display = "none"; // Hide daily tasks when complete
-            }
-        }
-
-// Function to open the "Personale Politik" popup
-function openPersonalePolitik() {
-    document.getElementById("personale-politik-popup").style.display = "block";
-}
-
-// Function to close the "Personale Politik" popup
-function closePersonalePolitik() {
-    document.getElementById("personale-politik-popup").style.display = "none";
-}
-
-const monthlyIncome = {
-    labels: [
-        "Januar", "Februar", "Marts", "April", "Maj", "Juni", 
-        "Juli", "August", "September", "Oktober", "November", "December"
-    ], // Months
-    datasets: [{
-        label: "Indkomst pr. måned (kr)",
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        borderColor: "#6200ea",
-        backgroundColor: "rgba(98, 0, 234, 0.2)",
-        fill: true,
-        tension: 0.4,
-    }]
-};
-
-// Calculate Total Income
-const totalIncome = monthlyIncome.datasets[0].data.reduce((sum, income) => sum + income, 0);
-
-// Update Total Income in HTML
-document.getElementById('totalIncome').textContent = `${totalIncome} kr`;
-
-// Render the Monthly List Below the Chart
-const monthlyListContainer = document.getElementById('monthlyIncomeList');
-monthlyIncome.labels.forEach((month, index) => {
-    const incomeValue = monthlyIncome.datasets[0].data[index];
-    const listItem = document.createElement('li');
-    listItem.textContent = incomeValue === 0 
-        ? `${month}: Ingen data` 
-        : `${month}: ${incomeValue} kr`;
-    monthlyListContainer.appendChild(listItem);
-});
-
-// Chart Configuration
-const config = {
-    type: 'line',
-    data: monthlyIncome,
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top'
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.raw === 0 
-                            ? "Ingen data" 
-                            : `${tooltipItem.raw} kr`;
-                    }
-                }
-            }
-        },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Måned'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Indkomst (kr)'
-                },
-                ticks: {
-                    stepSize: 10, // Step size for y-axis
-                    beginAtZero: true,
-                    callback: function(value) {
-                        return value % 10 === 0 ? value : null; // Only show multiples of 10
-                    }
-                }
-            }
-        }
-    }
-};
-
-// Render the Chart
-const ctx = document.getElementById('incomeChart').getContext('2d');
-new Chart(ctx, config);
-        
-    </script>
+    <script src="staff-script.js"></script>
 </body>
 </html>
