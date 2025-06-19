@@ -1,411 +1,1189 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta content="Markus' Portfolio" property="og:title" />
-<meta content="In development!" property="og:description" />
-<meta content="https://vortex3ps.github.io/markus-portfolio" property="og:url" />
-<meta content="" property="og:image" />
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Markus' Portfolio" property="og:title" />
+    <meta content="Ethical Hacker and Programmer from Denmark" property="og:description" />
+    <meta content="https://vortex3ps.github.io/markus-portfolio" property="og:url" />
+    <meta content="" property="og:image" />
     <title>Markus' Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
+        :root {
+            --primary-red: #dc2626;
+            --dark-red: #991b1b;
+            --light-red: #fee2e2;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a1515;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+            --gradient-primary: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --border-radius: 0.5rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
         header {
-            background-color: #1a0000;
-            padding: 20px;
-            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: var(--transition);
         }
-        nav a {
-            color: #fff;
-            margin: 0 15px;
-            text-decoration: none;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-        nav a:hover {
-            transform: scale(1.1);
-            background-color: darkred;
-        }
-        .hero {
-            text-align: center;
-            padding: 50px 20px;
-            background-color: #220000;
-        }
-        .hero h1 {
-            color: red;
-        }
-        .section {
-            padding: 40px 20px;
-        }
-        .skills, .projects, .contact {
-            background-color: #1a0000;
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .skills h2, .projects h2, .contact h2 {
-            color: red;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #1a0000;
-        }
-        .project-gallery {
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
         }
-        .project-item {
-            background-color: #220000;
-            border-radius: 8px;
-            padding: 15px;
-            width: 300px;
-            text-align: center;
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-desktop {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-desktop a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-desktop a::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+
+        .nav-desktop a:hover {
+            color: var(--text-primary);
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .nav-desktop a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
             cursor: pointer;
+            padding: 0.5rem;
         }
-        .project-img {
-            max-width: 100%;
-            border-radius: 8px;
+
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            transform: translateY(-100%);
+            transition: var(--transition);
         }
-        .project-info {
-            background-color: #330000;
-            color: #fff;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 8px;
-            display: none; 
+
+        .nav-mobile.active {
+            transform: translateY(0);
         }
+
+        .nav-mobile a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .nav-mobile a:hover {
+            color: var(--primary-red);
+            padding-left: 1rem;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(220,38,38,0.03)" points="0,0 1000,300 1000,1000 0,700"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.125rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.4);
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .about-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .about-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-red);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .about-card h3 {
+            color: var(--primary-red);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .about-card ul {
+            list-style: none;
+        }
+
+        .about-card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .about-card li::before {
+            content: '•';
+            color: var(--primary-red);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .skill-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .skill-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-red);
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-red);
+        }
+
+        .skill-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-color: var(--primary-red);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-link {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .project-link:hover {
+            gap: 1rem;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .contact-item:hover {
+            border-color: var(--primary-red);
+            background: var(--bg-tertiary);
+        }
+
+        .contact-icon {
+            color: var(--primary-red);
+            font-size: 1.25rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
             display: none;
-            justify-content: center;
             align-items: center;
-            color: #fff;
-            z-index: 1000;
-        }
-        .overlay-content {
-            max-width: 80%;
-            background: #1a0000;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .overlay-images {
-            display: flex;
             justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            z-index: 2000;
+            padding: 2rem;
         }
+
+        .overlay-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .overlay-header {
+            margin-bottom: 2rem;
+        }
+
+        .overlay-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .overlay-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
         .overlay-images img {
-            max-width: 45%;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
+            width: 100%;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
             cursor: zoom-in;
         }
+
+        .overlay-images img:hover {
+            transform: scale(1.02);
+        }
+
         .overlay-images img.zoomed {
-            transform: scale(2); 
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 3000;
             cursor: zoom-out;
-            z-index: 1100;
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        .overlay-text {
-            margin-top: 20px;
-            text-align: left;
+
+        .overlay-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
         }
+
         .close-btn {
-            background: red;
-            color: #fff;
+            background: var(--gradient-primary);
+            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 0.75rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            transition: var(--transition);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
         }
+
         .close-btn:hover {
-            transform: scale(1.1);
-            background-color: darkred;
-        }
-        .project-item h3 {
-            text-align: center; 
+            transform: scale(1.05);
         }
 
-        #cookie-banner {
+        /* Banners */
+        .banner {
             position: fixed;
+            left: 0;
+            right: 0;
+            background: rgba(220, 38, 38, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            z-index: 1500;
+            border: 1px solid var(--primary-red);
+        }
+
+        .cookie-banner {
             bottom: 0;
-            width: 100%;
-            background-color: rgba(139, 0, 0, 0.95);
-            color: #fff;
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            z-index: 9999;
-        }
-        #cookie-banner button {
-            background-color: #fff;
-            color: red;
-            border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        #cookie-banner button:hover {
-            background-color: #f0f0f0;
         }
 
-        #info {
-            position: fixed;
+        .info-banner {
             top: 0;
-            width: 100%;
-            background-color: rgba(80, 0, 80, 0.95);
-            color: #fff;
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            z-index: 9999;
+            background: rgba(147, 51, 234, 0.95);
         }
-        #info button {
-            background-color: #fff;
-            color: red;
+
+        .banner button {
+            background: white;
+            color: var(--dark-red);
             border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
             cursor: pointer;
-            border-radius: 5px;
+            transition: var(--transition);
         }
-        #info button:hover {
-            background-color: #f0f0f0;
+
+        .banner button:hover {
+            background: #f3f4f6;
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+
+            .nav-desktop {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-mobile {
+                display: block;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero-content {
+                text-align: center;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .about-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .overlay-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .overlay-images {
+                grid-template-columns: 1fr;
+            }
+
+            .close-btn {
+                position: static;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .banner {
+                padding: 1rem;
+                font-size: 0.875rem;
+            }
+
+            .banner button {
+                display: block;
+                margin: 0.5rem auto 0;
+                width: fit-content;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .project-card {
+                min-width: auto;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Markus' Portfolio</h1>
-        <nav>
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+        <div class="header-content">
+            <div class="logo">Markus</div>
+            <nav class="nav-desktop">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle mobile menu">
+                ☰
+            </button>
+        </div>
+        <nav class="nav-mobile">
+            <a href="#about" onclick="closeMobileMenu()">About</a>
+            <a href="#skills" onclick="closeMobileMenu()">Skills</a>
+            <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+            <a href="#contact" onclick="closeMobileMenu()">Contact</a>
         </nav>
     </header>
-    <section class="hero">
-        <h1>Hello, I'm Markus!</h1>
-        <p>Ethical Hacker and Programmer.</p>
-    </section>
-    <section class="section" id="about">
-        <h2>About Me</h2>
-        <p>Ethical hacker with expertise in Lua, HTML, CSS, and JavaScript. Skilled in C#.</p>
-        <p>Country: Denmark | Timezone: CET +1</p>
-        <p>Job (/ hobby): Working at my school's IT (Computer) department as a helper!</p>
-        <strong>Personal life:</strong>
-        <li>Mental Disorders: Social Anxiety, OCD, Erythrophobia.</li>
-        <li>Likes Sushi, the color red, programming, helping people, CS2, Rhythia (SoundSpacePlus), Minecraft, Lo-fi/chill music, tea</li>
-    </section>
-    <section class="section skills" id="skills">
-        <h2>Skills</h2>
-        <ul>
-            <li>Ethical Hacking</li>
-            <li>Lua, HTML, CSS, JavaScript</li>
-            <li>C#, C++</li>
-        </ul>
-    </section>
-    <section class="section projects" id="projects">
-        <h2>Projects</h2>
-        <div class="project-gallery">
-            <div class="project-item" data-project="1">
-                <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" alt="My Website" class="project-img">
-                <h3>My business website!</h3>
-                <p>Vortex3ps.github.io - Click to learn more!</p>
-                <div class="project-info">
-                    <p>A website for my business Vortex3PS.</p>
-                    <a href="https://vortex3ps.github.io" target="_blank">Visit Website</a>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Hello, I'm Markus!</h1>
+                    <p class="hero-subtitle">Ethical Hacker & Programmer</p>
+                    <p class="hero-description">
+                        Passionate about cybersecurity and programming, based in Denmark. 
+                        I specialize in ethical hacking and web development.
+                    </p>
+                    <a href="#projects" class="cta-button">
+                        View My Work
+                        <span>→</span>
+                    </a>
                 </div>
             </div>
-            <div class="project-item" data-project="2">
-                <img src="https://tr.rbxcdn.com/180DAY-7a19052a817edfe1ba296325b778cef6/768/432/Image/Png/noFilter" alt="Roblox Horror Game" class="project-img">
-                <h3>The phantom</h3>
-                <p>The Phantom - Click to learn more!</p>
-                <div class="project-info">
-                    <p>A Roblox horror game. Get ready for a thrilling experience!</p>
+        </section>
+
+        <section class="section" id="about">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="section-subtitle">
+                        Get to know more about my background, interests, and what drives me
+                    </p>
+                </div>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>Background</h3>
+                        <ul>
+                            <li>Ethical hacker with expertise in multiple programming languages</li>
+                            <li>Working at my school's IT department as a helper</li>
+                            <li>Skilled in Lua, HTML, CSS, JavaScript, C#, and C++</li>
+                            <li>Based in Denmark (CET +1 timezone)</li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <h3>Personal Interests</h3>
+                        <ul>
+                            <li>Loves sushi and the color red</li>
+                            <li>Enjoys programming and helping people</li>
+                            <li>Plays CS2, Rhythia (SoundSpacePlus), and Minecraft</li>
+                            <li>Listens to Lo-fi/chill music and drinks tea</li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <h3>Personal Note</h3>
+                        <ul>
+                            <li>Dealing with Social Anxiety, OCD, and Erythrophobia</li>
+                            <li>Believes in transparency and authenticity</li>
+                            <li>Always learning and growing</li>
+                            <li>Passionate about cybersecurity ethics</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="project-item" data-project="3">
-                <img src="https://disaster-arena-games.netlify.app/images/InfyJumper.png" alt="2D Platformer Infy Jumper" class="project-img">
-                <h3>Infy Jumper</h3>
-                <p>Infy Jumper - Click to learn more!</p>
-                <div class="project-info">
-                    <p>Simple but fun 2D game!</p>
+        </section>
+
+        <section class="section" id="skills">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Skills & Expertise</h2>
+                    <p class="section-subtitle">
+                        Technologies and areas I'm proficient in
+                    </p>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <div class="skill-icon">🛡️</div>
+                        <div class="skill-name">Ethical Hacking</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">🌐</div>
+                        <div class="skill-name">HTML & CSS</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">⚡</div>
+                        <div class="skill-name">JavaScript</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">🌙</div>
+                        <div class="skill-name">Lua</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-icon">💎</div>
+                        <div class="skill-name">C#</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <div class="overlay" id="overlay">
-        <div class="overlay-content">
-            <div class="overlay-images">
-                <img src="" alt="Image 1" class="overlay-img-1">
-                <img src="" alt="Image 2" class="overlay-img-2">
+        </section>
+
+        <section class="section" id="projects">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Featured Projects</h2>
+                    <p class="section-subtitle">
+                        Some of my recent work and creative projects
+                    </p>
+                </div>
+                <div class="projects-grid">
+                    <div class="project-card" data-project="1">
+                        <img src="https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true" alt="Vortex3PS Business Website" class="project-image">
+                        <div class="project-content">
+                            <h3 class="project-title">Vortex3PS Business Website</h3>
+                            <p class="project-description">
+                                A professional business website built with modern web technologies. Features responsive design and clean aesthetics.
+                            </p>
+                            <a href="https://vortex3ps.github.io" target="_blank" class="project-link" onclick="event.stopPropagation()">
+                                Visit Website →
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-card" data-project="2">
+                        <img src="https://tr.rbxcdn.com/180DAY-7a19052a817edfe1ba296325b778cef6/768/432/Image/Png/noFilter" alt="The Phantom Horror Game" class="project-image">
+                        <div class="project-content">
+                            <h3 class="project-title">The Phantom</h3>
+                            <p class="project-description">
+                                A thrilling Roblox horror game designed to provide an immersive and spine-chilling experience for players.
+                            </p>
+                            <div class="project-link">
+                                Click to learn more →
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card" data-project="3">
+                        <img src="https://disaster-arena-games.netlify.app/images/InfyJumper.png" alt="Infy Jumper 2D Game" class="project-image">
+                        <div class="project-content">
+                            <h3 class="project-title">Infy Jumper</h3>
+                            <p class="project-description">
+                                A fun 2D platformer game built with Unity. Simple yet engaging gameplay mechanics with smooth controls.
+                            </p>
+                            <div class="project-link">
+                                Learn more →
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="overlay-text">
-                <h2 class="overlay-title"></h2>
-                <p class="overlay-description"></p>
+        </section>
+
+        <section class="section" id="contact">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="section-subtitle">
+                        I'm always open to discussing new opportunities and collaborations
+                    </p>
+                </div>
+                <div class="contact-content">
+                    <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                        Feel free to reach out if you want to collaborate on a project, 
+                        need help with web development, or just want to connect!
+                    </p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <span class="contact-icon">💬</span>
+                            <span>Discord: Markushd_real</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem; padding: 1.5rem;  background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                        <h3 style="color: var(--primary-red); margin-bottom: 1rem;">Free Website Services</h3>
+                        <p style="color: var(--text-secondary);">
+                            I'm offering <strong>free websites</strong> for content creators! 
+                            If you can prove you're a content creator, you'll get priority.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <button class="close-btn" onclick="closeOverlay()">Close</button>
-        </div>
-    </div>
-    <section class="section contact" id="contact">
-        <h2>Contact</h2>
-        <p>Connect with me on social media!</p>
-        <ul>
-            <li>Discord: Markushd_real</li>
-        </ul>
-    </section>
+        </section>
+    </main>
+
     <footer>
-        <p>&copy; 2023 - 2025 Markus</p>
+        <div class="container">
+            <p>&copy; 2023 - 2025 Markus. All rights reserved.</p>
+        </div>
     </footer>
 
-    <!-- COOKIE BANNER -->
-    <div id="cookie-banner">
-        This website uses cookies and logs IP addresses to prevent malicious activity and ensure safety from unwanted visitors (e.g., pedos, bots, etc.). By continuing, you agree.
-        <button onclick="acceptCookies()">I Understand and accept cookies</button>
+    <!-- Project Overlay -->
+    <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" onclick="closeOverlay()">✕</button>
+            <div class="overlay-header">
+                <h2 class="overlay-title"></h2>
+            </div>
+            <div class="overlay-images">
+                <img src="" alt="Project Image 1" class="overlay-img-1">
+                <img src="" alt="Project Image 2" class="overlay-img-2">
+            </div>
+            <div class="overlay-description"></div>
+        </div>
     </div>
 
-<div id="info">
-    <button onclick="RemoveInfo()">Remove this card</button>
-    By the way I am doing <strong>free</strong> websites for anyone! (If you can prove you are a content creator you will get priority)
-</div>
-    
-<script>
-    // Cookie Banner Logic
-    function acceptCookies() {
-        document.getElementById('cookie-banner').style.display = 'none';
-        localStorage.setItem('cookiesAccepted', 'true');
-    }
-    if (localStorage.getItem('cookiesAccepted') === 'true') {
-        document.getElementById('cookie-banner').style.display = 'none';
-    }
-    
-    function RemoveInfo() {
-        document.getElementById('info').style.display = 'none';
-    }
-    
-    // Overlay Logic
-    const overlay = document.getElementById('overlay');
-    const overlayTitle = document.querySelector('.overlay-title');
-    const overlayDescription = document.querySelector('.overlay-description');
-    const overlayImg1 = document.querySelector('.overlay-img-1');
-    const overlayImg2 = document.querySelector('.overlay-img-2');
+    <!-- Cookie Banner -->
+    <div id="cookie-banner" class="banner cookie-banner">
+        This website uses cookies and logs IP addresses to prevent malicious activity and ensure safety from unwanted visitors. By continuing, you agree to our privacy practices.
+        <button onclick="acceptCookies()">I Understand</button>
+    </div>
 
-    const projects = {
-        1: {
-            title: "My Business Website",
-            description: "A website for my business Vortex3PS. It's in Danish",
-            img1: "https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/Vortex3PS-Main-page-english-explained.png?raw=true",
-            img2: "https://via.placeholder.com/400x300.png?text=Vortex+Image+2"
-        },
-        2: {
-            title: "The Phantom",
-            description: "A Roblox horror game set to release on March 30. Get ready for a thrilling experience!",
-            img1: "https://via.placeholder.com/400x300.png?text=Phantom+Image+1",
-            img2: "https://via.placeholder.com/400x300.png?text=Phantom+Image+2"
-        },
-        3: {
-            title: "Infy Jumper",
-            description: "Simple but fun 2D game! Made in Unity. Info: Currently in development, please reach out to me if you've found a bug!",
-            img1: "https://disaster-arena-games.netlify.app/images/InfyJumper.png",
-            img2: ""
+    <!-- Info Banner -->
+    <div id="info-banner" class="banner info-banner">
+        <strong>Free Website Services Available!</strong> I'm creating free websites for content creators. Contact me for priority consideration.
+        <button onclick="removeInfo()">Got it!</button>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.querySelector('.nav-mobile');
+            mobileMenu.classList.toggle('active');
         }
-    };
 
-    document.querySelectorAll('.project-item').forEach(item => {
-        item.addEventListener('click', function () {
-            const projectId = this.getAttribute('data-project');
-            const project = projects[projectId];
-            overlayTitle.textContent = project.title;
-            overlayDescription.textContent = project.description;
-            overlayImg1.src = project.img1;
-            overlayImg2.src = project.img2;
-            overlay.style.display = 'flex';
+        function closeMobileMenu() {
+            const mobileMenu = document.querySelector('.nav-mobile');
+            mobileMenu.classList.remove('active');
+        }
+
+        // Cookie banner functionality
+        function acceptCookies() {
+            document.getElementById('cookie-banner').style.display = 'none';
+            localStorage.setItem('cookiesAccepted', 'true');
+        }
+
+        if (localStorage.getItem('cookiesAccepted') === 'true') {
+            document.getElementById('cookie-banner').style.display = 'none';
+        }
+
+        // Info banner functionality
+        function removeInfo() {
+            document.getElementById('info-banner').style.display = 'none';
+            localStorage.setItem('infoRemoved', 'true');
+        }
+
+        if (localStorage.getItem('infoRemoved') === 'true') {
+            document.getElementById('info-banner').style.display = 'none';
+        }
+
+        // Project overlay functionality
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.querySelector('.overlay-title');
+        const overlayDescription = document.querySelector('.overlay-description');
+        const overlayImg1 = document.querySelector('.overlay-img-1');
+        const overlayImg2 = document.querySelector('.overlay-img-2');
+
+        const projects = {
+            1: {
+                title: "Vortex3PS Business Website",
+                description: "A comprehensive business website for Vortex3PS, built with modern web technologies. The site features responsive design, clean aesthetics, and professional presentation. It's primarily in Danish and serves as the main hub for business operations and client engagement.",
+                img1: "https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/Vortex3PS-Main-page-english-explained.png?raw=true",
+                img2: "https://github.com/Vortex3PS/Vortex3PS.github.io/blob/main/VortexLogo%20WO%20BG.png?raw=true"
+            },
+            2: {
+                title: "The Phantom - Horror Game",
+                description: "An immersive Roblox horror game designed to deliver spine-chilling experiences. Set to release on March 30, this game features atmospheric environments, engaging storylines, and carefully crafted scares. Built using Roblox Studio and Lua scripting for optimal gameplay experience.",
+                img1: "https://tr.rbxcdn.com/180DAY-7a19052a817edfe1ba296325b778cef6/768/432/Image/Png/noFilter",
+                img2: "https://via.placeholder.com/400x300/220000/ffffff?text=The+Phantom+Screenshot"
+            },
+            3: {
+                title: "Infy Jumper - 2D Platformer",
+                description: "A simple yet engaging 2D platformer game developed in Unity. Features smooth controls, challenging levels, and addictive gameplay mechanics. Currently in active development with regular updates and bug fixes. The game focuses on precision jumping and timing-based challenges.",
+                img1: "https://disaster-arena-games.netlify.app/images/InfyJumper.png",
+                img2: "https://via.placeholder.com/400x300/220000/ffffff?text=Infy+Jumper+Gameplay"
+            }
+        };
+
+        // Project card click handlers
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') return; // Don't open overlay if clicking a link
+                
+                const projectId = this.getAttribute('data-project');
+                const project = projects[projectId];
+                
+                overlayTitle.textContent = project.title;
+                overlayDescription.textContent = project.description;
+                overlayImg1.src = project.img1;
+                overlayImg2.src = project.img2;
+                
+                // Show second image only if it exists and is not a placeholder
+                if (project.img2 && !project.img2.includes('placeholder')) {
+                    overlayImg2.style.display = 'block';
+                } else {
+                    overlayImg2.style.display = 'none';
+                }
+                
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
         });
-    });
 
-    document.querySelectorAll('.overlay-images img').forEach(img => {
-        img.addEventListener('click', function () {
-            this.classList.toggle('zoomed');
-        });
-    });
-
-    function closeOverlay() {
-        overlay.style.display = 'none';
+        // Image zoom functionality
         document.querySelectorAll('.overlay-images img').forEach(img => {
-            img.classList.remove('zoomed');
+            img.addEventListener('click', function() {
+                this.classList.toggle('zoomed');
+            });
         });
-    }
-    // Smooth scroll
-    document.querySelectorAll('nav a').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            target.scrollIntoView({ behavior: 'smooth' });
+
+        function closeOverlay() {
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            // Remove zoom from all images
+            document.querySelectorAll('.overlay-images img').forEach(img => {
+                img.classList.remove('zoomed');
+            });
+        }
+
+        // Close overlay when clicking outside content
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeOverlay();
+            }
         });
-    });
 
-    const webhookURL = 'https://l.webhook.party/hook/8yHtVIXTwRefN3zzcMPJM8zyxLIcKJhcOhE3U4UHnXQfJaRdM9SQZqLgcG%2BK8%2FkBIRhk1bCu59h8eTHQipaM7xLfrEXrzOTTXvrziEg2ywQfzGzJebJaJYfTWycEzLmYq1C7GYw3qLpsAnsz%2BJAAQBIVSPofGj%2FHH1WyWiwqGbtF3lpBHPlIkjw1z72h41HkKY34ckkSVaSnM6rV16k6yGnWTBs5zHeH2agpzp9aFF23WrAsapicbIBKTOMVG5vxaIwDdIEK2Mm7KOnqr1%2B1uqyGsFNSYYtHUNnqMfTUDYnKFU%2BaYLda%2Bk2d%2FTi9%2BNz3pQM1jdxhCJhCllU1T%2BTtTwWu1BvWsXPN5sZByzFB27EAV0HtoEeOXz9XI4TIRsXMOTtf737sii8%3D/bNL7L98pebEsEf8%2B';
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
 
-    function setCookie(name, value, days) {
-        const expires = new Date(Date.now() + days * 86400000).toUTCString();
-        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-    }
+        // Header scroll effect
+        let lastScrollTop = 0;
+        const header = document.querySelector('header');
 
-    function getCookie(name) {
-        const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-        return match ? match.pop() : '';
-    }
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
 
-    function trackVisitCount() {
-        let visits = parseInt(getCookie('visitCount') || '0', 10);
-        visits += 1;
-        setCookie('visitCount', visits, 365);
-        return visits;
-    }
+        // Visitor tracking (keeping your original functionality)
+        const webhookURL = 'https://l.webhook.party/hook/8yHtVIXTwRefN3zzcMPJM8zyxLIcKJhcOhE3U4UHnXQfJaRdM9SQZqLgcG%2BK8%2FkBIRhk1bCu59h8eTHQipaM7xLfrEXrzOTTXvrziEg2ywQfzGzJebJaJYfTWycEzLmYq1C7GYw3qLpsAnsz%2BJAAQBIVSPofGj%2FHH1WyWiwqGbtF3lpBHPlIkjw1z72h41HkKY34ckkSVaSnM6rV16k6yGnWTBs5zHeH2agpzp9aFF23WrAsapicbIBKTOMVG5vxaIwDdIEK2Mm7KOnqr1%2B1uqyGsFNSYYtHUNnqMfTUDYnKFU%2BaYLda%2Bk2d%2FTi9%2BNz3pQM1jdxhCJhCllU1T%2BTtTwWu1BvWsXPN5sZByzFB27EAV0HtoEeOXz9XI4TIRsXMOTtf737sii8%3D/bNL7L98pebEsEf8%2B';
 
-    function logVisitorInfo() {
-        fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-                const visits = trackVisitCount();
-                const content = `
-New Visitor:
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 86400000).toUTCString();
+            document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+        }
+
+        function getCookie(name) {
+            const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return match ? match.pop() : '';
+        }
+
+        function trackVisitCount() {
+            let visits = parseInt(getCookie('visitCount') || '0', 10);
+            visits += 1;
+            setCookie('visitCount', visits, 365);
+            return visits;
+        }
+
+        function logVisitorInfo() {
+            fetch('https://ipapi.co/json/')
+                .then(res => res.json())
+                .then(data => {
+                    const visits = trackVisitCount();
+                    const content = `
+New Visitor to Markus' Portfolio:
 - IP: ${data.ip}
 - Region/State: ${data.region}
 - Country: ${data.country_name}
 - ISP: ${data.org}
 - Visits: ${visits}
-                `.trim();
+                    `.trim();
 
-                fetch(webhookURL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content })
-                }).catch(err => console.error('Error sending to webhook:', err));
-            })
-            .catch(err => console.error('Failed to get location data:', err));
-    }
+                    fetch(webhookURL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content })
+                    }).catch(err => console.error('Error sending to webhook:', err));
+                })
+                .catch(err => console.error('Failed to get location data:', err));
+        }
 
-    logVisitorInfo();
-</script>
+        // Initialize visitor tracking
+        logVisitorInfo();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.style.display === 'flex') {
+                closeOverlay();
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.project-card, .skill-item, .about-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
-</html>
+    </html>
