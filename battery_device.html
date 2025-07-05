@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Battery Device</title>
+  <style>
+    body { background: black; color: lime; font-family: monospace; text-align: center; margin-top: 20%; }
+    button { padding: 20px; font-size: 1.5rem; background: #111; color: lime; border: 2px solid lime; cursor: pointer; }
+    .cooldown { color: red; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Battery Device</h1>
+  <button id="charge-btn">Get Battery</button>
+  <div class="cooldown" id="cooldown-text"></div>
+
+  <script>
+    const btn = document.getElementById("charge-btn");
+    const cooldownText = document.getElementById("cooldown-text");
+    const jsonBlobUrl = "https://jsonblob.com/api/jsonBlob/1391074962424651776";
+
+    let canCharge = true;
+    let cooldown = 0;
+
+    btn.addEventListener("click", () => {
+      if (!canCharge) return;
+
+      const boost = Math.random() < 0.5 ? 5 : 10;
+
+      fetch(jsonBlobUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ batteryBoost: boost })
+      }).then(() => {
+        cooldown = 60;
+        canCharge = false;
+        btn.disabled = true;
+      });
+    });
+
+    setInterval(() => {
+      if (cooldown > 0) {
+        cooldown--;
+        cooldownText.textContent = `Cooldown: ${cooldown}s`;
+      } else if (!canCharge) {
+        canCharge = true;
+        btn.disabled = false;
+        cooldownText.textContent = "";
+      }
+
+      // Optional: Sync every 5 seconds (prevent rollback)
+      fetch(jsonBlobUrl)
+        .then(res => res.json())
+        .catch(() => {});
+    }, 1000);
+  </script>
+</body>
+</html>
