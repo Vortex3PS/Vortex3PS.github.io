@@ -87,6 +87,8 @@
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
+      flex-direction: column;
+      gap: 20px;
     }
     #start-overlay button {
       padding: 20px 40px;
@@ -105,6 +107,8 @@
 <body>
   <div id="start-overlay">
     <button id="start-button">Start</button>
+    <!-- Keep this line -->
+    <button id="battery-device-button">Battery Device</button> <!-- Added Battery Device button -->
   </div>
 
   <div id="challenge-overlay" style="display: none;">
@@ -112,7 +116,7 @@
   </div>
 
   <div class="centered" id="game-ui" style="display: none;">
-    <div class="clock-display" id="clock">10:00</div>
+    <div class="clock-display" id="clock">20:00</div>
     <div class="battery-display" id="battery">Battery: 100%</div>
     <div class="usage-display" id="usage">Usage: ▓</div>
     <div class="recharge-counter" id="recharge-counter">Recharges used: 0</div>
@@ -136,7 +140,7 @@
     var lightOn = false;
     var gameStarted = false;
 
-    var timeLeft = 600;
+    var timeLeft = 1200;
     var challengesShown = 0;
     const challengeTimes = [];
 
@@ -152,6 +156,10 @@
     const challengeOverlay = document.getElementById("challenge-overlay");
     const challengeText = document.getElementById("challenge-text");
     const startButton = document.getElementById("start-button");
+    const batteryDeviceButton = document.getElementById("battery-device-button");
+
+    // Replace with your actual JSONBlob URL
+    const jsonBlobUrl = "https://jsonblob.com/api/jsonBlob/1391074962424651776";
 
     function updateDisplay() {
       batteryDisplay.textContent = `Battery: ${Math.max(Math.floor(battery), 0)}%`;
@@ -240,6 +248,7 @@
       gameUI.style.display = "flex";
       scheduleChallenges();
       startCountdown();
+      startBatteryCheck();
     });
 
     leftDoorBtn.addEventListener("click", () => {
@@ -277,6 +286,35 @@
         updateDisplay();
       }
     }, 1000);
+
+    // --- Battery Device Logic ---
+
+    batteryDeviceButton.addEventListener("click", () => {
+      window.open("battery_device.html", "_blank");
+    });
+
+    function startBatteryCheck() {
+      setInterval(() => {
+        fetch(jsonBlobUrl)
+          .then(res => res.json())
+          .then(data => {
+            if (data.batteryBoost) {
+              battery = Math.min(battery + data.batteryBoost, 100);
+              rechargeCount++;
+              updateRechargeCounter();
+              updateDisplay();
+
+              // Reset boost on blob
+              fetch(jsonBlobUrl, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ batteryBoost: 0 })
+              });
+            }
+          })
+          .catch(err => console.error("Battery check error:", err));
+      }, 10000);
+    }
   </script>
 </body>
 </html>
